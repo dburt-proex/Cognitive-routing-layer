@@ -1,0 +1,1001 @@
+{
+  "assumptions": [
+    {
+      "assumption": "The build slot cannot be split across two work items.",
+      "operator_id": "first-principles",
+      "treated_as": "missing_evidence"
+    },
+    {
+      "assumption": "Downstream consumers will not change their interfaces during this build slot.",
+      "operator_id": "systemic",
+      "treated_as": "missing_evidence"
+    },
+    {
+      "assumption": "The three candidate items are the complete set under consideration.",
+      "operator_id": "divergent",
+      "treated_as": "missing_evidence"
+    },
+    {
+      "assumption": "Downstream systems adopt the receipt format without renegotiation.",
+      "operator_id": "second-order",
+      "treated_as": "missing_evidence"
+    }
+  ],
+  "authorization": {
+    "authorization_id": null,
+    "checks": [],
+    "derived_from_confidence": false,
+    "issuer": null,
+    "nonce": null,
+    "reason": "the intake requested no external action",
+    "status": "NOT_REQUESTED",
+    "verifier": "unavailable",
+    "verifier_is_authentic": false
+  },
+  "classification": {
+    "activated_rule_id": "CL-4",
+    "caller_proposal_honored": false,
+    "caller_proposal_mismatch": false,
+    "caller_proposed_classification": null,
+    "classification_policy_id": "RCP-ROUTING-0.1.0",
+    "classification_policy_version": "0.1.0",
+    "classification_source": "computed",
+    "deterministic_basis": "ordered first-match over classification_rules against normalized intake",
+    "manual_override": null,
+    "manual_override_owner": null,
+    "manual_override_reason": null,
+    "rejected_classifications": [],
+    "task_class": "PRIORITIZATION"
+  },
+  "confidence_by_operator": [
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "high",
+      "effective_confidence": 0.75,
+      "operator_id": "first-principles"
+    },
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "medium",
+      "effective_confidence": 0.75,
+      "operator_id": "systemic"
+    },
+    {
+      "contributes_to_decision_confidence": false,
+      "declared_confidence": "medium",
+      "effective_confidence": 0.0,
+      "operator_id": "divergent"
+    },
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "medium",
+      "effective_confidence": 0.75,
+      "operator_id": "critical"
+    },
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "medium",
+      "effective_confidence": 0.75,
+      "operator_id": "second-order"
+    },
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "derived",
+      "effective_confidence": 0.75,
+      "operator_id": "convergent"
+    }
+  ],
+  "contradictions": [
+    {
+      "contradiction_id": "RCP-CON-FP-C1-CR-C2",
+      "detection_method": "Two claims contradict when they address the same subject_ref with opposing polarity. Detection is structural, not semantic.",
+      "disposition": "unresolved",
+      "disposition_owner": null,
+      "opposing_claim_id": "CR-C2",
+      "opposing_confidence": 0.0,
+      "opposing_operator": "critical",
+      "severity": "minor",
+      "subject_ref": "OPT-A",
+      "supporting_claim_id": "FP-C1",
+      "supporting_confidence": 0.75,
+      "supporting_operator": "first-principles"
+    },
+    {
+      "contradiction_id": "RCP-CON-SO-C1-CR-C2",
+      "detection_method": "Two claims contradict when they address the same subject_ref with opposing polarity. Detection is structural, not semantic.",
+      "disposition": "unresolved",
+      "disposition_owner": null,
+      "opposing_claim_id": "CR-C2",
+      "opposing_confidence": 0.0,
+      "opposing_operator": "critical",
+      "severity": "minor",
+      "subject_ref": "OPT-A",
+      "supporting_claim_id": "SO-C1",
+      "supporting_confidence": 0.75,
+      "supporting_operator": "second-order"
+    },
+    {
+      "contradiction_id": "RCP-CON-SY-C1-CR-C2",
+      "detection_method": "Two claims contradict when they address the same subject_ref with opposing polarity. Detection is structural, not semantic.",
+      "disposition": "unresolved",
+      "disposition_owner": null,
+      "opposing_claim_id": "CR-C2",
+      "opposing_confidence": 0.0,
+      "opposing_operator": "critical",
+      "severity": "minor",
+      "subject_ref": "OPT-A",
+      "supporting_claim_id": "SY-C1",
+      "supporting_confidence": 0.75,
+      "supporting_operator": "systemic"
+    }
+  ],
+  "convergence": {
+    "decision_confidence": 0.75,
+    "decision_confidence_basis": "min(mean supporting claim confidence 0.75, evidence ceiling 1.0) less contradiction penalty 0.0",
+    "decision_confidence_label": "uncalibrated_decision_support_score",
+    "ranking": [
+      {
+        "contradiction_penalty": 0.0,
+        "distinct_evidence": 5,
+        "evidence_refs": [
+          "EV-1",
+          "EV-2",
+          "EV-3",
+          "EV-4",
+          "EV-7"
+        ],
+        "evidence_sufficient": true,
+        "independent_groups": 4,
+        "label": "Complete the Cognitive Routing Layer v0.1 vertical slice",
+        "mean_evidence_quality": 70.7143,
+        "net": 2.25,
+        "opposing_claims": [
+          "CR-C2"
+        ],
+        "opposition": 0.0,
+        "option_id": "OPT-A",
+        "support": 2.25,
+        "supporting_claims": [
+          "FP-C1",
+          "SO-C1",
+          "SY-C1"
+        ],
+        "unmet_thresholds": [],
+        "verified_evidence": 4
+      },
+      {
+        "contradiction_penalty": 0.0,
+        "distinct_evidence": 2,
+        "evidence_refs": [
+          "EV-5",
+          "EV-6"
+        ],
+        "evidence_sufficient": true,
+        "independent_groups": 2,
+        "label": "Package the assessment service for sale",
+        "mean_evidence_quality": 62.5,
+        "net": -0.75,
+        "opposing_claims": [
+          "CR-C1"
+        ],
+        "opposition": 0.75,
+        "option_id": "OPT-B",
+        "support": 0.0,
+        "supporting_claims": [],
+        "unmet_thresholds": [],
+        "verified_evidence": 0
+      },
+      {
+        "contradiction_penalty": 0.0,
+        "distinct_evidence": 1,
+        "evidence_refs": [
+          "EV-8"
+        ],
+        "evidence_sufficient": false,
+        "independent_groups": 1,
+        "label": "Reconcile repository documentation",
+        "mean_evidence_quality": 55.0,
+        "net": -0.5,
+        "opposing_claims": [
+          "SO-C2"
+        ],
+        "opposition": 0.5,
+        "option_id": "OPT-C",
+        "support": 0.0,
+        "supporting_claims": [],
+        "unmet_thresholds": [
+          "requires 2 distinct evidence records, resolved 1"
+        ],
+        "verified_evidence": 0
+      }
+    ],
+    "rejected_alternatives": [
+      {
+        "option_id": "OPT-B",
+        "reason": "lower evidence-weighted net score (-0.75) than the selection"
+      },
+      {
+        "option_id": "OPT-C",
+        "reason": "requires 2 distinct evidence records, resolved 1"
+      }
+    ],
+    "selected_option_id": "OPT-A",
+    "selection_reason": "OPT-A carries the highest evidence-weighted net score 2.25 among options meeting the PRIORITIZATION evidence threshold",
+    "thresholds_applied": {
+      "min_distinct_evidence_per_option": 2,
+      "min_independent_sources_per_option": 1,
+      "minimum_evidence_quality": 50,
+      "require_verified_evidence": false
+    },
+    "tie_candidates": []
+  },
+  "evidence_used": [
+    {
+      "authority": "authoritative",
+      "evidence_id": "EV-1",
+      "independence_group": "repo-inspection",
+      "quality": 80,
+      "source_type": "repository",
+      "untrusted_instruction_detected": false,
+      "verification_state": "INTEGRITY_CHECKED"
+    },
+    {
+      "authority": "authoritative",
+      "evidence_id": "EV-2",
+      "independence_group": "test-execution",
+      "quality": 85,
+      "source_type": "test_result",
+      "untrusted_instruction_detected": false,
+      "verification_state": "INTEGRITY_CHECKED"
+    },
+    {
+      "authority": "authoritative",
+      "evidence_id": "EV-3",
+      "independence_group": "repo-inspection",
+      "quality": 75,
+      "source_type": "repository",
+      "untrusted_instruction_detected": false,
+      "verification_state": "RETRIEVED"
+    },
+    {
+      "authority": "corroborating",
+      "evidence_id": "EV-4",
+      "independence_group": "planning-record",
+      "quality": 70,
+      "source_type": "document",
+      "untrusted_instruction_detected": false,
+      "verification_state": "SOURCE_IDENTIFIED"
+    },
+    {
+      "authority": "indicative",
+      "evidence_id": "EV-5",
+      "independence_group": "planning-record",
+      "quality": 60,
+      "source_type": "document",
+      "untrusted_instruction_detected": false,
+      "verification_state": "SOURCE_IDENTIFIED"
+    },
+    {
+      "authority": "corroborating",
+      "evidence_id": "EV-6",
+      "independence_group": "operational-record",
+      "quality": 65,
+      "source_type": "measurement",
+      "untrusted_instruction_detected": false,
+      "verification_state": "RETRIEVED"
+    },
+    {
+      "authority": "anecdotal",
+      "evidence_id": "EV-7",
+      "independence_group": "informal",
+      "quality": 20,
+      "source_type": "document",
+      "untrusted_instruction_detected": false,
+      "verification_state": "UNVERIFIED"
+    },
+    {
+      "authority": "indicative",
+      "evidence_id": "EV-8",
+      "independence_group": "repo-inspection",
+      "quality": 55,
+      "source_type": "repository",
+      "untrusted_instruction_detected": false,
+      "verification_state": "SOURCE_IDENTIFIED"
+    }
+  ],
+  "execution": {
+    "authorization_status": "NOT_REQUESTED",
+    "composition_rule": "confidence never grants permission; authorization never cures insufficient evidence",
+    "execution_authorized": false,
+    "execution_outcome": "NOT_AUTHORIZED",
+    "recommendation_eligible": true
+  },
+  "gate": {
+    "allow_semantics": "ALLOW means the recommendation is eligible for human review. It is not an authorization to act and never has been. Vocabulary matches CASA, DiffWall, and the Leverage Engine.",
+    "confidence_threshold_applied": 0.5,
+    "gate_reasons": [
+      {
+        "detail": "all gates cleared",
+        "gate": "ALLOW",
+        "reason_code": "RCP-GATE-ELIGIBLE-FOR-HUMAN-REVIEW"
+      }
+    ],
+    "gate_result": "ALLOW",
+    "high_impact_route": false
+  },
+  "ledger_receipt": {
+    "appended": false,
+    "persisted": false,
+    "record_id": "RCP-RUN-2026-0001::OPT-A",
+    "sha256": "a806de1ca162b7331fbb17f463da490cfff66f405aa02ccc0d6407a51c0bbe1f"
+  },
+  "metacognitive_audit": {
+    "audit_result": "PASS",
+    "coverage": {
+      "claims_evaluated": 7,
+      "contradiction_detection_method": "structural: same subject_ref, opposing polarity",
+      "contradictions_detected": 3,
+      "coverage_is_not_confidence": true,
+      "executed_operators": [
+        "convergent",
+        "critical",
+        "divergent",
+        "first-principles",
+        "second-order",
+        "systemic"
+      ],
+      "missing_evidence_items": 5,
+      "missing_operators": [],
+      "planned_operators": [
+        "convergent",
+        "critical",
+        "divergent",
+        "first-principles",
+        "second-order",
+        "systemic"
+      ],
+      "route_depth": 6,
+      "stages_covered": [
+        "CHALLENGE",
+        "CLASSIFY",
+        "DECIDE",
+        "EXPLORE",
+        "FORECAST",
+        "FRAME",
+        "INTAKE",
+        "ROUTE"
+      ]
+    },
+    "declared_confidence": "high",
+    "findings": [
+      {
+        "detail": "OPT-C: requires 2 distinct evidence records, resolved 1",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "first-principles assumed without evidence: The build slot cannot be split across two work items.",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "systemic assumed without evidence: Downstream consumers will not change their interfaces during this build slot.",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "divergent assumed without evidence: The three candidate items are the complete set under consideration.",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "second-order assumed without evidence: Downstream systems adopt the receipt format without renegotiation.",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      }
+    ],
+    "material_finding_count": 0,
+    "operator_id": "metacognitive",
+    "phases": [
+      {
+        "checked": "the executed route matches the route the policy selected",
+        "phase": "PLAN"
+      },
+      {
+        "checked": "operator contracts were satisfied and the stage chain is intact",
+        "phase": "MONITOR"
+      },
+      {
+        "checked": "no claim outranks its evidence and thresholds were applied",
+        "phase": "EVALUATE"
+      },
+      {
+        "checked": "contradictions are dispositioned, gaps enumerated, authorization not derived from confidence",
+        "phase": "REFLECT"
+      }
+    ],
+    "stage_chain_head": "c3f903e40844363d70579bf6a6136ac4528ac6ad27f2f4b79b6645cca8a627b2"
+  },
+  "missing_evidence": [
+    {
+      "detail": "OPT-C: requires 2 distinct evidence records, resolved 1",
+      "kind": "evidence_threshold",
+      "subject_ref": "OPT-C"
+    },
+    {
+      "detail": "first-principles assumed without evidence: The build slot cannot be split across two work items.",
+      "kind": "undischarged_assumption",
+      "subject_ref": "first-principles"
+    },
+    {
+      "detail": "systemic assumed without evidence: Downstream consumers will not change their interfaces during this build slot.",
+      "kind": "undischarged_assumption",
+      "subject_ref": "systemic"
+    },
+    {
+      "detail": "divergent assumed without evidence: The three candidate items are the complete set under consideration.",
+      "kind": "undischarged_assumption",
+      "subject_ref": "divergent"
+    },
+    {
+      "detail": "second-order assumed without evidence: Downstream systems adopt the receipt format without renegotiation.",
+      "kind": "undischarged_assumption",
+      "subject_ref": "second-order"
+    }
+  ],
+  "next_action": "Present the recommendation and its receipt to the decision owner for approval.",
+  "normalized_intake_hash": "52e69d9954cfaac37ddbffd4b93f4c1f73a9e08a813a08e3fa743769eaac8e8e",
+  "operator_conclusions": [
+    {
+      "conclusions": [
+        "The vertical slice is the only candidate whose prerequisites are already satisfied in the repository."
+      ],
+      "contract_violations": [],
+      "operator_id": "first-principles",
+      "operator_version": "0.1.0",
+      "selection_basis": "required",
+      "selection_rationale": "first-principles is required for every PRIORITIZATION route by policy RCP-ROUTING-0.1.0. Purpose: Decompose the problem into primitives that are separately checkable, and label each primitive as verified fact, assumption, or unknown, so that every later conclusion rests on an inspectable base rather than on inherited framing.",
+      "stage": "FRAME",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "evidence_refs": [
+            "EV-4"
+          ],
+          "primitive_id": "P1",
+          "statement": "Only one build slot is available this week.",
+          "status": "verified_fact"
+        },
+        {
+          "evidence_refs": [
+            "EV-1"
+          ],
+          "primitive_id": "P2",
+          "statement": "The routing policy and operator registry are already written and versioned.",
+          "status": "verified_fact"
+        },
+        {
+          "evidence_refs": [
+            "EV-2"
+          ],
+          "primitive_id": "P3",
+          "statement": "An adjacent subsystem has already proven the deterministic-fixture pattern executable.",
+          "status": "verified_fact"
+        },
+        {
+          "evidence_refs": [],
+          "primitive_id": "P4",
+          "statement": "Whether a buyer will pay for any of these outputs is unknown.",
+          "status": "unknown"
+        }
+      ],
+      "structured_payload_key": "primitives"
+    },
+    {
+      "conclusions": [
+        "The routing layer closes an open loop that currently leaves the leverage ranking without recorded reasoning coverage."
+      ],
+      "contract_violations": [],
+      "operator_id": "systemic",
+      "operator_version": "0.1.0",
+      "selection_basis": "conditional",
+      "selection_rationale": "systemic was activated for this PRIORITIZATION route by signal(s) systemic_coupling.",
+      "stage": "FRAME",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "component_id": "C1",
+          "label": "Cognitive Routing Layer"
+        },
+        {
+          "component_id": "C2",
+          "label": "Leverage Engine"
+        },
+        {
+          "component_id": "C3",
+          "label": "Shared Decision Ledger"
+        }
+      ],
+      "structured_payload_key": "components"
+    },
+    {
+      "conclusions": [
+        "Three materially distinct mechanisms are available: build capability, package existing capability, or repair the record of capability."
+      ],
+      "contract_violations": [],
+      "operator_id": "divergent",
+      "operator_version": "0.1.0",
+      "selection_basis": "required",
+      "selection_rationale": "divergent is required for every PRIORITIZATION route by policy RCP-ROUTING-0.1.0. Purpose: Generate a set of materially distinct options, each with a stated mechanism, so that convergence has a real option space rather than a single pre-selected answer with decorations.",
+      "stage": "EXPLORE",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "label": "Complete the Cognitive Routing Layer v0.1 vertical slice",
+          "mechanism": "Implement the deterministic router, operator contract enforcement, and decision receipt against the locked policy so the pipeline runs end to end.",
+          "option_id": "OPT-A",
+          "reversible": true,
+          "tradeoff": "Defers commercial packaging work by at least one week."
+        },
+        {
+          "label": "Package the assessment service for sale",
+          "mechanism": "Assemble buyer-facing collateral, pricing tiers, and a proposal template from existing assessment content.",
+          "option_id": "OPT-B",
+          "reversible": true,
+          "tradeoff": "Commits to a commercial claim before any buyer evidence exists."
+        },
+        {
+          "label": "Reconcile repository documentation",
+          "mechanism": "Audit every README and architecture note against the shipped behaviour and correct the drift.",
+          "option_id": "OPT-C",
+          "reversible": true,
+          "tradeoff": "Consumes the slot on maintenance rather than on new capability."
+        }
+      ],
+      "structured_payload_key": "options"
+    },
+    {
+      "conclusions": [
+        "Packaging rests on an unmeasured demand assumption.",
+        "An unattributed note suggests the slice may overrun its slot, but the source is anecdotal and unverified."
+      ],
+      "contract_violations": [],
+      "operator_id": "critical",
+      "operator_version": "0.1.0",
+      "selection_basis": "required",
+      "selection_rationale": "critical is required for every PRIORITIZATION route by policy RCP-ROUTING-0.1.0. Purpose: Attack the evidentiary support of claims already on the record and emit typed defects bound to specific targets, so that weak support is surfaced as structured findings rather than as a caveat sentence.",
+      "stage": "CHALLENGE",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "defect_id": "CR-D1",
+          "defect_type": "unsupported_claim",
+          "remediation": "Collect two buyer conversations with recorded willingness to pay before packaging.",
+          "severity": "material",
+          "statement": "Packaging assumes demand that no evidence in this run measures.",
+          "target_ref": "OPT-B"
+        },
+        {
+          "defect_id": "CR-D2",
+          "defect_type": "evidence_gap",
+          "remediation": "Run a drift diff across README and architecture files and count the divergences.",
+          "severity": "material",
+          "statement": "The extent of documentation drift is asserted rather than measured, so the work cannot be sized.",
+          "target_ref": "OPT-C"
+        },
+        {
+          "defect_id": "CR-D3",
+          "defect_type": "false_precision",
+          "remediation": "Timebox the slice and record actual elapsed effort against the estimate.",
+          "severity": "minor",
+          "statement": "Prerequisites being present does not establish that the slice fits inside one build slot.",
+          "target_ref": "FP-C1"
+        }
+      ],
+      "structured_payload_key": "defects"
+    },
+    {
+      "conclusions": [
+        "Building the slice first is what makes the downstream ranking defensible, so its second-order value exceeds its direct output.",
+        "Reconciling documentation against unstable behaviour repeats the work within one release."
+      ],
+      "contract_violations": [],
+      "operator_id": "second-order",
+      "operator_version": "0.1.0",
+      "selection_basis": "required",
+      "selection_rationale": "second-order is required for every PRIORITIZATION route by policy RCP-ROUTING-0.1.0. Purpose: Trace consequences past the immediate effect, so that the and-then-what step is recorded with a horizon and an affected party rather than left implicit.",
+      "stage": "FORECAST",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "affected_party": "Leverage Engine consumers",
+          "effect_id": "SO-E1",
+          "follows_from": "The vertical slice emits decision receipts.",
+          "horizon": "weeks",
+          "option_ref": "OPT-A",
+          "order": 2,
+          "statement": "Once receipts exist, the leverage ranking can cite reasoning coverage rather than asserting it, which changes what the adjacent subsystem is able to claim."
+        },
+        {
+          "affected_party": "prospective buyers",
+          "effect_id": "SO-E2",
+          "follows_from": "Buyer-facing collateral is published.",
+          "horizon": "quarters",
+          "option_ref": "OPT-B",
+          "order": 2,
+          "statement": "Packaging before demand evidence exists creates a public claim that later evidence may contradict, which is expensive to retract."
+        },
+        {
+          "affected_party": "maintainers",
+          "effect_id": "SO-E3",
+          "follows_from": "Documentation is reconciled against current behaviour.",
+          "horizon": "weeks",
+          "option_ref": "OPT-C",
+          "order": 2,
+          "statement": "Documentation repaired before behaviour stabilises drifts again within one release, consuming the slot twice."
+        }
+      ],
+      "structured_payload_key": "effects"
+    }
+  ],
+  "option_set": [
+    {
+      "label": "Complete the Cognitive Routing Layer v0.1 vertical slice",
+      "option_id": "OPT-A",
+      "origin": "intake"
+    },
+    {
+      "label": "Package the assessment service for sale",
+      "option_id": "OPT-B",
+      "origin": "intake"
+    },
+    {
+      "label": "Reconcile repository documentation",
+      "option_id": "OPT-C",
+      "origin": "intake"
+    }
+  ],
+  "partial_execution": [],
+  "problem_statement": "Three candidate work items compete for the next build slot across the Operator Intelligence and Cognitive Routing Layer repositories, and only one can be started this week.",
+  "receipt_version": "0.1.0",
+  "recommendation": {
+    "kind": "RECOMMENDATION",
+    "option_id": "OPT-A",
+    "statement": "Recommend: Complete the Cognitive Routing Layer v0.1 vertical slice. OPT-A carries the highest evidence-weighted net score 2.25 among options meeting the PRIORITIZATION evidence threshold."
+  },
+  "recommendation_binding_hash": "3dfdde3530d6370b89890fce364179e0fda27fe49b7f350bc64d7ebf26de5f25",
+  "record_id": "RCP-RUN-2026-0001::OPT-A",
+  "review_requirements": [],
+  "risks": [
+    {
+      "affected_party": "Leverage Engine consumers",
+      "detection_signal": null,
+      "horizon": "weeks",
+      "reversible": null,
+      "risk_id": "SO-E1",
+      "source_operator": "second-order",
+      "statement": "Once receipts exist, the leverage ranking can cite reasoning coverage rather than asserting it, which changes what the adjacent subsystem is able to claim."
+    },
+    {
+      "affected_party": "prospective buyers",
+      "detection_signal": null,
+      "horizon": "quarters",
+      "reversible": null,
+      "risk_id": "SO-E2",
+      "source_operator": "second-order",
+      "statement": "Packaging before demand evidence exists creates a public claim that later evidence may contradict, which is expensive to retract."
+    },
+    {
+      "affected_party": "maintainers",
+      "detection_signal": null,
+      "horizon": "weeks",
+      "reversible": null,
+      "risk_id": "SO-E3",
+      "source_operator": "second-order",
+      "statement": "Documentation repaired before behaviour stabilises drifts again within one release, consuming the slot twice."
+    }
+  ],
+  "route": {
+    "operators": [
+      {
+        "activated_by": [],
+        "operator_id": "first-principles",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "first-principles is required for every PRIORITIZATION route by policy RCP-ROUTING-0.1.0. Purpose: Decompose the problem into primitives that are separately checkable, and label each primitive as verified fact, assumption, or unknown, so that every later conclusion rests on an inspectable base rather than on inherited framing.",
+        "stage": "FRAME"
+      },
+      {
+        "activated_by": [
+          "systemic_coupling"
+        ],
+        "operator_id": "systemic",
+        "operator_version": "0.1.0",
+        "selection_basis": "conditional",
+        "selection_rationale": "systemic was activated for this PRIORITIZATION route by signal(s) systemic_coupling.",
+        "stage": "FRAME"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "divergent",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "divergent is required for every PRIORITIZATION route by policy RCP-ROUTING-0.1.0. Purpose: Generate a set of materially distinct options, each with a stated mechanism, so that convergence has a real option space rather than a single pre-selected answer with decorations.",
+        "stage": "EXPLORE"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "critical",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "critical is required for every PRIORITIZATION route by policy RCP-ROUTING-0.1.0. Purpose: Attack the evidentiary support of claims already on the record and emit typed defects bound to specific targets, so that weak support is surfaced as structured findings rather than as a caveat sentence.",
+        "stage": "CHALLENGE"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "second-order",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "second-order is required for every PRIORITIZATION route by policy RCP-ROUTING-0.1.0. Purpose: Trace consequences past the immediate effect, so that the and-then-what step is recorded with a horizon and an affected party rather than left implicit.",
+        "stage": "FORECAST"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "convergent",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "convergent is required for every PRIORITIZATION route by policy RCP-ROUTING-0.1.0. Purpose: Reduce the option set to a single recommendation or to an explicit no-recommendation, by deterministic aggregation of evidence-weighted supporting and opposing claims.",
+        "stage": "DECIDE"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "metacognitive",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "metacognitive is required for every PRIORITIZATION route by policy RCP-ROUTING-0.1.0. Purpose: Audit the run itself rather than the problem.",
+        "stage": "AUDIT"
+      }
+    ],
+    "operators_deferred": [
+      {
+        "detail": "Requires a validated source-domain corpus and a structural-mapping check to avoid surface-similarity reasoning. Without a mapping validity test it degrades into decorative comparison, which is precisely the failure mode this system exists to prevent.",
+        "operator_id": "analogical",
+        "reason": "deferred to v0.2"
+      },
+      {
+        "detail": "Its value is reframing the problem statement, which conflicts with a v0.1 pipeline that treats the intake frame as fixed for the run. Enabling it requires a re-entrant router that can restart classification, which is a v0.2 routing change.",
+        "operator_id": "lateral",
+        "reason": "deferred to v0.2"
+      },
+      {
+        "detail": "Produces connections whose quality cannot yet be scored deterministically. Admitting unscoreable output into the evidence-weighted convergence would let unweighted material influence a decision.",
+        "operator_id": "associative",
+        "reason": "deferred to v0.2"
+      },
+      {
+        "detail": "Deliberately holds opposed propositions simultaneously, which the v0.1 contradiction gate is built to flag and route to REVIEW. Admitting it requires a contradiction taxonomy that distinguishes productive tension from unresolved conflict. That taxonomy is the v0.2 prerequisite.",
+        "operator_id": "janusian",
+        "reason": "deferred to v0.2"
+      }
+    ],
+    "operators_not_selected": [
+      {
+        "operator_id": "inverted",
+        "reason": "no activating signal fired",
+        "would_activate_on": [
+          "external_impact",
+          "irreversibility",
+          "permission_change",
+          "sensitive_data_scope"
+        ]
+      },
+      {
+        "operator_id": "abductive",
+        "reason": "no activating signal fired",
+        "would_activate_on": [
+          "unexplained_observation"
+        ]
+      }
+    ],
+    "route_depth": 7,
+    "route_supported": true,
+    "stage_sequence": [
+      {
+        "execution": "parallel_eligible",
+        "operators": [
+          "first-principles",
+          "systemic"
+        ],
+        "serialized_order": [
+          "first-principles",
+          "systemic"
+        ],
+        "stage": "FRAME"
+      },
+      {
+        "execution": "single",
+        "operators": [
+          "divergent"
+        ],
+        "serialized_order": [
+          "divergent"
+        ],
+        "stage": "EXPLORE"
+      },
+      {
+        "execution": "single",
+        "operators": [
+          "critical"
+        ],
+        "serialized_order": [
+          "critical"
+        ],
+        "stage": "CHALLENGE"
+      },
+      {
+        "execution": "single",
+        "operators": [
+          "second-order"
+        ],
+        "serialized_order": [
+          "second-order"
+        ],
+        "stage": "FORECAST"
+      },
+      {
+        "execution": "single",
+        "operators": [
+          "convergent"
+        ],
+        "serialized_order": [
+          "convergent"
+        ],
+        "stage": "DECIDE"
+      },
+      {
+        "execution": "single",
+        "operators": [
+          "metacognitive"
+        ],
+        "serialized_order": [
+          "metacognitive"
+        ],
+        "stage": "AUDIT"
+      }
+    ],
+    "task_class": "PRIORITIZATION"
+  },
+  "run_id": "RCP-RUN-2026-0001",
+  "run_timestamp": "2026-08-04T15:00:00Z",
+  "signals": [
+    "contested_options",
+    "systemic_coupling",
+    "time_bound"
+  ],
+  "stage_chain": [
+    {
+      "content_hash": "1ec6a695bf064cc2ec2105127471fe98a2c8411a9153994d7b086a899c0841d8",
+      "operator_id": "intake",
+      "operator_version": "0.1.0",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "record_hash": "9299bed18d50c0b82f0582d15e901071e440dc6d3012ed8ff197450c41893b6e",
+      "recorded_at": "2026-08-04T15:00:00Z",
+      "sequence": 0,
+      "stage": "INTAKE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "a659c3c09a63729a576e6d572a8381add2ec459487e3b0e07b1610a3a1f594c4",
+      "operator_id": "classifier",
+      "operator_version": "0.1.0",
+      "previous_hash": "9299bed18d50c0b82f0582d15e901071e440dc6d3012ed8ff197450c41893b6e",
+      "record_hash": "ed281ed54efb7931b9d01478c431ff522215065ae66afb7b6ec834f62a2ab878",
+      "recorded_at": "2026-08-04T15:00:00Z",
+      "sequence": 1,
+      "stage": "CLASSIFY",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "4088a6b28564077fd9e6a64ba8323873c79cb34933da8c1a8abe4c7c9fd5970a",
+      "operator_id": "router",
+      "operator_version": "0.1.0",
+      "previous_hash": "ed281ed54efb7931b9d01478c431ff522215065ae66afb7b6ec834f62a2ab878",
+      "record_hash": "2cfbe46566a756da28a05b87474cdcbc5a471a78ea12e86e61cc1229e32cb0b4",
+      "recorded_at": "2026-08-04T15:00:00Z",
+      "sequence": 2,
+      "stage": "ROUTE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "fa55518452996d8a4456f97e782d3017e2d8dbb7bd8b50f0d7950b0c624be43a",
+      "operator_id": "first-principles",
+      "operator_version": "0.1.0",
+      "previous_hash": "2cfbe46566a756da28a05b87474cdcbc5a471a78ea12e86e61cc1229e32cb0b4",
+      "record_hash": "d591348372d457a3e2a4b946cdaf0c7b58e671c6c690ad2d778aa2e2c3195781",
+      "recorded_at": "2026-08-04T15:00:00Z",
+      "sequence": 3,
+      "stage": "FRAME",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "7be9d94c12e87233a5c51f41bdf7ec14a32c25ced3af1c7dd8348cbf6cb8ee7e",
+      "operator_id": "systemic",
+      "operator_version": "0.1.0",
+      "previous_hash": "d591348372d457a3e2a4b946cdaf0c7b58e671c6c690ad2d778aa2e2c3195781",
+      "record_hash": "dbb24c41b6c275abba55f1344d545d80df6a9a8c5c22536b7c1bd27fae5a1ac8",
+      "recorded_at": "2026-08-04T15:00:00Z",
+      "sequence": 4,
+      "stage": "FRAME",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "08cf6b259ded2f1b78ff1b357b6d2552fcbbf802bd41120a2deb5dfec63c9c9f",
+      "operator_id": "divergent",
+      "operator_version": "0.1.0",
+      "previous_hash": "dbb24c41b6c275abba55f1344d545d80df6a9a8c5c22536b7c1bd27fae5a1ac8",
+      "record_hash": "c47328b4fccc1fc6a407cfc4ed586ad5bad9dd27b9f31016123bb4507fc6eadf",
+      "recorded_at": "2026-08-04T15:00:00Z",
+      "sequence": 5,
+      "stage": "EXPLORE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "b1d3de20b907640103c53023fefcd1cd26d744ffc5417be477e1a9044802d563",
+      "operator_id": "critical",
+      "operator_version": "0.1.0",
+      "previous_hash": "c47328b4fccc1fc6a407cfc4ed586ad5bad9dd27b9f31016123bb4507fc6eadf",
+      "record_hash": "251caeccb1317460211a97c8e1a8b82ca0c3d2894b98b4115be57d3d0beff180",
+      "recorded_at": "2026-08-04T15:00:00Z",
+      "sequence": 6,
+      "stage": "CHALLENGE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "bd535893df09a3540d1c980f42e9b9df8e739e60bed21bc83f85852aaa8cab9d",
+      "operator_id": "second-order",
+      "operator_version": "0.1.0",
+      "previous_hash": "251caeccb1317460211a97c8e1a8b82ca0c3d2894b98b4115be57d3d0beff180",
+      "record_hash": "4788bc87f30231f41ba5e02b30af6a3adcb7327ecada62f2347b0c56d2a58d54",
+      "recorded_at": "2026-08-04T15:00:00Z",
+      "sequence": 7,
+      "stage": "FORECAST",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "6fcf77231a158768662c31dc05ea383f52360e7289d6689d5153dd3ae3e72836",
+      "operator_id": "convergent",
+      "operator_version": "0.1.0",
+      "previous_hash": "4788bc87f30231f41ba5e02b30af6a3adcb7327ecada62f2347b0c56d2a58d54",
+      "record_hash": "c3f903e40844363d70579bf6a6136ac4528ac6ad27f2f4b79b6645cca8a627b2",
+      "recorded_at": "2026-08-04T15:00:00Z",
+      "sequence": 8,
+      "stage": "DECIDE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "e7f6347517cd85d513faf189b8ffe3f304eab59ec96499683195f9093c66405e",
+      "operator_id": "metacognitive",
+      "operator_version": "0.1.0",
+      "previous_hash": "c3f903e40844363d70579bf6a6136ac4528ac6ad27f2f4b79b6645cca8a627b2",
+      "record_hash": "e6101cd5d9285ddd5b147faf12eeff08b5468f78a4f5da5d8aa341f96d93821a",
+      "recorded_at": "2026-08-04T15:00:00Z",
+      "sequence": 9,
+      "stage": "AUDIT",
+      "status": "COMPLETE"
+    }
+  ],
+  "stage_chain_head": "e6101cd5d9285ddd5b147faf12eeff08b5468f78a4f5da5d8aa341f96d93821a",
+  "versions": {
+    "operator_registry_id": "RCP-OPERATORS-0.1.0",
+    "operator_registry_sha256": "0666a034739ee1b18f5470d911c07341b495747d7dbdc4b98a7fc99132257637",
+    "operator_registry_version": "0.1.0",
+    "policy_id": "RCP-ROUTING-0.1.0",
+    "policy_version": "0.1.0",
+    "routing_policy_sha256": "098e8bc21de5b1b5eece1dc1daec44b2e6da84577be1363a5908e924bf60b265"
+  }
+}

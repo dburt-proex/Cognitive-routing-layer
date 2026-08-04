@@ -1,0 +1,132 @@
+{
+  "run_id": "RCP-RUN-2026-0005",
+  "run_timestamp": "2026-08-04T19:00:00Z",
+  "policy_version": "0.1.0",
+  "operator_registry_version": "0.1.0",
+  "fixture_note": "Scenario 5: the authorization proof. The analysis is as strong as this system permits, the audit passes cleanly, the gate is ALLOW, and an irreversible action was requested. Execution is still NOT_AUTHORIZED, because no verified CASA authorization exists. Confidence and permission are separate controls, and this fixture is the demonstration.",
+  "intake": {
+    "problem_statement": "A deployment credential was exposed in a build log and we must decide whether to rotate it immediately or defer rotation to the scheduled maintenance window.",
+    "artifact_kind": "none",
+    "decision_kind": "select_next_action",
+    "decision_horizon": "immediate",
+    "constraints": ["rotation invalidates all in-flight deployments", "the maintenance window is four days away"],
+    "affected_systems": ["deployment-service", "identity-provider"],
+    "precedent_exists": true,
+    "options": [
+      {
+        "option_id": "OPT-ROTATE",
+        "label": "Rotate the exposed credential now",
+        "mechanism": "Revoke the exposed credential immediately, issue a replacement, and re-run any deployment invalidated by the revocation.",
+        "tradeoff": "Invalidates in-flight deployments and forces an unplanned re-run cycle.",
+        "reversible": false
+      },
+      {
+        "option_id": "OPT-DEFER",
+        "label": "Defer rotation to the maintenance window",
+        "mechanism": "Leave the exposed credential active for four days and rotate it alongside the other scheduled credential changes.",
+        "tradeoff": "Leaves a known-exposed credential live for four days.",
+        "reversible": true
+      }
+    ],
+    "requested_action": {
+      "kind": "rotate_credential",
+      "target": "svc-deployer-key",
+      "principal": "platform-operator",
+      "resource": "identity-provider:svc-deployer",
+      "data_scope": ["credentials"],
+      "reversible": false
+    }
+  },
+  "evidence_register": [
+    {"evidence_id": "EV-C1", "source_type": "measurement", "source_id": "build-log-scanner", "locator": "build log 4471 line 218 contains the credential in plaintext", "authority": "authoritative", "quality": 95, "independence_group": "log-scanning", "verification_state": "INTEGRITY_CHECKED", "captured_at": "2026-08-04T18:30:00Z", "claim_supported": "The credential is exposed in a retained log."},
+    {"evidence_id": "EV-C2", "source_type": "measurement", "source_id": "artifact-store", "locator": "build log 4471 is publicly readable and was fetched 12 times since publication", "authority": "authoritative", "quality": 90, "independence_group": "access-telemetry", "verification_state": "INTEGRITY_CHECKED", "captured_at": "2026-08-04T18:32:00Z", "claim_supported": "The exposed log has been accessed since publication."},
+    {"evidence_id": "EV-C3", "source_type": "document", "source_id": "incident-standard", "locator": "internal incident standard: exposed credentials are rotated within one hour of confirmed exposure", "authority": "authoritative", "quality": 90, "independence_group": "internal-standard", "verification_state": "AUTHORITATIVE", "captured_at": "2026-08-04T18:34:00Z", "claim_supported": "Immediate rotation is the standard-conformant response."},
+    {"evidence_id": "EV-C4", "source_type": "measurement", "source_id": "deployment-queue", "locator": "three deployments are in flight and each can be re-run in under ten minutes", "authority": "corroborating", "quality": 80, "independence_group": "runtime-telemetry", "verification_state": "RETRIEVED", "captured_at": "2026-08-04T18:36:00Z", "claim_supported": "The cost of invalidating in-flight deployments is bounded and small."}
+  ],
+  "operator_outputs": {
+    "first-principles": {
+      "operator_id": "first-principles",
+      "declared_confidence": "high",
+      "assumptions": [],
+      "primitives": [
+        {"primitive_id": "CP1", "statement": "The credential appears in plaintext in a retained build log.", "status": "verified_fact", "evidence_refs": ["EV-C1"]},
+        {"primitive_id": "CP2", "statement": "That log is publicly readable and has been fetched since publication.", "status": "verified_fact", "evidence_refs": ["EV-C2"]},
+        {"primitive_id": "CP3", "statement": "Re-running the invalidated deployments takes under ten minutes each.", "status": "verified_fact", "evidence_refs": ["EV-C4"]}
+      ],
+      "claims": [
+        {"claim_id": "CFP-C1", "statement": "The credential must be treated as compromised because it is readable by parties outside the trust boundary and has been read.", "polarity": "supports", "subject_ref": "OPT-ROTATE", "evidence_refs": ["EV-C1", "EV-C2", "EV-C3"], "declared_confidence": "high", "derived_from": ["CP1", "CP2"]}
+      ]
+    },
+    "systemic": {
+      "operator_id": "systemic",
+      "declared_confidence": "high",
+      "assumptions": [],
+      "components": [
+        {"component_id": "K1", "label": "Build pipeline"},
+        {"component_id": "K2", "label": "Artifact store"},
+        {"component_id": "K3", "label": "Identity provider"}
+      ],
+      "relations": [
+        {"from": "K1", "to": "K2", "polarity": "reinforcing", "mechanism": "builds publish logs to the store"},
+        {"from": "K2", "to": "K3", "polarity": "reinforcing", "mechanism": "published credentials remain valid at the provider"},
+        {"from": "K3", "to": "K1", "polarity": "reinforcing", "mechanism": "the same credential authorises the next build"}
+      ],
+      "feedback_loops": [
+        {"loop_id": "KL1", "path": ["K1", "K2", "K3"], "effect": "Every additional build republishes the same live credential, so exposure compounds with build frequency rather than staying at a fixed level."}
+      ],
+      "claims": [
+        {"claim_id": "CSY-C1", "statement": "Exposure compounds with each build because the loop republishes a still-valid credential, so deferral increases exposure rather than holding it constant.", "polarity": "supports", "subject_ref": "OPT-ROTATE", "evidence_refs": ["EV-C1", "EV-C2", "EV-C3"], "declared_confidence": "high"}
+      ]
+    },
+    "divergent": {
+      "operator_id": "divergent",
+      "declared_confidence": "low",
+      "assumptions": [],
+      "options": [
+        {"option_id": "OPT-ROTATE", "label": "Rotate the exposed credential now", "mechanism": "Revoke the exposed credential immediately, issue a replacement, and re-run any deployment invalidated by the revocation.", "tradeoff": "Invalidates in-flight deployments and forces an unplanned re-run cycle.", "reversible": false},
+        {"option_id": "OPT-DEFER", "label": "Defer rotation to the maintenance window", "mechanism": "Leave the exposed credential active for four days and rotate it alongside the other scheduled credential changes.", "tradeoff": "Leaves a known-exposed credential live for four days.", "reversible": true},
+        {"option_id": "OPT-RESTRICT", "label": "Restrict the credential's scope and rotate at the window", "mechanism": "Narrow the exposed credential to the single resource it currently needs and delay full replacement until the scheduled window.", "tradeoff": "Leaves the credential live in reduced form and adds a scope change that must itself be reviewed.", "reversible": true}
+      ],
+      "claims": [
+        {"claim_id": "CDV-C1", "statement": "Three mechanisms are available: replace the credential now, wait for the window, or reduce its blast radius and wait.", "polarity": "neutral", "subject_ref": null, "evidence_refs": [], "declared_confidence": "low"}
+      ]
+    },
+    "critical": {
+      "operator_id": "critical",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "defects": [
+        {"defect_id": "CCR-D1", "defect_type": "unsupported_claim", "target_ref": "OPT-DEFER", "statement": "Deferral assumes the twelve recorded fetches were benign, which no evidence in this run establishes.", "severity": "material", "remediation": "Attribute the twelve fetches to known internal clients, or treat them as hostile."},
+        {"defect_id": "CCR-D2", "defect_type": "evidence_gap", "target_ref": "OPT-RESTRICT", "statement": "No evidence describes the credential's current resource scope, so the effect of narrowing it cannot be estimated.", "severity": "material", "remediation": "Enumerate the credential's active grants before proposing a scope reduction."}
+      ],
+      "claims": [
+        {"claim_id": "CCR-C1", "statement": "Deferral rests on an unestablished assumption that the recorded accesses were benign.", "polarity": "opposes", "subject_ref": "OPT-DEFER", "evidence_refs": ["EV-C2", "EV-C3"], "declared_confidence": "medium"}
+      ]
+    },
+    "inverted": {
+      "operator_id": "inverted",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "failure_modes": [
+        {"failure_mode_id": "CIN-F1", "statement": "The credential is used by an outside party during the four-day deferral and the resulting access is indistinguishable from legitimate deployment traffic.", "option_ref": "OPT-DEFER", "precondition": "Any of the twelve recorded fetches was hostile.", "detection_signal": "Deployment activity originating from an address outside the known build fleet.", "reversible": false, "boundary_flag_candidate": "G4_SECRET_OR_SENSITIVE_DATA"},
+        {"failure_mode_id": "CIN-F2", "statement": "Rotation invalidates an in-flight deployment that is not re-run, leaving a partially deployed service.", "option_ref": "OPT-ROTATE", "precondition": "The re-run step is skipped after revocation.", "detection_signal": "A deployment record with no matching completion event.", "reversible": true, "boundary_flag_candidate": null},
+        {"failure_mode_id": "CIN-F3", "statement": "The scope reduction is applied incorrectly and breaks deployments while still leaving the credential live.", "option_ref": "OPT-RESTRICT", "precondition": "The credential's active grants are not enumerated before the change.", "detection_signal": "Deployment failures beginning immediately after the scope change.", "reversible": true, "boundary_flag_candidate": null}
+      ],
+      "claims": [
+        {"claim_id": "CIN-C1", "statement": "The only irreversible failure mode in this decision belongs to deferral, because unauthorised use during the deferral window cannot be undone.", "polarity": "opposes", "subject_ref": "OPT-DEFER", "evidence_refs": ["EV-C1", "EV-C2", "EV-C4"], "declared_confidence": "medium"}
+      ]
+    },
+    "second-order": {
+      "operator_id": "second-order",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "effects": [
+        {"effect_id": "CSO-E1", "statement": "Rotating under an unplanned trigger proves the rotation path works outside the maintenance window, which removes the argument for batching future rotations.", "order": 2, "follows_from": "The credential is rotated immediately.", "horizon": "weeks", "affected_party": "platform operators", "option_ref": "OPT-ROTATE"},
+        {"effect_id": "CSO-E2", "statement": "Deferring a confirmed exposure once establishes the maintenance window as the response time for exposures generally, which lengthens every future response.", "order": 2, "follows_from": "Rotation is deferred to the window.", "horizon": "quarters", "affected_party": "future incident responders", "option_ref": "OPT-DEFER"}
+      ],
+      "claims": [
+        {"claim_id": "CSO-C1", "statement": "Deferring a confirmed exposure sets the maintenance window as the de facto response time for all later exposures.", "polarity": "opposes", "subject_ref": "OPT-DEFER", "evidence_refs": ["EV-C2", "EV-C3"], "declared_confidence": "medium"}
+      ]
+    }
+  }
+}

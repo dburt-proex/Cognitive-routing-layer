@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "problem-intake.schema.json",
+  "title": "Reasoning Control Plane Problem Intake",
+  "description": "The enforced intake boundary. Determinism begins here: classification is computed from these fields, so an unknown or malformed field fails the run rather than silently changing the route.",
+  "type": "object",
+  "required": ["problem_statement", "artifact_kind", "decision_kind", "decision_horizon"],
+  "properties": {
+    "problem_statement": {"type": "string", "minLength": 20},
+    "artifact_kind": {"enum": ["code_change", "proposal", "policy", "control_design", "system_design", "none"]},
+    "decision_kind": {"enum": ["select_next_action", "evaluate_proposal", "explain_observation", "design_system", "position_strategy", "assess_change"]},
+    "decision_horizon": {"enum": ["immediate", "days", "weeks", "quarters", "years"]},
+    "constraints": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["option_id", "label", "mechanism", "tradeoff", "reversible"],
+        "properties": {
+          "option_id": {"type": "string", "pattern": "^OPT-[A-Za-z0-9-]+$"},
+          "label": {"type": "string", "minLength": 1},
+          "mechanism": {"type": "string", "minLength": 10},
+          "tradeoff": {"type": "string", "minLength": 5},
+          "reversible": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["observation_id", "statement", "explained"],
+        "properties": {
+          "observation_id": {"type": "string", "pattern": "^OBS-[A-Za-z0-9-]+$"},
+          "statement": {"type": "string", "minLength": 5},
+          "explained": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "data_scope": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "permission_delta": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "external_parties": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "affected_systems": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "stakeholder_positions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["party", "position"],
+        "properties": {
+          "party": {"type": "string", "minLength": 1},
+          "position": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "known_evidence_gaps": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "deadline": {"type": ["string", "null"], "format": "date-time"},
+    "precedent_exists": {"type": "boolean"},
+    "precedent_setting": {"type": "boolean"},
+    "proposed_classification": {"type": ["string", "null"]},
+    "requested_action": {
+      "type": ["object", "null"],
+      "required": ["kind", "target", "principal", "resource", "reversible"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "target": {"type": "string", "minLength": 1},
+        "principal": {"type": "string", "minLength": 1},
+        "resource": {"type": "string", "minLength": 1},
+        "data_scope": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "reversible": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

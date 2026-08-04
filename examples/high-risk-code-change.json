@@ -1,0 +1,1123 @@
+{
+  "assumptions": [
+    {
+      "assumption": "The handler's stated data requirements are complete.",
+      "operator_id": "first-principles",
+      "treated_as": "missing_evidence"
+    },
+    {
+      "assumption": "The identity provider can issue short-lived credentials without a new integration.",
+      "operator_id": "systemic",
+      "treated_as": "missing_evidence"
+    },
+    {
+      "assumption": "Rejecting the change outright is out of scope for this review.",
+      "operator_id": "divergent",
+      "treated_as": "missing_evidence"
+    },
+    {
+      "assumption": "The release cadence stays weekly.",
+      "operator_id": "second-order",
+      "treated_as": "missing_evidence"
+    }
+  ],
+  "authorization": {
+    "authorization_id": null,
+    "checks": [],
+    "derived_from_confidence": false,
+    "issuer": null,
+    "nonce": null,
+    "reason": "an action was requested and no CASA authorization object was supplied",
+    "status": "PENDING_CASA",
+    "verifier": "unavailable",
+    "verifier_is_authentic": false
+  },
+  "classification": {
+    "activated_rule_id": "CL-1",
+    "caller_proposal_honored": false,
+    "caller_proposal_mismatch": false,
+    "caller_proposed_classification": null,
+    "classification_policy_id": "RCP-ROUTING-0.1.0",
+    "classification_policy_version": "0.1.0",
+    "classification_source": "computed",
+    "deterministic_basis": "ordered first-match over classification_rules against normalized intake",
+    "manual_override": null,
+    "manual_override_owner": null,
+    "manual_override_reason": null,
+    "rejected_classifications": [],
+    "task_class": "CHANGE_RISK"
+  },
+  "confidence_by_operator": [
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "high",
+      "effective_confidence": 1.0,
+      "operator_id": "first-principles"
+    },
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "medium",
+      "effective_confidence": 0.75,
+      "operator_id": "systemic"
+    },
+    {
+      "contributes_to_decision_confidence": false,
+      "declared_confidence": "low",
+      "effective_confidence": 0.0,
+      "operator_id": "divergent"
+    },
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "medium",
+      "effective_confidence": 0.75,
+      "operator_id": "critical"
+    },
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "medium",
+      "effective_confidence": 0.75,
+      "operator_id": "inverted"
+    },
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "medium",
+      "effective_confidence": 0.75,
+      "operator_id": "second-order"
+    },
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "derived",
+      "effective_confidence": 0.583333,
+      "operator_id": "convergent"
+    }
+  ],
+  "contradictions": [
+    {
+      "contradiction_id": "RCP-CON-DFP-C1-DCR-C1",
+      "detection_method": "Two claims contradict when they address the same subject_ref with opposing polarity. Detection is structural, not semantic.",
+      "disposition": "unresolved",
+      "disposition_owner": null,
+      "opposing_claim_id": "DCR-C1",
+      "opposing_confidence": 0.75,
+      "opposing_operator": "critical",
+      "severity": "material",
+      "subject_ref": "OPT-SCOPED",
+      "supporting_claim_id": "DFP-C1",
+      "supporting_confidence": 1.0,
+      "supporting_operator": "first-principles"
+    },
+    {
+      "contradiction_id": "RCP-CON-DSO-C1-DCR-C1",
+      "detection_method": "Two claims contradict when they address the same subject_ref with opposing polarity. Detection is structural, not semantic.",
+      "disposition": "unresolved",
+      "disposition_owner": null,
+      "opposing_claim_id": "DCR-C1",
+      "opposing_confidence": 0.75,
+      "opposing_operator": "critical",
+      "severity": "material",
+      "subject_ref": "OPT-SCOPED",
+      "supporting_claim_id": "DSO-C1",
+      "supporting_confidence": 0.75,
+      "supporting_operator": "second-order"
+    },
+    {
+      "contradiction_id": "RCP-CON-DSY-C1-DCR-C1",
+      "detection_method": "Two claims contradict when they address the same subject_ref with opposing polarity. Detection is structural, not semantic.",
+      "disposition": "unresolved",
+      "disposition_owner": null,
+      "opposing_claim_id": "DCR-C1",
+      "opposing_confidence": 0.75,
+      "opposing_operator": "critical",
+      "severity": "material",
+      "subject_ref": "OPT-SCOPED",
+      "supporting_claim_id": "DSY-C1",
+      "supporting_confidence": 0.75,
+      "supporting_operator": "systemic"
+    }
+  ],
+  "convergence": {
+    "decision_confidence": 0.583333,
+    "decision_confidence_basis": "min(mean supporting claim confidence 0.833333, evidence ceiling 1.0) less contradiction penalty 0.25",
+    "decision_confidence_label": "uncalibrated_decision_support_score",
+    "ranking": [
+      {
+        "contradiction_penalty": 0.25,
+        "distinct_evidence": 5,
+        "evidence_refs": [
+          "EV-D2",
+          "EV-D3",
+          "EV-D4",
+          "EV-D5",
+          "EV-D6"
+        ],
+        "evidence_sufficient": true,
+        "independent_groups": 5,
+        "label": "Merge with a request-scoped short-lived credential",
+        "mean_evidence_quality": 80.9091,
+        "net": 1.5,
+        "opposing_claims": [
+          "DCR-C1"
+        ],
+        "opposition": 0.75,
+        "option_id": "OPT-SCOPED",
+        "support": 2.5,
+        "supporting_claims": [
+          "DFP-C1",
+          "DSO-C1",
+          "DSY-C1"
+        ],
+        "unmet_thresholds": [],
+        "verified_evidence": 7
+      },
+      {
+        "contradiction_penalty": 0.0,
+        "distinct_evidence": 3,
+        "evidence_refs": [
+          "EV-D2",
+          "EV-D4",
+          "EV-D5"
+        ],
+        "evidence_sufficient": true,
+        "independent_groups": 3,
+        "label": "Merge the change as submitted",
+        "mean_evidence_quality": 85.0,
+        "net": -1.5,
+        "opposing_claims": [
+          "DCR-C2",
+          "DIN-C1"
+        ],
+        "opposition": 1.5,
+        "option_id": "OPT-MERGE",
+        "support": 0.0,
+        "supporting_claims": [],
+        "unmet_thresholds": [],
+        "verified_evidence": 3
+      },
+      {
+        "contradiction_penalty": 0.0,
+        "distinct_evidence": 0,
+        "evidence_refs": [],
+        "evidence_sufficient": false,
+        "independent_groups": 0,
+        "label": "Split the change and ship the handler alone",
+        "mean_evidence_quality": 0.0,
+        "net": 0.0,
+        "opposing_claims": [],
+        "opposition": 0.0,
+        "option_id": "OPT-SPLIT",
+        "support": 0.0,
+        "supporting_claims": [],
+        "unmet_thresholds": [
+          "requires 3 distinct evidence records, resolved 0",
+          "requires 2 independent sources, resolved 0",
+          "no evidence resolved for this option",
+          "task class requires at least one INTEGRITY_CHECKED or AUTHORITATIVE evidence record"
+        ],
+        "verified_evidence": 0
+      }
+    ],
+    "rejected_alternatives": [
+      {
+        "option_id": "OPT-MERGE",
+        "reason": "lower evidence-weighted net score (-1.5) than the selection"
+      },
+      {
+        "option_id": "OPT-SPLIT",
+        "reason": "requires 3 distinct evidence records, resolved 0; requires 2 independent sources, resolved 0; no evidence resolved for this option; task class requires at least one INTEGRITY_CHECKED or AUTHORITATIVE evidence record"
+      }
+    ],
+    "selected_option_id": "OPT-SCOPED",
+    "selection_reason": "OPT-SCOPED carries the highest evidence-weighted net score 1.5 among options meeting the CHANGE_RISK evidence threshold",
+    "thresholds_applied": {
+      "min_distinct_evidence_per_option": 3,
+      "min_independent_sources_per_option": 2,
+      "minimum_evidence_quality": 70,
+      "require_verified_evidence": true
+    },
+    "tie_candidates": []
+  },
+  "evidence_used": [
+    {
+      "authority": "authoritative",
+      "evidence_id": "EV-D1",
+      "independence_group": "ci-execution",
+      "quality": 85,
+      "source_type": "test_result",
+      "untrusted_instruction_detected": false,
+      "verification_state": "INTEGRITY_CHECKED"
+    },
+    {
+      "authority": "authoritative",
+      "evidence_id": "EV-D2",
+      "independence_group": "static-analysis",
+      "quality": 90,
+      "source_type": "repository",
+      "untrusted_instruction_detected": false,
+      "verification_state": "INTEGRITY_CHECKED"
+    },
+    {
+      "authority": "authoritative",
+      "evidence_id": "EV-D3",
+      "independence_group": "human-review",
+      "quality": 80,
+      "source_type": "human_attestation",
+      "untrusted_instruction_detected": false,
+      "verification_state": "AUTHORITATIVE"
+    },
+    {
+      "authority": "corroborating",
+      "evidence_id": "EV-D4",
+      "independence_group": "runtime-telemetry",
+      "quality": 75,
+      "source_type": "measurement",
+      "untrusted_instruction_detected": false,
+      "verification_state": "RETRIEVED"
+    },
+    {
+      "authority": "authoritative",
+      "evidence_id": "EV-D5",
+      "independence_group": "internal-standard",
+      "quality": 85,
+      "source_type": "document",
+      "untrusted_instruction_detected": false,
+      "verification_state": "AUTHORITATIVE"
+    },
+    {
+      "authority": "corroborating",
+      "evidence_id": "EV-D6",
+      "independence_group": "operational-record",
+      "quality": 70,
+      "source_type": "measurement",
+      "untrusted_instruction_detected": false,
+      "verification_state": "RETRIEVED"
+    }
+  ],
+  "execution": {
+    "authorization_status": "PENDING_CASA",
+    "composition_rule": "confidence never grants permission; authorization never cures insufficient evidence",
+    "execution_authorized": false,
+    "execution_outcome": "REVIEW",
+    "recommendation_eligible": false
+  },
+  "gate": {
+    "allow_semantics": "ALLOW means the recommendation is eligible for human review. It is not an authorization to act and never has been. Vocabulary matches CASA, DiffWall, and the Leverage Engine.",
+    "confidence_threshold_applied": 0.75,
+    "gate_reasons": [
+      {
+        "detail": "metacognitive audit failed with 3 material findings",
+        "gate": "REVIEW",
+        "reason_code": "RCP-GATE-AUDIT-FAIL"
+      },
+      {
+        "detail": "3 unresolved material contradiction(s)",
+        "gate": "REVIEW",
+        "reason_code": "RCP-GATE-CONTRADICTION-UNRESOLVED"
+      },
+      {
+        "detail": "decision confidence 0.583333 is below the required 0.75",
+        "gate": "REVIEW",
+        "reason_code": "RCP-GATE-CONFIDENCE-BELOW-THRESHOLD"
+      }
+    ],
+    "gate_result": "REVIEW",
+    "high_impact_route": true
+  },
+  "ledger_receipt": {
+    "appended": false,
+    "persisted": false,
+    "record_id": "RCP-RUN-2026-0003::OPT-SCOPED",
+    "sha256": "4e5ac38b1952647adb74a4bb4e735efbc025ebda7be9d218cb53d42c3d31451b"
+  },
+  "metacognitive_audit": {
+    "audit_result": "FAIL",
+    "coverage": {
+      "claims_evaluated": 7,
+      "contradiction_detection_method": "structural: same subject_ref, opposing polarity",
+      "contradictions_detected": 3,
+      "coverage_is_not_confidence": true,
+      "executed_operators": [
+        "convergent",
+        "critical",
+        "divergent",
+        "first-principles",
+        "inverted",
+        "second-order",
+        "systemic"
+      ],
+      "missing_evidence_items": 8,
+      "missing_operators": [],
+      "planned_operators": [
+        "convergent",
+        "critical",
+        "divergent",
+        "first-principles",
+        "inverted",
+        "second-order",
+        "systemic"
+      ],
+      "route_depth": 7,
+      "stages_covered": [
+        "CHALLENGE",
+        "CLASSIFY",
+        "DECIDE",
+        "EXPLORE",
+        "FORECAST",
+        "FRAME",
+        "INTAKE",
+        "ROUTE"
+      ]
+    },
+    "declared_confidence": "high",
+    "findings": [
+      {
+        "detail": "RCP-CON-DFP-C1-DCR-C1 is a material contradiction left unresolved",
+        "finding_id": "MC-F4",
+        "phase": "REFLECT",
+        "severity": "material"
+      },
+      {
+        "detail": "RCP-CON-DSO-C1-DCR-C1 is a material contradiction left unresolved",
+        "finding_id": "MC-F4",
+        "phase": "REFLECT",
+        "severity": "material"
+      },
+      {
+        "detail": "RCP-CON-DSY-C1-DCR-C1 is a material contradiction left unresolved",
+        "finding_id": "MC-F4",
+        "phase": "REFLECT",
+        "severity": "material"
+      },
+      {
+        "detail": "OPT-SPLIT: requires 3 distinct evidence records, resolved 0",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "OPT-SPLIT: requires 2 independent sources, resolved 0",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "OPT-SPLIT: no evidence resolved for this option",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "OPT-SPLIT: task class requires at least one INTEGRITY_CHECKED or AUTHORITATIVE evidence record",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "first-principles assumed without evidence: The handler's stated data requirements are complete.",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "systemic assumed without evidence: The identity provider can issue short-lived credentials without a new integration.",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "divergent assumed without evidence: Rejecting the change outright is out of scope for this review.",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "second-order assumed without evidence: The release cadence stays weekly.",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      }
+    ],
+    "material_finding_count": 3,
+    "operator_id": "metacognitive",
+    "phases": [
+      {
+        "checked": "the executed route matches the route the policy selected",
+        "phase": "PLAN"
+      },
+      {
+        "checked": "operator contracts were satisfied and the stage chain is intact",
+        "phase": "MONITOR"
+      },
+      {
+        "checked": "no claim outranks its evidence and thresholds were applied",
+        "phase": "EVALUATE"
+      },
+      {
+        "checked": "contradictions are dispositioned, gaps enumerated, authorization not derived from confidence",
+        "phase": "REFLECT"
+      }
+    ],
+    "stage_chain_head": "f9aa955d9781f58033748e16ea301ce8801ff40e9ad85056bb64e37823b1ce93"
+  },
+  "missing_evidence": [
+    {
+      "detail": "OPT-SPLIT: requires 3 distinct evidence records, resolved 0",
+      "kind": "evidence_threshold",
+      "subject_ref": "OPT-SPLIT"
+    },
+    {
+      "detail": "OPT-SPLIT: requires 2 independent sources, resolved 0",
+      "kind": "evidence_threshold",
+      "subject_ref": "OPT-SPLIT"
+    },
+    {
+      "detail": "OPT-SPLIT: no evidence resolved for this option",
+      "kind": "evidence_threshold",
+      "subject_ref": "OPT-SPLIT"
+    },
+    {
+      "detail": "OPT-SPLIT: task class requires at least one INTEGRITY_CHECKED or AUTHORITATIVE evidence record",
+      "kind": "evidence_threshold",
+      "subject_ref": "OPT-SPLIT"
+    },
+    {
+      "detail": "first-principles assumed without evidence: The handler's stated data requirements are complete.",
+      "kind": "undischarged_assumption",
+      "subject_ref": "first-principles"
+    },
+    {
+      "detail": "systemic assumed without evidence: The identity provider can issue short-lived credentials without a new integration.",
+      "kind": "undischarged_assumption",
+      "subject_ref": "systemic"
+    },
+    {
+      "detail": "divergent assumed without evidence: Rejecting the change outright is out of scope for this review.",
+      "kind": "undischarged_assumption",
+      "subject_ref": "divergent"
+    },
+    {
+      "detail": "second-order assumed without evidence: The release cadence stays weekly.",
+      "kind": "undischarged_assumption",
+      "subject_ref": "second-order"
+    }
+  ],
+  "next_action": "Route to the decision owner with the missing-evidence and contradiction lists before any action.",
+  "normalized_intake_hash": "35fada51ac2f755b50ac79aae13757fe843ab1d67cfd1fd2ce06e162548586cf",
+  "operator_conclusions": [
+    {
+      "conclusions": [
+        "The write scope in the change is not required by any behaviour the change introduces, so a request-scoped credential satisfies the same functional requirement."
+      ],
+      "contract_violations": [],
+      "operator_id": "first-principles",
+      "operator_version": "0.1.0",
+      "selection_basis": "required",
+      "selection_rationale": "first-principles is required for every CHANGE_RISK route by policy RCP-ROUTING-0.1.0. Purpose: Decompose the problem into primitives that are separately checkable, and label each primitive as verified fact, assumption, or unknown, so that every later conclusion rests on an inspectable base rather than on inherited framing.",
+      "stage": "FRAME",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "evidence_refs": [
+            "EV-D2"
+          ],
+          "primitive_id": "DP1",
+          "statement": "The handler needs to read a configuration value backed by a secrets store.",
+          "status": "verified_fact"
+        },
+        {
+          "evidence_refs": [
+            "EV-D3"
+          ],
+          "primitive_id": "DP2",
+          "statement": "The handler does not itself perform any write to the deployment target.",
+          "status": "verified_fact"
+        },
+        {
+          "evidence_refs": [
+            "EV-D4"
+          ],
+          "primitive_id": "DP3",
+          "statement": "The existing service credential has no expiry.",
+          "status": "verified_fact"
+        },
+        {
+          "evidence_refs": [],
+          "primitive_id": "DP4",
+          "statement": "Whether any other consumer depends on the standing write scope is unknown.",
+          "status": "unknown"
+        }
+      ],
+      "structured_payload_key": "primitives"
+    },
+    {
+      "conclusions": [
+        "A standing scope propagates through the records store into a downstream consumer before the balancing path can react, so scope duration is the control point rather than scope correctness."
+      ],
+      "contract_violations": [],
+      "operator_id": "systemic",
+      "operator_version": "0.1.0",
+      "selection_basis": "required",
+      "selection_rationale": "systemic is required for every CHANGE_RISK route by policy RCP-ROUTING-0.1.0. Purpose: Map the components, the directed relations between them, and at least one feedback loop, so that effects propagating through the system are visible before an option is chosen.",
+      "stage": "FRAME",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "component_id": "D1",
+          "label": "Deployment service"
+        },
+        {
+          "component_id": "D2",
+          "label": "Identity provider"
+        },
+        {
+          "component_id": "D3",
+          "label": "Customer records store"
+        },
+        {
+          "component_id": "D4",
+          "label": "Billing consumer"
+        }
+      ],
+      "structured_payload_key": "components"
+    },
+    {
+      "conclusions": [
+        "Three mechanisms are available: accept the standing grant, bound the grant in time, or separate the permission change from the functional change."
+      ],
+      "contract_violations": [],
+      "operator_id": "divergent",
+      "operator_version": "0.1.0",
+      "selection_basis": "conditional",
+      "selection_rationale": "divergent was activated for this CHANGE_RISK route by signal(s) contested_options.",
+      "stage": "EXPLORE",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "label": "Merge the change as submitted",
+          "mechanism": "Accept the widened service account scope and the new configuration handler exactly as written and release inside the current window.",
+          "option_id": "OPT-MERGE",
+          "reversible": false,
+          "tradeoff": "Grants a standing write and secrets-read scope that no rollback removes automatically."
+        },
+        {
+          "label": "Merge with a request-scoped short-lived credential",
+          "mechanism": "Replace the standing grant with a credential issued per deployment request and expiring at the end of it, keeping the handler otherwise unchanged.",
+          "option_id": "OPT-SCOPED",
+          "reversible": true,
+          "tradeoff": "Adds a credential-issuance dependency to every deployment and costs one extra release cycle to implement."
+        },
+        {
+          "label": "Split the change and ship the handler alone",
+          "mechanism": "Land only the configuration handler behind a feature flag and defer every permission modification to a separate reviewed change.",
+          "option_id": "OPT-SPLIT",
+          "reversible": true,
+          "tradeoff": "Leaves the handler inert until a second change lands, so no user-visible value ships in this window."
+        }
+      ],
+      "structured_payload_key": "options"
+    },
+    {
+      "conclusions": [
+        "Removing the standing scope is asserted to be safe on the basis of a review that examined only this handler, so the scoped option carries an unquantified regression risk for other consumers.",
+        "Merging as submitted bundles an irreversible permission grant with a functional change, which the change-time scan already routes away from automatic acceptance."
+      ],
+      "contract_violations": [],
+      "operator_id": "critical",
+      "operator_version": "0.1.0",
+      "selection_basis": "required",
+      "selection_rationale": "critical is required for every CHANGE_RISK route by policy RCP-ROUTING-0.1.0. Purpose: Attack the evidentiary support of claims already on the record and emit typed defects bound to specific targets, so that weak support is surfaced as structured findings rather than as a caveat sentence.",
+      "stage": "CHALLENGE",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "defect_id": "DCR-D1",
+          "defect_type": "unsupported_claim",
+          "remediation": "Add a test that asserts the effective credential scope at deployment time, or stop citing the suite as scope evidence.",
+          "severity": "material",
+          "statement": "A passing suite is evidence about behaviour, not about permission scope; no test in the suite exercises the widened credential.",
+          "target_ref": "EV-D1"
+        },
+        {
+          "defect_id": "DCR-D2",
+          "defect_type": "scope_creep",
+          "remediation": "Separate the permission change into its own reviewable change.",
+          "severity": "material",
+          "statement": "The change bundles a permission modification with a functional handler, so neither can be reviewed or reverted independently.",
+          "target_ref": "OPT-MERGE"
+        },
+        {
+          "defect_id": "DCR-D3",
+          "defect_type": "false_precision",
+          "remediation": "Enumerate current consumers of the write scope before removing it.",
+          "severity": "minor",
+          "statement": "Concluding that no other consumer needs the write scope overstates what the security note establishes, which covers this handler only.",
+          "target_ref": "DFP-C1"
+        }
+      ],
+      "structured_payload_key": "defects"
+    },
+    {
+      "conclusions": [
+        "The only irreversible failure mode in this change belongs to merging as submitted, because a standing grant persists after any code rollback."
+      ],
+      "contract_violations": [],
+      "operator_id": "inverted",
+      "operator_version": "0.1.0",
+      "selection_basis": "required",
+      "selection_rationale": "inverted is required for every CHANGE_RISK route by policy RCP-ROUTING-0.1.0. Purpose: Reason from the failure end: enumerate concrete failure modes with preconditions and detection signals, so that what would have to be true for this to go wrong is on the record before the choice is made.",
+      "stage": "CHALLENGE",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "boundary_flag_candidate": "G4_SECRET_OR_SENSITIVE_DATA",
+          "detection_signal": "The service account appears in access logs for resources unrelated to deployment.",
+          "failure_mode_id": "DIN-F1",
+          "option_ref": "OPT-MERGE",
+          "precondition": "No scheduled review removes the grant after this release.",
+          "reversible": false,
+          "statement": "The standing secrets-read scope is never revoked, and a later unrelated change reuses the same service account to reach customer records."
+        },
+        {
+          "boundary_flag_candidate": null,
+          "detection_signal": "Deployment failures correlate with identity provider latency.",
+          "failure_mode_id": "DIN-F2",
+          "option_ref": "OPT-SCOPED",
+          "precondition": "The identity provider has no fallback issuance path.",
+          "reversible": true,
+          "statement": "Credential issuance becomes a deployment dependency and an issuance outage blocks all releases."
+        },
+        {
+          "boundary_flag_candidate": null,
+          "detection_signal": "The feature flag remains off for more than two release cycles.",
+          "failure_mode_id": "DIN-F3",
+          "option_ref": "OPT-SPLIT",
+          "precondition": "The follow-up permission change is never scheduled.",
+          "reversible": true,
+          "statement": "The handler ships behind a flag and is forgotten, leaving dead code that later readers assume is active."
+        }
+      ],
+      "structured_payload_key": "failure_modes"
+    },
+    {
+      "conclusions": [
+        "Bounding the credential in time converts an invisible standing risk into a monitored signal, which compounds in value across later changes."
+      ],
+      "contract_violations": [],
+      "operator_id": "second-order",
+      "operator_version": "0.1.0",
+      "selection_basis": "required",
+      "selection_rationale": "second-order is required for every CHANGE_RISK route by policy RCP-ROUTING-0.1.0. Purpose: Trace consequences past the immediate effect, so that the and-then-what step is recorded with a horizon and an affected party rather than left implicit.",
+      "stage": "FORECAST",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "affected_party": "future change reviewers",
+          "effect_id": "DSO-E1",
+          "follows_from": "The permission widening is accepted inside the release window.",
+          "horizon": "quarters",
+          "option_ref": "OPT-MERGE",
+          "order": 2,
+          "statement": "A standing grant issued under release pressure becomes the reference precedent for the next urgent change, so the exception rate rises rather than staying constant."
+        },
+        {
+          "affected_party": "platform operators",
+          "effect_id": "DSO-E2",
+          "follows_from": "Request-scoped credentials are adopted.",
+          "horizon": "weeks",
+          "option_ref": "OPT-SCOPED",
+          "order": 2,
+          "statement": "Once deployments depend on issued credentials, credential expiry becomes a monitored signal, which surfaces scope drift that is currently invisible."
+        }
+      ],
+      "structured_payload_key": "effects"
+    }
+  ],
+  "option_set": [
+    {
+      "label": "Merge the change as submitted",
+      "option_id": "OPT-MERGE",
+      "origin": "intake"
+    },
+    {
+      "label": "Merge with a request-scoped short-lived credential",
+      "option_id": "OPT-SCOPED",
+      "origin": "intake"
+    },
+    {
+      "label": "Split the change and ship the handler alone",
+      "option_id": "OPT-SPLIT",
+      "origin": "generated_by:divergent"
+    }
+  ],
+  "partial_execution": [],
+  "problem_statement": "A pull request widens the deployment service account from read-scoped to write-scoped and adds a new handler that reads customer records from a secrets-backed configuration path.",
+  "receipt_version": "0.1.0",
+  "recommendation": {
+    "kind": "RECOMMENDATION",
+    "option_id": "OPT-SCOPED",
+    "statement": "Provisionally recommend, pending human review: Merge with a request-scoped short-lived credential. OPT-SCOPED carries the highest evidence-weighted net score 1.5 among options meeting the CHANGE_RISK evidence threshold."
+  },
+  "recommendation_binding_hash": "f43561875a0c96406ce96a8c540f11c62ea4367b67fc3cb108449d25960a0e10",
+  "record_id": "RCP-RUN-2026-0003::OPT-SCOPED",
+  "review_requirements": [
+    "metacognitive audit failed with 3 material findings",
+    "3 unresolved material contradiction(s)",
+    "decision confidence 0.583333 is below the required 0.75",
+    "Authorization is PENDING_CASA: an action was requested and no CASA authorization object was supplied"
+  ],
+  "risks": [
+    {
+      "boundary_flag_candidate": "G4_SECRET_OR_SENSITIVE_DATA",
+      "detection_signal": "The service account appears in access logs for resources unrelated to deployment.",
+      "reversible": false,
+      "risk_id": "DIN-F1",
+      "source_operator": "inverted",
+      "statement": "The standing secrets-read scope is never revoked, and a later unrelated change reuses the same service account to reach customer records."
+    },
+    {
+      "boundary_flag_candidate": null,
+      "detection_signal": "Deployment failures correlate with identity provider latency.",
+      "reversible": true,
+      "risk_id": "DIN-F2",
+      "source_operator": "inverted",
+      "statement": "Credential issuance becomes a deployment dependency and an issuance outage blocks all releases."
+    },
+    {
+      "boundary_flag_candidate": null,
+      "detection_signal": "The feature flag remains off for more than two release cycles.",
+      "reversible": true,
+      "risk_id": "DIN-F3",
+      "source_operator": "inverted",
+      "statement": "The handler ships behind a flag and is forgotten, leaving dead code that later readers assume is active."
+    },
+    {
+      "affected_party": "future change reviewers",
+      "detection_signal": null,
+      "horizon": "quarters",
+      "reversible": null,
+      "risk_id": "DSO-E1",
+      "source_operator": "second-order",
+      "statement": "A standing grant issued under release pressure becomes the reference precedent for the next urgent change, so the exception rate rises rather than staying constant."
+    },
+    {
+      "affected_party": "platform operators",
+      "detection_signal": null,
+      "horizon": "weeks",
+      "reversible": null,
+      "risk_id": "DSO-E2",
+      "source_operator": "second-order",
+      "statement": "Once deployments depend on issued credentials, credential expiry becomes a monitored signal, which surfaces scope drift that is currently invisible."
+    }
+  ],
+  "route": {
+    "operators": [
+      {
+        "activated_by": [],
+        "operator_id": "first-principles",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "first-principles is required for every CHANGE_RISK route by policy RCP-ROUTING-0.1.0. Purpose: Decompose the problem into primitives that are separately checkable, and label each primitive as verified fact, assumption, or unknown, so that every later conclusion rests on an inspectable base rather than on inherited framing.",
+        "stage": "FRAME"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "systemic",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "systemic is required for every CHANGE_RISK route by policy RCP-ROUTING-0.1.0. Purpose: Map the components, the directed relations between them, and at least one feedback loop, so that effects propagating through the system are visible before an option is chosen.",
+        "stage": "FRAME"
+      },
+      {
+        "activated_by": [
+          "contested_options"
+        ],
+        "operator_id": "divergent",
+        "operator_version": "0.1.0",
+        "selection_basis": "conditional",
+        "selection_rationale": "divergent was activated for this CHANGE_RISK route by signal(s) contested_options.",
+        "stage": "EXPLORE"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "critical",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "critical is required for every CHANGE_RISK route by policy RCP-ROUTING-0.1.0. Purpose: Attack the evidentiary support of claims already on the record and emit typed defects bound to specific targets, so that weak support is surfaced as structured findings rather than as a caveat sentence.",
+        "stage": "CHALLENGE"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "inverted",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "inverted is required for every CHANGE_RISK route by policy RCP-ROUTING-0.1.0. Purpose: Reason from the failure end: enumerate concrete failure modes with preconditions and detection signals, so that what would have to be true for this to go wrong is on the record before the choice is made.",
+        "stage": "CHALLENGE"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "second-order",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "second-order is required for every CHANGE_RISK route by policy RCP-ROUTING-0.1.0. Purpose: Trace consequences past the immediate effect, so that the and-then-what step is recorded with a horizon and an affected party rather than left implicit.",
+        "stage": "FORECAST"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "convergent",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "convergent is required for every CHANGE_RISK route by policy RCP-ROUTING-0.1.0. Purpose: Reduce the option set to a single recommendation or to an explicit no-recommendation, by deterministic aggregation of evidence-weighted supporting and opposing claims.",
+        "stage": "DECIDE"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "metacognitive",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "metacognitive is required for every CHANGE_RISK route by policy RCP-ROUTING-0.1.0. Purpose: Audit the run itself rather than the problem.",
+        "stage": "AUDIT"
+      }
+    ],
+    "operators_deferred": [
+      {
+        "detail": "Requires a validated source-domain corpus and a structural-mapping check to avoid surface-similarity reasoning. Without a mapping validity test it degrades into decorative comparison, which is precisely the failure mode this system exists to prevent.",
+        "operator_id": "analogical",
+        "reason": "deferred to v0.2"
+      },
+      {
+        "detail": "Its value is reframing the problem statement, which conflicts with a v0.1 pipeline that treats the intake frame as fixed for the run. Enabling it requires a re-entrant router that can restart classification, which is a v0.2 routing change.",
+        "operator_id": "lateral",
+        "reason": "deferred to v0.2"
+      },
+      {
+        "detail": "Produces connections whose quality cannot yet be scored deterministically. Admitting unscoreable output into the evidence-weighted convergence would let unweighted material influence a decision.",
+        "operator_id": "associative",
+        "reason": "deferred to v0.2"
+      },
+      {
+        "detail": "Deliberately holds opposed propositions simultaneously, which the v0.1 contradiction gate is built to flag and route to REVIEW. Admitting it requires a contradiction taxonomy that distinguishes productive tension from unresolved conflict. That taxonomy is the v0.2 prerequisite.",
+        "operator_id": "janusian",
+        "reason": "deferred to v0.2"
+      }
+    ],
+    "operators_not_selected": [
+      {
+        "operator_id": "abductive",
+        "reason": "no activating signal fired",
+        "would_activate_on": [
+          "unexplained_observation"
+        ]
+      }
+    ],
+    "route_depth": 8,
+    "route_supported": true,
+    "stage_sequence": [
+      {
+        "execution": "parallel_eligible",
+        "operators": [
+          "first-principles",
+          "systemic"
+        ],
+        "serialized_order": [
+          "first-principles",
+          "systemic"
+        ],
+        "stage": "FRAME"
+      },
+      {
+        "execution": "single",
+        "operators": [
+          "divergent"
+        ],
+        "serialized_order": [
+          "divergent"
+        ],
+        "stage": "EXPLORE"
+      },
+      {
+        "execution": "parallel_eligible",
+        "operators": [
+          "critical",
+          "inverted"
+        ],
+        "serialized_order": [
+          "critical",
+          "inverted"
+        ],
+        "stage": "CHALLENGE"
+      },
+      {
+        "execution": "single",
+        "operators": [
+          "second-order"
+        ],
+        "serialized_order": [
+          "second-order"
+        ],
+        "stage": "FORECAST"
+      },
+      {
+        "execution": "single",
+        "operators": [
+          "convergent"
+        ],
+        "serialized_order": [
+          "convergent"
+        ],
+        "stage": "DECIDE"
+      },
+      {
+        "execution": "single",
+        "operators": [
+          "metacognitive"
+        ],
+        "serialized_order": [
+          "metacognitive"
+        ],
+        "stage": "AUDIT"
+      }
+    ],
+    "task_class": "CHANGE_RISK"
+  },
+  "run_id": "RCP-RUN-2026-0003",
+  "run_timestamp": "2026-08-04T17:00:00Z",
+  "signals": [
+    "contested_options",
+    "external_impact",
+    "irreversibility",
+    "permission_change",
+    "sensitive_data_scope",
+    "systemic_coupling"
+  ],
+  "stage_chain": [
+    {
+      "content_hash": "372dcdc562c459c5a4ef18b108e79aad8c27615008f9af8b72b4692d44a33fac",
+      "operator_id": "intake",
+      "operator_version": "0.1.0",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "record_hash": "3e6695cea94ac829c6eac33ecd98964d74eb9d1d77428153cc852f6356ace0bb",
+      "recorded_at": "2026-08-04T17:00:00Z",
+      "sequence": 0,
+      "stage": "INTAKE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "00495744d13cfed9dee270f350d47953d500692056309e0e389e4532059f413b",
+      "operator_id": "classifier",
+      "operator_version": "0.1.0",
+      "previous_hash": "3e6695cea94ac829c6eac33ecd98964d74eb9d1d77428153cc852f6356ace0bb",
+      "record_hash": "4483e3c798420f4ba582fc62610605f9593f87b3b30feb4e5e0873b10720f590",
+      "recorded_at": "2026-08-04T17:00:00Z",
+      "sequence": 1,
+      "stage": "CLASSIFY",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "9b637f8847d3fafb4055650686da34c044e520b1373ad683735981db9f68ea8f",
+      "operator_id": "router",
+      "operator_version": "0.1.0",
+      "previous_hash": "4483e3c798420f4ba582fc62610605f9593f87b3b30feb4e5e0873b10720f590",
+      "record_hash": "0f9a1cbc1c5dda886e593cc814321aaf2d5fb58b04b825aac41243ab28ff86b0",
+      "recorded_at": "2026-08-04T17:00:00Z",
+      "sequence": 2,
+      "stage": "ROUTE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "e36845062f5e1e343b2b379107f305128ecb9ea659037dd652946aab2cbf47aa",
+      "operator_id": "first-principles",
+      "operator_version": "0.1.0",
+      "previous_hash": "0f9a1cbc1c5dda886e593cc814321aaf2d5fb58b04b825aac41243ab28ff86b0",
+      "record_hash": "2c06f168b4fc9fec01b206663422d3f1daa58b4cb0846aac8218f5f78e23f9a5",
+      "recorded_at": "2026-08-04T17:00:00Z",
+      "sequence": 3,
+      "stage": "FRAME",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "81e464f90a4443a2b19a4757594e48ef89ed98850de9c683876b35f677b52802",
+      "operator_id": "systemic",
+      "operator_version": "0.1.0",
+      "previous_hash": "2c06f168b4fc9fec01b206663422d3f1daa58b4cb0846aac8218f5f78e23f9a5",
+      "record_hash": "08d842fce5c7d15bee12ea81b40decfe02377ac990571ea552f1e79f733077a3",
+      "recorded_at": "2026-08-04T17:00:00Z",
+      "sequence": 4,
+      "stage": "FRAME",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "1ac1b30dccbeebdda9ec7dc80202b1cba0a38dfd2f53f176b8fc49fc4cf70682",
+      "operator_id": "divergent",
+      "operator_version": "0.1.0",
+      "previous_hash": "08d842fce5c7d15bee12ea81b40decfe02377ac990571ea552f1e79f733077a3",
+      "record_hash": "78fb2c9cf530ee236bec929ee0ac2fbe8bbc7a66e30ff3742fd12864338e64d0",
+      "recorded_at": "2026-08-04T17:00:00Z",
+      "sequence": 5,
+      "stage": "EXPLORE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "bbb74d8ccf9cd43b69719f4edad012264b43532a05be5947af67f5265c41652a",
+      "operator_id": "critical",
+      "operator_version": "0.1.0",
+      "previous_hash": "78fb2c9cf530ee236bec929ee0ac2fbe8bbc7a66e30ff3742fd12864338e64d0",
+      "record_hash": "1ebd100be970378281a0d1401e40fcd0f70840de2339b64165a9107cc3ca7c98",
+      "recorded_at": "2026-08-04T17:00:00Z",
+      "sequence": 6,
+      "stage": "CHALLENGE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "51c7604a182ef0908e761841e1833ebcdadb3d567e5036e8370198f2a5079515",
+      "operator_id": "inverted",
+      "operator_version": "0.1.0",
+      "previous_hash": "1ebd100be970378281a0d1401e40fcd0f70840de2339b64165a9107cc3ca7c98",
+      "record_hash": "28ae4c6df8397e276472d72a8def738bf9c0852ea7f894098cc0eaa15dfce011",
+      "recorded_at": "2026-08-04T17:00:00Z",
+      "sequence": 7,
+      "stage": "CHALLENGE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "2499ffb8c6b0bd69625d0ca327076e105146c9a464af38ed706cdcede617be73",
+      "operator_id": "second-order",
+      "operator_version": "0.1.0",
+      "previous_hash": "28ae4c6df8397e276472d72a8def738bf9c0852ea7f894098cc0eaa15dfce011",
+      "record_hash": "c688bcc7a52b28dc4c82d4d49a329c917e7fc911b4025149c3fd58be39c30cf1",
+      "recorded_at": "2026-08-04T17:00:00Z",
+      "sequence": 8,
+      "stage": "FORECAST",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "93ca99a4642fe4cdf2d159f663221d901c4bd3ee87d0fb828ec57dd7c55d8d82",
+      "operator_id": "convergent",
+      "operator_version": "0.1.0",
+      "previous_hash": "c688bcc7a52b28dc4c82d4d49a329c917e7fc911b4025149c3fd58be39c30cf1",
+      "record_hash": "f9aa955d9781f58033748e16ea301ce8801ff40e9ad85056bb64e37823b1ce93",
+      "recorded_at": "2026-08-04T17:00:00Z",
+      "sequence": 9,
+      "stage": "DECIDE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "b216f082dbf09a2cdf643545bdd53ce2e5551ffaf3973b4b6032410c52f57a11",
+      "operator_id": "metacognitive",
+      "operator_version": "0.1.0",
+      "previous_hash": "f9aa955d9781f58033748e16ea301ce8801ff40e9ad85056bb64e37823b1ce93",
+      "record_hash": "b44de2298a218080ae00500a5045257e7a7df9d5e99c935f55d4cf42b2994b11",
+      "recorded_at": "2026-08-04T17:00:00Z",
+      "sequence": 10,
+      "stage": "AUDIT",
+      "status": "COMPLETE"
+    }
+  ],
+  "stage_chain_head": "b44de2298a218080ae00500a5045257e7a7df9d5e99c935f55d4cf42b2994b11",
+  "versions": {
+    "operator_registry_id": "RCP-OPERATORS-0.1.0",
+    "operator_registry_sha256": "0666a034739ee1b18f5470d911c07341b495747d7dbdc4b98a7fc99132257637",
+    "operator_registry_version": "0.1.0",
+    "policy_id": "RCP-ROUTING-0.1.0",
+    "policy_version": "0.1.0",
+    "routing_policy_sha256": "098e8bc21de5b1b5eece1dc1daec44b2e6da84577be1363a5908e924bf60b265"
+  }
+}

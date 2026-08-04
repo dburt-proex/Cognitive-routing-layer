@@ -1,0 +1,291 @@
+{
+  "policy_id": "RCP-ROUTING-0.1.0",
+  "version": "0.1.0",
+  "stage": "v0.1_locked",
+  "operator_registry_version": "0.1.0",
+  "format_note": "JSON-compatible YAML, matching the operator-intelligence/leverage-engine control-file convention.",
+
+  "determinism_contract": {
+    "statement": "Identical normalized intake plus identical policy version yields an identical route, an identical selection rationale, and an identical set of rejected classifications.",
+    "classification_is_computed": true,
+    "caller_supplied_classification_is_a_proposal_only": true,
+    "caller_proposal_mismatch_behavior": "REVIEW",
+    "rationale": "A caller that can declare its own task class can choose its own scrutiny level. The engine computes the classification from normalized intake and treats any caller-supplied value as a proposal that must agree with the computed result."
+  },
+
+  "sensitive_data_kinds": ["credentials", "secrets", "pii", "phi", "payment", "customer_records", "auth_tokens", "private_keys"],
+  "horizon_vocabulary": ["immediate", "days", "weeks", "quarters", "years"],
+  "defect_vocabulary": ["unsupported_claim", "evidence_gap", "sampling_bias", "circularity", "equivocation", "overgeneralization", "stale_evidence", "source_conflict", "scope_creep", "false_precision"],
+  "option_distinctness_jaccard_max": 0.6,
+  "option_distinctness_note": "Two option mechanisms whose normalized token sets have a Jaccard similarity above this value are treated as restatements of one option, not as distinct options. This is what stops divergent output from becoming one idea wearing three hats.",
+  "evidence_verification_states": ["UNVERIFIED", "SOURCE_IDENTIFIED", "RETRIEVED", "INTEGRITY_CHECKED", "AUTHORITATIVE", "CONFLICTED", "STALE"],
+  "verified_states": ["INTEGRITY_CHECKED", "AUTHORITATIVE"],
+
+  "boundary_flags": [
+    "G4_UNAUTHORIZED_EXTERNAL_ACTION",
+    "G4_REPOSITORY_MUTATION",
+    "G4_SECRET_OR_SENSITIVE_DATA",
+    "G4_DESTRUCTIVE_OR_IRREVERSIBLE",
+    "G4_FINANCIAL_OR_LEGAL_COMMITMENT",
+    "G4_SELF_MODIFICATION"
+  ],
+  "boundary_flag_note": "Vocabulary is intentionally identical to the Leverage Engine G4 rule set so a boundary flag raised here is legible to that system without translation.",
+
+  "signal_rules": [
+    {"signal_id": "contested_options", "rule": "len(intake.options) >= 2"},
+    {"signal_id": "unexplained_observation", "rule": "any(observation.explained is false for observation in intake.observations)"},
+    {"signal_id": "irreversibility", "rule": "intake.requested_action.reversible is false or any(option.reversible is false for option in intake.options)"},
+    {"signal_id": "sensitive_data_scope", "rule": "intersection(intake.data_scope, policy.sensitive_data_kinds) is non-empty"},
+    {"signal_id": "permission_change", "rule": "len(intake.permission_delta) >= 1"},
+    {"signal_id": "external_impact", "rule": "len(intake.external_parties) >= 1"},
+    {"signal_id": "declared_evidence_gap", "rule": "len(intake.known_evidence_gaps) >= 1"},
+    {"signal_id": "time_bound", "rule": "intake.deadline is not null"},
+    {"signal_id": "novel_domain", "rule": "intake.precedent_exists is false"},
+    {"signal_id": "stakeholder_conflict", "rule": "len(intake.stakeholder_positions) >= 2 and at least two positions differ"},
+    {"signal_id": "systemic_coupling", "rule": "len(intake.affected_systems) >= 2"},
+    {"signal_id": "precedent_setting", "rule": "intake.precedent_setting is true"}
+  ],
+
+  "classification_rules": [
+    {
+      "rule_id": "CL-1",
+      "precedence": 1,
+      "task_class": "CHANGE_RISK",
+      "predicate": "intake.artifact_kind == 'code_change'",
+      "description": "A proposed change to a repository or runtime configuration is always classified for change risk, regardless of how the caller framed it."
+    },
+    {
+      "rule_id": "CL-2",
+      "precedence": 2,
+      "task_class": "GOVERNANCE_EVALUATION",
+      "predicate": "intake.artifact_kind in ['proposal', 'policy', 'control_design']",
+      "description": "Evaluating a proposal, policy, or control design against standards."
+    },
+    {
+      "rule_id": "CL-3",
+      "precedence": 3,
+      "task_class": "DIAGNOSTIC",
+      "predicate": "count(unexplained observations) >= 1 and len(intake.options) <= 1",
+      "description": "Something is to be explained and there is not yet a choice to make."
+    },
+    {
+      "rule_id": "CL-4",
+      "precedence": 4,
+      "task_class": "PRIORITIZATION",
+      "predicate": "intake.decision_kind == 'select_next_action' and len(intake.options) >= 2",
+      "description": "Selecting among competing candidate actions."
+    },
+    {
+      "rule_id": "CL-5",
+      "precedence": 5,
+      "task_class": "DESIGN",
+      "predicate": "intake.artifact_kind == 'system_design'",
+      "description": "Designing a system or component that does not yet exist."
+    },
+    {
+      "rule_id": "CL-6",
+      "precedence": 6,
+      "task_class": "STRATEGY",
+      "predicate": "intake.decision_horizon in ['quarters', 'years']",
+      "description": "Long-horizon positioning where downstream effects dominate immediate ones."
+    }
+  ],
+  "unsupported_classification_behavior": {
+    "task_class": "UNSUPPORTED",
+    "gate_result": "REVIEW",
+    "reason_code": "RCP-GATE-UNSUPPORTED-CLASSIFICATION",
+    "statement": "No classification rule matched the normalized intake. The engine declares a coverage gap rather than routing to a nearest-neighbour class."
+  },
+
+  "stage_order": ["FRAME", "EXPLORE", "EXPLAIN", "CHALLENGE", "FORECAST", "DECIDE", "AUDIT"],
+  "stage_order_rationale": "CHALLENGE precedes DECIDE so that challenge operators cannot run as post-hoc justification for a decision already made. Stage records are append-only and hash-linked so that ordering is enforced by structure rather than by convention alone.",
+
+  "execution_model": {
+    "across_stages": "sequential",
+    "within_stage": "parallel_eligible",
+    "within_stage_note": "Operators inside one stage share the same inputs and never read each other's output, so they may execute concurrently. The engine serializes them in the policy-declared order so that a run is byte-reproducible regardless of scheduling.",
+    "min_route_depth": 4,
+    "max_route_depth": 9,
+    "min_route_depth_rationale": "A route must contain at least one FRAME operator, at least one CHALLENGE operator, convergent, and metacognitive. Anything shallower cannot produce a defensible receipt.",
+    "operator_timeout_seconds": 120,
+    "on_operator_timeout": "record_partial_and_route_review",
+    "on_operator_contract_violation": "record_violation_and_route_review",
+    "on_required_operator_failure": "REVIEW"
+  },
+
+  "routes": [
+    {
+      "task_class": "PRIORITIZATION",
+      "required_operators": ["first-principles", "divergent", "critical", "second-order", "convergent", "metacognitive"],
+      "conditional_operators": [
+        {"operator_id": "systemic", "activated_by": ["systemic_coupling", "external_impact", "precedent_setting"]},
+        {"operator_id": "inverted", "activated_by": ["irreversibility", "external_impact", "sensitive_data_scope", "permission_change"]},
+        {"operator_id": "abductive", "activated_by": ["unexplained_observation"]}
+      ]
+    },
+    {
+      "task_class": "GOVERNANCE_EVALUATION",
+      "required_operators": ["first-principles", "systemic", "critical", "inverted", "second-order", "convergent", "metacognitive"],
+      "conditional_operators": [
+        {"operator_id": "divergent", "activated_by": ["contested_options", "novel_domain"]},
+        {"operator_id": "abductive", "activated_by": ["unexplained_observation"]}
+      ]
+    },
+    {
+      "task_class": "CHANGE_RISK",
+      "required_operators": ["first-principles", "systemic", "inverted", "critical", "second-order", "convergent", "metacognitive"],
+      "conditional_operators": [
+        {"operator_id": "divergent", "activated_by": ["contested_options"]},
+        {"operator_id": "abductive", "activated_by": ["unexplained_observation"]}
+      ]
+    },
+    {
+      "task_class": "DIAGNOSTIC",
+      "required_operators": ["first-principles", "abductive", "systemic", "critical", "convergent", "metacognitive"],
+      "conditional_operators": [
+        {"operator_id": "divergent", "activated_by": ["contested_options", "novel_domain"]},
+        {"operator_id": "second-order", "activated_by": ["external_impact", "precedent_setting", "systemic_coupling"]},
+        {"operator_id": "inverted", "activated_by": ["irreversibility", "sensitive_data_scope"]}
+      ]
+    },
+    {
+      "task_class": "DESIGN",
+      "required_operators": ["first-principles", "divergent", "systemic", "inverted", "critical", "second-order", "convergent", "metacognitive"],
+      "conditional_operators": [
+        {"operator_id": "abductive", "activated_by": ["unexplained_observation"]}
+      ]
+    },
+    {
+      "task_class": "STRATEGY",
+      "required_operators": ["first-principles", "systemic", "divergent", "second-order", "critical", "convergent", "metacognitive"],
+      "conditional_operators": [
+        {"operator_id": "inverted", "activated_by": ["irreversibility", "external_impact", "precedent_setting"]},
+        {"operator_id": "abductive", "activated_by": ["unexplained_observation"]}
+      ]
+    }
+  ],
+
+  "evidence_thresholds": {
+    "default": {
+      "min_distinct_evidence_per_option": 2,
+      "min_independent_sources_per_option": 1,
+      "minimum_evidence_quality": 50,
+      "require_verified_evidence": false
+    },
+    "by_task_class": {
+      "PRIORITIZATION": {"min_distinct_evidence_per_option": 2, "min_independent_sources_per_option": 1, "minimum_evidence_quality": 50, "require_verified_evidence": false},
+      "GOVERNANCE_EVALUATION": {"min_distinct_evidence_per_option": 3, "min_independent_sources_per_option": 2, "minimum_evidence_quality": 60, "require_verified_evidence": false},
+      "CHANGE_RISK": {"min_distinct_evidence_per_option": 3, "min_independent_sources_per_option": 2, "minimum_evidence_quality": 70, "require_verified_evidence": true},
+      "DIAGNOSTIC": {"min_distinct_evidence_per_option": 2, "min_independent_sources_per_option": 1, "minimum_evidence_quality": 60, "require_verified_evidence": false},
+      "DESIGN": {"min_distinct_evidence_per_option": 2, "min_independent_sources_per_option": 1, "minimum_evidence_quality": 50, "require_verified_evidence": false},
+      "STRATEGY": {"min_distinct_evidence_per_option": 2, "min_independent_sources_per_option": 2, "minimum_evidence_quality": 50, "require_verified_evidence": false}
+    }
+  },
+
+  "confidence_model": {
+    "label": "uncalibrated_decision_support_score",
+    "is_probability_of_correctness": false,
+    "calibration_performed": false,
+    "disclosure_required": "Confidence values in this system are uncalibrated decision-support scores derived from evidence quantity, quality, and independence. They are not probabilities that the recommendation is correct. No calibration study has been run against outcomes.",
+    "factors": {"high": 1.0, "medium": 0.75, "low": 0.5, "unknown": 0.0},
+    "evidence_ceiling_rule": "effective_confidence = min(declared_confidence_factor, evidence_ceiling)",
+    "evidence_ceiling_bands": [
+      {"min_distinct_evidence": 0, "ceiling": 0.0},
+      {"min_distinct_evidence": 1, "ceiling": 0.5},
+      {"min_distinct_evidence": 2, "ceiling": 0.75},
+      {"min_distinct_evidence": 3, "ceiling": 1.0}
+    ],
+    "quality_modifier": "The ceiling is reduced one band when mean evidence quality is below the task-class minimum.",
+    "independence_modifier": "The ceiling is capped at 0.75 when all supporting evidence shares one independence_group.",
+    "contradiction_penalty_per_material_contradiction": 0.25,
+    "decision_confidence_contributors": ["abductive", "critical", "inverted", "second-order", "systemic", "first-principles"],
+    "excluded_from_decision_confidence": ["divergent"],
+    "exclusion_rationale": "Divergent output is inert by contract: its claims carry no evidence weight and it is prohibited from ranking options. Generating an option is not evidence about that option, so divergent neither raises nor lowers decision confidence. This is enforced at the operator contract rather than by filtering at aggregation time.",
+    "coverage_is_separate_from_confidence": true
+  },
+
+  "confidence_thresholds": {
+    "minimum_for_recommendation": 0.5,
+    "minimum_for_high_impact_recommendation": 0.75,
+    "high_impact_signals": ["irreversibility", "sensitive_data_scope", "permission_change", "external_impact"]
+  },
+
+  "contradiction_rules": {
+    "detection": "Two claims contradict when they address the same subject_ref with opposing polarity. Detection is structural, not semantic.",
+    "severity": {
+      "material": "both sides have effective_confidence >= 0.5",
+      "minor": "either side has effective_confidence < 0.5"
+    },
+    "disposition_vocabulary": ["resolved_by_evidence", "resolved_by_precedence", "unresolved", "accepted_tension"],
+    "unresolved_material_contradiction_behavior": "REVIEW",
+    "accepted_tension_requires": "an explicit human disposition record; the engine may never self-assign accepted_tension in v0.1"
+  },
+
+  "conflict_resolution_precedence": [
+    {"order": 1, "condition": "any boundary_flag raised", "gate_result": "HALT", "reason_code": "RCP-GATE-BOUNDARY-FLAG"},
+    {"order": 2, "condition": "metacognitive audit result is FAIL", "gate_result": "REVIEW", "reason_code": "RCP-GATE-AUDIT-FAIL"},
+    {"order": 3, "condition": "a required operator did not execute or violated its contract", "gate_result": "REVIEW", "reason_code": "RCP-GATE-ROUTE-INCOMPLETE"},
+    {"order": 4, "condition": "no option is evidence_sufficient", "gate_result": "REVIEW", "reason_code": "RCP-GATE-EVIDENCE-INSUFFICIENT"},
+    {"order": 5, "condition": "an unresolved material contradiction exists", "gate_result": "REVIEW", "reason_code": "RCP-GATE-CONTRADICTION-UNRESOLVED"},
+    {"order": 6, "condition": "decision confidence is below the applicable threshold", "gate_result": "REVIEW", "reason_code": "RCP-GATE-CONFIDENCE-BELOW-THRESHOLD"},
+    {"order": 7, "condition": "top two options are within tie_tolerance", "gate_result": "REVIEW", "reason_code": "RCP-GATE-MATERIAL-TIE"},
+    {"order": 8, "condition": "otherwise", "gate_result": "ALLOW", "reason_code": "RCP-GATE-ELIGIBLE-FOR-HUMAN-REVIEW"}
+  ],
+  "tie_tolerance": 0.0,
+  "allow_semantics": "ALLOW means the recommendation is eligible for human review. It is not an authorization to act and never has been. Vocabulary matches CASA, DiffWall, and the Leverage Engine.",
+
+  "stop_conditions": [
+    "A boundary flag is raised: the run stops before DECIDE and emits a HALT receipt.",
+    "The classification is UNSUPPORTED: the run stops after classification and emits a REVIEW receipt declaring the coverage gap.",
+    "A required operator exceeds its timeout: the run stops at that stage and emits a REVIEW receipt with a partial-execution record.",
+    "Maximum route depth is reached: no further operators are admitted.",
+    "The metacognitive audit has run: the run always terminates after AUDIT. There is no re-entry in v0.1."
+  ],
+
+  "escalation_conditions": [
+    {"condition": "boundary flag raised", "escalate_to": "human_decision_owner", "urgency": "immediate"},
+    {"condition": "unresolved material contradiction", "escalate_to": "human_decision_owner", "urgency": "before_action"},
+    {"condition": "evidence insufficient for every option", "escalate_to": "evidence_owner", "urgency": "before_action"},
+    {"condition": "authorization requested but verification unavailable", "escalate_to": "casa_owner", "urgency": "before_action"},
+    {"condition": "stage record hash mismatch", "escalate_to": "system_owner", "urgency": "immediate"}
+  ],
+
+  "human_review_gates": [
+    {"gate_id": "HRG-1", "trigger": "gate_result is REVIEW or HALT", "reviewer_role": "decision_owner", "must_record": ["disposition", "reviewer_identity", "reviewed_at"]},
+    {"gate_id": "HRG-2", "trigger": "an action is requested", "reviewer_role": "authorization_owner", "must_record": ["casa_authorization_id", "verification_result"]},
+    {"gate_id": "HRG-3", "trigger": "a contradiction is proposed for accepted_tension disposition", "reviewer_role": "decision_owner", "must_record": ["justification", "reviewer_identity"]}
+  ],
+
+  "authorization_model": {
+    "statement": "Analytical confidence and action authorization are structurally separate controls. No confidence value, coverage value, or gate result can produce an AUTHORIZED status.",
+    "statuses": ["NOT_REQUESTED", "PENDING_CASA", "VERIFICATION_UNAVAILABLE", "AUTHORIZED", "DENIED"],
+    "authorized_requires_all": [
+      "an action was requested in the intake",
+      "an external CASA authorization object was supplied",
+      "the configured verifier returned verified",
+      "the authorization has not expired",
+      "the action hash in the authorization matches the recommended action hash",
+      "the principal and resource scope match the intake",
+      "the authorization nonce has not been seen before in this ledger"
+    ],
+    "default_verifier": "unavailable",
+    "default_verifier_behavior": "Return VERIFICATION_UNAVAILABLE and route to REVIEW. v0.1 ships no authentic CASA verifier. A test adapter exists for fixtures and is never the default.",
+    "execution_composition": {
+      "sufficient_evidence_and_valid_authorization": "MAY_PROCEED",
+      "sufficient_evidence_and_no_authorization": "NOT_AUTHORIZED",
+      "insufficient_evidence_and_valid_authorization": "REVIEW",
+      "insufficient_evidence_and_no_authorization": "REVIEW"
+    },
+    "composition_rule": "Confidence never grants permission, and authorization never cures insufficient evidence. Proceeding requires both an eligible recommendation and a verified authorization."
+  },
+
+  "failure_and_recovery": {
+    "malformed_intake": "HALT before classification with reason RCP-FAIL-INTAKE-INVALID. No partial run record is emitted.",
+    "unknown_policy_or_operator_version": "HALT with reason RCP-FAIL-VERSION-UNKNOWN.",
+    "operator_contract_violation": "Record the violation on the stage record, continue the route, and force REVIEW at the gate. The violation is never silently dropped.",
+    "operator_timeout": "Record a partial stage record with status TIMEOUT and force REVIEW.",
+    "stage_hash_mismatch": "HALT with reason RCP-FAIL-STAGE-TAMPER. The run is not recoverable and a superseding run is required.",
+    "ledger_write_failure": "The receipt is still returned to the caller but is marked persisted=false and the run is not eligible for downstream handoff.",
+    "correction_model": "Corrections create a superseding run that references the prior run_id. Prior receipts are never mutated."
+  }
+}

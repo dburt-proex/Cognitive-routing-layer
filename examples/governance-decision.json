@@ -1,0 +1,1160 @@
+{
+  "assumptions": [
+    {
+      "assumption": "The proposal document supplied is the complete and current version.",
+      "operator_id": "first-principles",
+      "treated_as": "missing_evidence"
+    },
+    {
+      "assumption": "Business units share one identity provider.",
+      "operator_id": "systemic",
+      "treated_as": "missing_evidence"
+    },
+    {
+      "assumption": "Rejecting the proposal outright is out of scope for this evaluation.",
+      "operator_id": "divergent",
+      "treated_as": "missing_evidence"
+    },
+    {
+      "assumption": "The proposer had access to their own incident data when writing the proposal.",
+      "operator_id": "abductive",
+      "treated_as": "missing_evidence"
+    },
+    {
+      "assumption": "The steering review treats this evaluation as precedent for later proposals.",
+      "operator_id": "second-order",
+      "treated_as": "missing_evidence"
+    }
+  ],
+  "authorization": {
+    "authorization_id": null,
+    "checks": [],
+    "derived_from_confidence": false,
+    "issuer": null,
+    "nonce": null,
+    "reason": "the intake requested no external action",
+    "status": "NOT_REQUESTED",
+    "verifier": "unavailable",
+    "verifier_is_authentic": false
+  },
+  "classification": {
+    "activated_rule_id": "CL-2",
+    "caller_proposal_honored": false,
+    "caller_proposal_mismatch": false,
+    "caller_proposed_classification": null,
+    "classification_policy_id": "RCP-ROUTING-0.1.0",
+    "classification_policy_version": "0.1.0",
+    "classification_source": "computed",
+    "deterministic_basis": "ordered first-match over classification_rules against normalized intake",
+    "manual_override": null,
+    "manual_override_owner": null,
+    "manual_override_reason": null,
+    "rejected_classifications": [
+      {
+        "reason": "lower precedence than the activated rule",
+        "rule_id": "CL-6",
+        "task_class": "STRATEGY"
+      }
+    ],
+    "task_class": "GOVERNANCE_EVALUATION"
+  },
+  "confidence_by_operator": [
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "medium",
+      "effective_confidence": 0.5,
+      "operator_id": "first-principles"
+    },
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "medium",
+      "effective_confidence": 0.5,
+      "operator_id": "systemic"
+    },
+    {
+      "contributes_to_decision_confidence": false,
+      "declared_confidence": "medium",
+      "effective_confidence": 0.0,
+      "operator_id": "divergent"
+    },
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "low",
+      "effective_confidence": 0.5,
+      "operator_id": "abductive"
+    },
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "medium",
+      "effective_confidence": 0.5,
+      "operator_id": "critical"
+    },
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "medium",
+      "effective_confidence": 0.0,
+      "operator_id": "inverted"
+    },
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "medium",
+      "effective_confidence": 0.5,
+      "operator_id": "second-order"
+    },
+    {
+      "contributes_to_decision_confidence": true,
+      "declared_confidence": "derived",
+      "effective_confidence": 0.0,
+      "operator_id": "convergent"
+    }
+  ],
+  "contradictions": [],
+  "convergence": {
+    "decision_confidence": 0.0,
+    "decision_confidence_basis": "no option was selected",
+    "decision_confidence_label": "uncalibrated_decision_support_score",
+    "ranking": [
+      {
+        "contradiction_penalty": 0.0,
+        "distinct_evidence": 1,
+        "evidence_refs": [
+          "EV-P4"
+        ],
+        "evidence_sufficient": false,
+        "independent_groups": 1,
+        "label": "Adopt conditionally after an evidence round",
+        "mean_evidence_quality": 80.0,
+        "net": 1.0,
+        "opposing_claims": [],
+        "opposition": 0.0,
+        "option_id": "OPT-CONDITION",
+        "support": 1.0,
+        "supporting_claims": [
+          "GFP-C2",
+          "GSO-C1"
+        ],
+        "unmet_thresholds": [
+          "requires 3 distinct evidence records, resolved 1",
+          "requires 2 independent sources, resolved 1"
+        ],
+        "verified_evidence": 2
+      },
+      {
+        "contradiction_penalty": 0.0,
+        "distinct_evidence": 0,
+        "evidence_refs": [],
+        "evidence_sufficient": false,
+        "independent_groups": 0,
+        "label": "Run a bounded pilot in one business unit",
+        "mean_evidence_quality": 0.0,
+        "net": 0.0,
+        "opposing_claims": [],
+        "opposition": 0.0,
+        "option_id": "OPT-PILOT",
+        "support": 0.0,
+        "supporting_claims": [],
+        "unmet_thresholds": [
+          "requires 3 distinct evidence records, resolved 0",
+          "requires 2 independent sources, resolved 0",
+          "no evidence resolved for this option"
+        ],
+        "verified_evidence": 0
+      },
+      {
+        "contradiction_penalty": 0.0,
+        "distinct_evidence": 3,
+        "evidence_refs": [
+          "EV-P1",
+          "EV-P2",
+          "EV-P3"
+        ],
+        "evidence_sufficient": false,
+        "independent_groups": 1,
+        "label": "Adopt the proposal as written",
+        "mean_evidence_quality": 49.0,
+        "net": -1.0,
+        "opposing_claims": [
+          "GCR-C1",
+          "GFP-C1",
+          "GIN-C1",
+          "GSY-C1"
+        ],
+        "opposition": 1.0,
+        "option_id": "OPT-ADOPT",
+        "support": 0.0,
+        "supporting_claims": [],
+        "unmet_thresholds": [
+          "requires 2 independent sources, resolved 1",
+          "requires mean quality 60, resolved 49.0"
+        ],
+        "verified_evidence": 0
+      }
+    ],
+    "rejected_alternatives": [
+      {
+        "option_id": "OPT-CONDITION",
+        "reason": "requires 3 distinct evidence records, resolved 1; requires 2 independent sources, resolved 1"
+      },
+      {
+        "option_id": "OPT-PILOT",
+        "reason": "requires 3 distinct evidence records, resolved 0; requires 2 independent sources, resolved 0; no evidence resolved for this option"
+      },
+      {
+        "option_id": "OPT-ADOPT",
+        "reason": "requires 2 independent sources, resolved 1; requires mean quality 60, resolved 49.0"
+      }
+    ],
+    "selected_option_id": null,
+    "selection_reason": "no option cleared the task-class evidence threshold",
+    "thresholds_applied": {
+      "min_distinct_evidence_per_option": 3,
+      "min_independent_sources_per_option": 2,
+      "minimum_evidence_quality": 60,
+      "require_verified_evidence": false
+    },
+    "tie_candidates": []
+  },
+  "evidence_used": [
+    {
+      "authority": "indicative",
+      "evidence_id": "EV-P1",
+      "independence_group": "buyer-supplied",
+      "quality": 65,
+      "source_type": "document",
+      "untrusted_instruction_detected": false,
+      "verification_state": "RETRIEVED"
+    },
+    {
+      "authority": "anecdotal",
+      "evidence_id": "EV-P2",
+      "independence_group": "buyer-supplied",
+      "quality": 40,
+      "source_type": "vendor_claim",
+      "untrusted_instruction_detected": false,
+      "verification_state": "UNVERIFIED"
+    },
+    {
+      "authority": "indicative",
+      "evidence_id": "EV-P3",
+      "independence_group": "buyer-supplied",
+      "quality": 60,
+      "source_type": "document",
+      "untrusted_instruction_detected": false,
+      "verification_state": "RETRIEVED"
+    },
+    {
+      "authority": "authoritative",
+      "evidence_id": "EV-P4",
+      "independence_group": "internal-standard",
+      "quality": 80,
+      "source_type": "external_publication",
+      "untrusted_instruction_detected": false,
+      "verification_state": "INTEGRITY_CHECKED"
+    }
+  ],
+  "execution": {
+    "authorization_status": "NOT_REQUESTED",
+    "composition_rule": "confidence never grants permission; authorization never cures insufficient evidence",
+    "execution_authorized": false,
+    "execution_outcome": "REVIEW",
+    "recommendation_eligible": false
+  },
+  "gate": {
+    "allow_semantics": "ALLOW means the recommendation is eligible for human review. It is not an authorization to act and never has been. Vocabulary matches CASA, DiffWall, and the Leverage Engine.",
+    "confidence_threshold_applied": 0.75,
+    "gate_reasons": [
+      {
+        "detail": "no option cleared the task-class evidence threshold",
+        "gate": "REVIEW",
+        "reason_code": "RCP-GATE-EVIDENCE-INSUFFICIENT"
+      }
+    ],
+    "gate_result": "REVIEW",
+    "high_impact_route": true
+  },
+  "ledger_receipt": {
+    "appended": false,
+    "persisted": false,
+    "record_id": "RCP-RUN-2026-0002::NO_RECOMMENDATION",
+    "sha256": "3ca9c241ab6fd4266d8f06d78b3039dab7285d4c4a541a3189eef891b429380e"
+  },
+  "metacognitive_audit": {
+    "audit_result": "PASS",
+    "coverage": {
+      "claims_evaluated": 8,
+      "contradiction_detection_method": "structural: same subject_ref, opposing polarity",
+      "contradictions_detected": 0,
+      "coverage_is_not_confidence": true,
+      "executed_operators": [
+        "abductive",
+        "convergent",
+        "critical",
+        "divergent",
+        "first-principles",
+        "inverted",
+        "second-order",
+        "systemic"
+      ],
+      "missing_evidence_items": 12,
+      "missing_operators": [],
+      "planned_operators": [
+        "abductive",
+        "convergent",
+        "critical",
+        "divergent",
+        "first-principles",
+        "inverted",
+        "second-order",
+        "systemic"
+      ],
+      "route_depth": 8,
+      "stages_covered": [
+        "CHALLENGE",
+        "CLASSIFY",
+        "DECIDE",
+        "EXPLAIN",
+        "EXPLORE",
+        "FORECAST",
+        "FRAME",
+        "INTAKE",
+        "ROUTE"
+      ]
+    },
+    "declared_confidence": "high",
+    "findings": [
+      {
+        "detail": "OPT-CONDITION: requires 3 distinct evidence records, resolved 1",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "OPT-CONDITION: requires 2 independent sources, resolved 1",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "OPT-PILOT: requires 3 distinct evidence records, resolved 0",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "OPT-PILOT: requires 2 independent sources, resolved 0",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "OPT-PILOT: no evidence resolved for this option",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "OPT-ADOPT: requires 2 independent sources, resolved 1",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "OPT-ADOPT: requires mean quality 60, resolved 49.0",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "first-principles assumed without evidence: The proposal document supplied is the complete and current version.",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "systemic assumed without evidence: Business units share one identity provider.",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "divergent assumed without evidence: Rejecting the proposal outright is out of scope for this evaluation.",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "abductive assumed without evidence: The proposer had access to their own incident data when writing the proposal.",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      },
+      {
+        "detail": "second-order assumed without evidence: The steering review treats this evaluation as precedent for later proposals.",
+        "finding_id": "MC-EVIDENCE-GAP",
+        "phase": "REFLECT",
+        "severity": "minor"
+      }
+    ],
+    "material_finding_count": 0,
+    "operator_id": "metacognitive",
+    "phases": [
+      {
+        "checked": "the executed route matches the route the policy selected",
+        "phase": "PLAN"
+      },
+      {
+        "checked": "operator contracts were satisfied and the stage chain is intact",
+        "phase": "MONITOR"
+      },
+      {
+        "checked": "no claim outranks its evidence and thresholds were applied",
+        "phase": "EVALUATE"
+      },
+      {
+        "checked": "contradictions are dispositioned, gaps enumerated, authorization not derived from confidence",
+        "phase": "REFLECT"
+      }
+    ],
+    "stage_chain_head": "18b5b276ac33979206e3568237c73d9b5b313ad662f42ab754182d8de24a4aad"
+  },
+  "missing_evidence": [
+    {
+      "detail": "OPT-CONDITION: requires 3 distinct evidence records, resolved 1",
+      "kind": "evidence_threshold",
+      "subject_ref": "OPT-CONDITION"
+    },
+    {
+      "detail": "OPT-CONDITION: requires 2 independent sources, resolved 1",
+      "kind": "evidence_threshold",
+      "subject_ref": "OPT-CONDITION"
+    },
+    {
+      "detail": "OPT-PILOT: requires 3 distinct evidence records, resolved 0",
+      "kind": "evidence_threshold",
+      "subject_ref": "OPT-PILOT"
+    },
+    {
+      "detail": "OPT-PILOT: requires 2 independent sources, resolved 0",
+      "kind": "evidence_threshold",
+      "subject_ref": "OPT-PILOT"
+    },
+    {
+      "detail": "OPT-PILOT: no evidence resolved for this option",
+      "kind": "evidence_threshold",
+      "subject_ref": "OPT-PILOT"
+    },
+    {
+      "detail": "OPT-ADOPT: requires 2 independent sources, resolved 1",
+      "kind": "evidence_threshold",
+      "subject_ref": "OPT-ADOPT"
+    },
+    {
+      "detail": "OPT-ADOPT: requires mean quality 60, resolved 49.0",
+      "kind": "evidence_threshold",
+      "subject_ref": "OPT-ADOPT"
+    },
+    {
+      "detail": "first-principles assumed without evidence: The proposal document supplied is the complete and current version.",
+      "kind": "undischarged_assumption",
+      "subject_ref": "first-principles"
+    },
+    {
+      "detail": "systemic assumed without evidence: Business units share one identity provider.",
+      "kind": "undischarged_assumption",
+      "subject_ref": "systemic"
+    },
+    {
+      "detail": "divergent assumed without evidence: Rejecting the proposal outright is out of scope for this evaluation.",
+      "kind": "undischarged_assumption",
+      "subject_ref": "divergent"
+    },
+    {
+      "detail": "abductive assumed without evidence: The proposer had access to their own incident data when writing the proposal.",
+      "kind": "undischarged_assumption",
+      "subject_ref": "abductive"
+    },
+    {
+      "detail": "second-order assumed without evidence: The steering review treats this evaluation as precedent for later proposals.",
+      "kind": "undischarged_assumption",
+      "subject_ref": "second-order"
+    }
+  ],
+  "next_action": "Route to the decision owner with the missing-evidence and contradiction lists before any action.",
+  "normalized_intake_hash": "63aa2b9fa02a5670e76355d34155622beebf2232bb26dac253ac6387849a8846",
+  "operator_conclusions": [
+    {
+      "conclusions": [
+        "The proposal's central effectiveness claim rests on an unstated measurement method, so adoption as written would import an unverifiable baseline.",
+        "A conditional adoption route is already permitted by the internal standard."
+      ],
+      "contract_violations": [],
+      "operator_id": "first-principles",
+      "operator_version": "0.1.0",
+      "selection_basis": "required",
+      "selection_rationale": "first-principles is required for every GOVERNANCE_EVALUATION route by policy RCP-ROUTING-0.1.0. Purpose: Decompose the problem into primitives that are separately checkable, and label each primitive as verified fact, assumption, or unknown, so that every later conclusion rests on an inspectable base rather than on inherited framing.",
+      "stage": "FRAME",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "evidence_refs": [
+            "EV-P1"
+          ],
+          "primitive_id": "GP1",
+          "statement": "The proposal defines a control set.",
+          "status": "verified_fact"
+        },
+        {
+          "evidence_refs": [
+            "EV-P2"
+          ],
+          "primitive_id": "GP2",
+          "statement": "The effectiveness figure has no stated measurement method.",
+          "status": "verified_fact"
+        },
+        {
+          "evidence_refs": [],
+          "primitive_id": "GP3",
+          "statement": "Whether the absent business units were excluded deliberately is unknown.",
+          "status": "unknown"
+        },
+        {
+          "evidence_refs": [
+            "EV-P4"
+          ],
+          "primitive_id": "GP4",
+          "statement": "A conditional adoption route exists in the standard.",
+          "status": "verified_fact"
+        }
+      ],
+      "structured_payload_key": "primitives"
+    },
+    {
+      "conclusions": [
+        "A rollout covering half the business units leaves the remaining units outside the balancing loop, which weakens the control rather than partially applying it."
+      ],
+      "contract_violations": [],
+      "operator_id": "systemic",
+      "operator_version": "0.1.0",
+      "selection_basis": "required",
+      "selection_rationale": "systemic is required for every GOVERNANCE_EVALUATION route by policy RCP-ROUTING-0.1.0. Purpose: Map the components, the directed relations between them, and at least one feedback loop, so that effects propagating through the system are visible before an option is chosen.",
+      "stage": "FRAME",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "component_id": "G1",
+          "label": "Agent runtime"
+        },
+        {
+          "component_id": "G2",
+          "label": "Identity provider"
+        },
+        {
+          "component_id": "G3",
+          "label": "Change management"
+        },
+        {
+          "component_id": "G4",
+          "label": "Internal audit"
+        }
+      ],
+      "structured_payload_key": "components"
+    },
+    {
+      "conclusions": [
+        "Three routes exist: accept the stated terms, require evidence first, or generate the missing evidence internally."
+      ],
+      "contract_violations": [],
+      "operator_id": "divergent",
+      "operator_version": "0.1.0",
+      "selection_basis": "conditional",
+      "selection_rationale": "divergent was activated for this GOVERNANCE_EVALUATION route by signal(s) contested_options, novel_domain.",
+      "stage": "EXPLORE",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "label": "Adopt the proposal as written",
+          "mechanism": "Accept the stated control set, rollout schedule, and success measures without modification and begin the first business unit next quarter.",
+          "option_id": "OPT-ADOPT",
+          "reversible": false,
+          "tradeoff": "Accepts the proposal's unmeasured effectiveness claim as the baseline for later evaluation."
+        },
+        {
+          "label": "Adopt conditionally after an evidence round",
+          "mechanism": "Require measured baseline data and a stated rollout rationale for the two absent units before any adoption decision is taken.",
+          "option_id": "OPT-CONDITION",
+          "reversible": true,
+          "tradeoff": "Delays the decision by at least one steering cycle."
+        },
+        {
+          "label": "Run a bounded pilot in one business unit",
+          "mechanism": "Instrument a single unit for one quarter to generate the missing baseline internally instead of requesting it.",
+          "option_id": "OPT-PILOT",
+          "reversible": true,
+          "tradeoff": "Spends internal capacity to produce evidence the proposer should have supplied."
+        }
+      ],
+      "structured_payload_key": "options"
+    },
+    {
+      "conclusions": [
+        "The leading explanation for both anomalies is a partial inventory, which is testable by requesting inventory status and is not yet established."
+      ],
+      "contract_violations": [],
+      "operator_id": "abductive",
+      "operator_version": "0.1.0",
+      "selection_basis": "conditional",
+      "selection_rationale": "abductive was activated for this GOVERNANCE_EVALUATION route by signal(s) unexplained_observation.",
+      "stage": "EXPLAIN",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "discriminating_test": "Request the inventory status of the two absent units; if inventories exist, this hypothesis is false.",
+          "explains": [
+            "OBS-1",
+            "OBS-2"
+          ],
+          "hypothesis_id": "GH1",
+          "rank": 1,
+          "statement": "The two absent business units were omitted because their agent estate is not yet inventoried, and the effectiveness figure comes from a pilot in the two included units only."
+        },
+        {
+          "discriminating_test": "Ask for the source system of the 40 percent figure; a vendor document rather than buyer telemetry confirms this hypothesis.",
+          "explains": [
+            "OBS-1",
+            "OBS-2"
+          ],
+          "hypothesis_id": "GH2",
+          "rank": 2,
+          "statement": "The figure is a vendor benchmark rather than a buyer measurement, and the absent units are covered by a separate programme."
+        }
+      ],
+      "structured_payload_key": "hypotheses"
+    },
+    {
+      "conclusions": [
+        "The evidence base is dominated by one interested source and cannot support an adoption decision at this task class."
+      ],
+      "contract_violations": [],
+      "operator_id": "critical",
+      "operator_version": "0.1.0",
+      "selection_basis": "required",
+      "selection_rationale": "critical is required for every GOVERNANCE_EVALUATION route by policy RCP-ROUTING-0.1.0. Purpose: Attack the evidentiary support of claims already on the record and emit typed defects bound to specific targets, so that weak support is surfaced as structured findings rather than as a caveat sentence.",
+      "stage": "CHALLENGE",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "defect_id": "GCR-D1",
+          "defect_type": "unsupported_claim",
+          "remediation": "Require the measurement method, sample population, and observation window before the figure is used in any decision.",
+          "severity": "material",
+          "statement": "The 40 percent effectiveness figure has no measurement method, population, or period attached.",
+          "target_ref": "EV-P2"
+        },
+        {
+          "defect_id": "GCR-D2",
+          "defect_type": "sampling_bias",
+          "remediation": "Require the selection rationale for the included units.",
+          "severity": "material",
+          "statement": "The rollout covers only the units most likely to succeed, so a favourable result would not generalise.",
+          "target_ref": "EV-P3"
+        },
+        {
+          "defect_id": "GCR-D3",
+          "defect_type": "source_conflict",
+          "remediation": "Obtain at least one measurement from a source the proposer does not control.",
+          "severity": "material",
+          "statement": "Three of four evidence records originate from a single buyer-supplied source, so the evidence base is not independent.",
+          "target_ref": "evidence_register"
+        }
+      ],
+      "structured_payload_key": "defects"
+    },
+    {
+      "conclusions": [
+        "The dominant failure mode of adopting as written is irreversible attribution of an unearned improvement to the control set."
+      ],
+      "contract_violations": [],
+      "operator_id": "inverted",
+      "operator_version": "0.1.0",
+      "selection_basis": "required",
+      "selection_rationale": "inverted is required for every GOVERNANCE_EVALUATION route by policy RCP-ROUTING-0.1.0. Purpose: Reason from the failure end: enumerate concrete failure modes with preconditions and detection signals, so that what would have to be true for this to go wrong is on the record before the choice is made.",
+      "stage": "CHALLENGE",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "boundary_flag_candidate": "G4_FINANCIAL_OR_LEGAL_COMMITMENT",
+          "detection_signal": "Post-adoption incident rate does not move despite reported control coverage.",
+          "failure_mode_id": "GIN-F1",
+          "option_ref": "OPT-ADOPT",
+          "precondition": "The 40 percent figure is never independently reproduced after adoption.",
+          "reversible": false,
+          "statement": "Adoption proceeds, the unmeasured baseline turns out to be wrong, and the control set is credited with an improvement it did not cause."
+        },
+        {
+          "boundary_flag_candidate": null,
+          "detection_signal": "Agent activity in the absent units grows relative to the covered units.",
+          "failure_mode_id": "GIN-F2",
+          "option_ref": "OPT-ADOPT",
+          "precondition": "No rollout rationale is supplied for the absent units and they are never scheduled.",
+          "reversible": true,
+          "statement": "The two absent units remain outside the control perimeter and become the route around the governance layer."
+        },
+        {
+          "boundary_flag_candidate": null,
+          "detection_signal": "No response to the evidence request within one steering cycle.",
+          "failure_mode_id": "GIN-F3",
+          "option_ref": "OPT-CONDITION",
+          "precondition": "The buyer treats the evidence request as a rejection.",
+          "reversible": true,
+          "statement": "The evidence round is requested, the buyer declines, and the evaluation stalls without a decision."
+        }
+      ],
+      "structured_payload_key": "failure_modes"
+    },
+    {
+      "conclusions": [
+        "Because this evaluation is precedent-setting, the downstream cost of accepting an unmeasured claim exceeds the immediate cost of delay."
+      ],
+      "contract_violations": [],
+      "operator_id": "second-order",
+      "operator_version": "0.1.0",
+      "selection_basis": "required",
+      "selection_rationale": "second-order is required for every GOVERNANCE_EVALUATION route by policy RCP-ROUTING-0.1.0. Purpose: Trace consequences past the immediate effect, so that the and-then-what step is recorded with a horizon and an affected party rather than left implicit.",
+      "stage": "FORECAST",
+      "status": "COMPLETE",
+      "structured_payload": [
+        {
+          "affected_party": "future proposal reviewers",
+          "effect_id": "GSO-E1",
+          "follows_from": "The proposal is adopted as written.",
+          "horizon": "quarters",
+          "option_ref": "OPT-ADOPT",
+          "order": 2,
+          "statement": "Accepting an unmeasured effectiveness claim once establishes that vendor-asserted figures are adoptable, which lowers the evidence bar for every later proposal."
+        },
+        {
+          "affected_party": "future proposers",
+          "effect_id": "GSO-E2",
+          "follows_from": "Conditional adoption is chosen.",
+          "horizon": "quarters",
+          "option_ref": "OPT-CONDITION",
+          "order": 2,
+          "statement": "Requiring measured evidence once sets the expectation that proposers supply baselines, which shifts evidence cost to the party that can produce it cheapest."
+        }
+      ],
+      "structured_payload_key": "effects"
+    }
+  ],
+  "option_set": [
+    {
+      "label": "Adopt the proposal as written",
+      "option_id": "OPT-ADOPT",
+      "origin": "intake"
+    },
+    {
+      "label": "Adopt conditionally after an evidence round",
+      "option_id": "OPT-CONDITION",
+      "origin": "intake"
+    },
+    {
+      "label": "Run a bounded pilot in one business unit",
+      "option_id": "OPT-PILOT",
+      "origin": "generated_by:divergent"
+    }
+  ],
+  "partial_execution": [],
+  "problem_statement": "An enterprise buyer proposes adopting an agent-governance control layer across four business units, and we must evaluate whether the proposal as written is adoptable.",
+  "receipt_version": "0.1.0",
+  "recommendation": {
+    "kind": "NO_RECOMMENDATION",
+    "option_id": null,
+    "statement": "No recommendation. no option cleared the task-class evidence threshold. Route to human review with the missing-evidence list."
+  },
+  "recommendation_binding_hash": "d0745c3c6c6ebd052c7516426e9ae8d5972766a2ba32c3bb0d142b19d2f9a80a",
+  "record_id": "RCP-RUN-2026-0002::NO_RECOMMENDATION",
+  "review_requirements": [
+    "no option cleared the task-class evidence threshold"
+  ],
+  "risks": [
+    {
+      "boundary_flag_candidate": "G4_FINANCIAL_OR_LEGAL_COMMITMENT",
+      "detection_signal": "Post-adoption incident rate does not move despite reported control coverage.",
+      "reversible": false,
+      "risk_id": "GIN-F1",
+      "source_operator": "inverted",
+      "statement": "Adoption proceeds, the unmeasured baseline turns out to be wrong, and the control set is credited with an improvement it did not cause."
+    },
+    {
+      "boundary_flag_candidate": null,
+      "detection_signal": "Agent activity in the absent units grows relative to the covered units.",
+      "reversible": true,
+      "risk_id": "GIN-F2",
+      "source_operator": "inverted",
+      "statement": "The two absent units remain outside the control perimeter and become the route around the governance layer."
+    },
+    {
+      "boundary_flag_candidate": null,
+      "detection_signal": "No response to the evidence request within one steering cycle.",
+      "reversible": true,
+      "risk_id": "GIN-F3",
+      "source_operator": "inverted",
+      "statement": "The evidence round is requested, the buyer declines, and the evaluation stalls without a decision."
+    },
+    {
+      "affected_party": "future proposal reviewers",
+      "detection_signal": null,
+      "horizon": "quarters",
+      "reversible": null,
+      "risk_id": "GSO-E1",
+      "source_operator": "second-order",
+      "statement": "Accepting an unmeasured effectiveness claim once establishes that vendor-asserted figures are adoptable, which lowers the evidence bar for every later proposal."
+    },
+    {
+      "affected_party": "future proposers",
+      "detection_signal": null,
+      "horizon": "quarters",
+      "reversible": null,
+      "risk_id": "GSO-E2",
+      "source_operator": "second-order",
+      "statement": "Requiring measured evidence once sets the expectation that proposers supply baselines, which shifts evidence cost to the party that can produce it cheapest."
+    }
+  ],
+  "route": {
+    "operators": [
+      {
+        "activated_by": [],
+        "operator_id": "first-principles",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "first-principles is required for every GOVERNANCE_EVALUATION route by policy RCP-ROUTING-0.1.0. Purpose: Decompose the problem into primitives that are separately checkable, and label each primitive as verified fact, assumption, or unknown, so that every later conclusion rests on an inspectable base rather than on inherited framing.",
+        "stage": "FRAME"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "systemic",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "systemic is required for every GOVERNANCE_EVALUATION route by policy RCP-ROUTING-0.1.0. Purpose: Map the components, the directed relations between them, and at least one feedback loop, so that effects propagating through the system are visible before an option is chosen.",
+        "stage": "FRAME"
+      },
+      {
+        "activated_by": [
+          "contested_options",
+          "novel_domain"
+        ],
+        "operator_id": "divergent",
+        "operator_version": "0.1.0",
+        "selection_basis": "conditional",
+        "selection_rationale": "divergent was activated for this GOVERNANCE_EVALUATION route by signal(s) contested_options, novel_domain.",
+        "stage": "EXPLORE"
+      },
+      {
+        "activated_by": [
+          "unexplained_observation"
+        ],
+        "operator_id": "abductive",
+        "operator_version": "0.1.0",
+        "selection_basis": "conditional",
+        "selection_rationale": "abductive was activated for this GOVERNANCE_EVALUATION route by signal(s) unexplained_observation.",
+        "stage": "EXPLAIN"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "critical",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "critical is required for every GOVERNANCE_EVALUATION route by policy RCP-ROUTING-0.1.0. Purpose: Attack the evidentiary support of claims already on the record and emit typed defects bound to specific targets, so that weak support is surfaced as structured findings rather than as a caveat sentence.",
+        "stage": "CHALLENGE"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "inverted",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "inverted is required for every GOVERNANCE_EVALUATION route by policy RCP-ROUTING-0.1.0. Purpose: Reason from the failure end: enumerate concrete failure modes with preconditions and detection signals, so that what would have to be true for this to go wrong is on the record before the choice is made.",
+        "stage": "CHALLENGE"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "second-order",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "second-order is required for every GOVERNANCE_EVALUATION route by policy RCP-ROUTING-0.1.0. Purpose: Trace consequences past the immediate effect, so that the and-then-what step is recorded with a horizon and an affected party rather than left implicit.",
+        "stage": "FORECAST"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "convergent",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "convergent is required for every GOVERNANCE_EVALUATION route by policy RCP-ROUTING-0.1.0. Purpose: Reduce the option set to a single recommendation or to an explicit no-recommendation, by deterministic aggregation of evidence-weighted supporting and opposing claims.",
+        "stage": "DECIDE"
+      },
+      {
+        "activated_by": [],
+        "operator_id": "metacognitive",
+        "operator_version": "0.1.0",
+        "selection_basis": "required",
+        "selection_rationale": "metacognitive is required for every GOVERNANCE_EVALUATION route by policy RCP-ROUTING-0.1.0. Purpose: Audit the run itself rather than the problem.",
+        "stage": "AUDIT"
+      }
+    ],
+    "operators_deferred": [
+      {
+        "detail": "Requires a validated source-domain corpus and a structural-mapping check to avoid surface-similarity reasoning. Without a mapping validity test it degrades into decorative comparison, which is precisely the failure mode this system exists to prevent.",
+        "operator_id": "analogical",
+        "reason": "deferred to v0.2"
+      },
+      {
+        "detail": "Its value is reframing the problem statement, which conflicts with a v0.1 pipeline that treats the intake frame as fixed for the run. Enabling it requires a re-entrant router that can restart classification, which is a v0.2 routing change.",
+        "operator_id": "lateral",
+        "reason": "deferred to v0.2"
+      },
+      {
+        "detail": "Produces connections whose quality cannot yet be scored deterministically. Admitting unscoreable output into the evidence-weighted convergence would let unweighted material influence a decision.",
+        "operator_id": "associative",
+        "reason": "deferred to v0.2"
+      },
+      {
+        "detail": "Deliberately holds opposed propositions simultaneously, which the v0.1 contradiction gate is built to flag and route to REVIEW. Admitting it requires a contradiction taxonomy that distinguishes productive tension from unresolved conflict. That taxonomy is the v0.2 prerequisite.",
+        "operator_id": "janusian",
+        "reason": "deferred to v0.2"
+      }
+    ],
+    "operators_not_selected": [],
+    "route_depth": 9,
+    "route_supported": true,
+    "stage_sequence": [
+      {
+        "execution": "parallel_eligible",
+        "operators": [
+          "first-principles",
+          "systemic"
+        ],
+        "serialized_order": [
+          "first-principles",
+          "systemic"
+        ],
+        "stage": "FRAME"
+      },
+      {
+        "execution": "single",
+        "operators": [
+          "divergent"
+        ],
+        "serialized_order": [
+          "divergent"
+        ],
+        "stage": "EXPLORE"
+      },
+      {
+        "execution": "single",
+        "operators": [
+          "abductive"
+        ],
+        "serialized_order": [
+          "abductive"
+        ],
+        "stage": "EXPLAIN"
+      },
+      {
+        "execution": "parallel_eligible",
+        "operators": [
+          "critical",
+          "inverted"
+        ],
+        "serialized_order": [
+          "critical",
+          "inverted"
+        ],
+        "stage": "CHALLENGE"
+      },
+      {
+        "execution": "single",
+        "operators": [
+          "second-order"
+        ],
+        "serialized_order": [
+          "second-order"
+        ],
+        "stage": "FORECAST"
+      },
+      {
+        "execution": "single",
+        "operators": [
+          "convergent"
+        ],
+        "serialized_order": [
+          "convergent"
+        ],
+        "stage": "DECIDE"
+      },
+      {
+        "execution": "single",
+        "operators": [
+          "metacognitive"
+        ],
+        "serialized_order": [
+          "metacognitive"
+        ],
+        "stage": "AUDIT"
+      }
+    ],
+    "task_class": "GOVERNANCE_EVALUATION"
+  },
+  "run_id": "RCP-RUN-2026-0002",
+  "run_timestamp": "2026-08-04T16:00:00Z",
+  "signals": [
+    "contested_options",
+    "declared_evidence_gap",
+    "external_impact",
+    "irreversibility",
+    "novel_domain",
+    "precedent_setting",
+    "systemic_coupling",
+    "unexplained_observation"
+  ],
+  "stage_chain": [
+    {
+      "content_hash": "43865cbc78caa024da719b994589b2346d5be501da102e8a33f362b77f34f33a",
+      "operator_id": "intake",
+      "operator_version": "0.1.0",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "record_hash": "efcab26136d3afe0b5bac0ceef5ca4b0b146b18d251fc12f767d3939b6a51926",
+      "recorded_at": "2026-08-04T16:00:00Z",
+      "sequence": 0,
+      "stage": "INTAKE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "6053a1456a05e77c1fa1f623e51ea47ae2552a7433a259506eb25816a7b9e9e8",
+      "operator_id": "classifier",
+      "operator_version": "0.1.0",
+      "previous_hash": "efcab26136d3afe0b5bac0ceef5ca4b0b146b18d251fc12f767d3939b6a51926",
+      "record_hash": "effbd95ce0968718013594a69fa68176d32e2c5b05d153589feba78ad4e9ecdd",
+      "recorded_at": "2026-08-04T16:00:00Z",
+      "sequence": 1,
+      "stage": "CLASSIFY",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "def46a08769a83d215eda560e3653482666ac97dcfc1b357265cad954f08d0d6",
+      "operator_id": "router",
+      "operator_version": "0.1.0",
+      "previous_hash": "effbd95ce0968718013594a69fa68176d32e2c5b05d153589feba78ad4e9ecdd",
+      "record_hash": "22445e9eb4d1bece15347ab8c239ea59c54d3dcb060ef7b4593404b61419645f",
+      "recorded_at": "2026-08-04T16:00:00Z",
+      "sequence": 2,
+      "stage": "ROUTE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "91af7efd7c91e2a24824cfcdc35fd205ed4b4938f9d24781693422d191bfc0f6",
+      "operator_id": "first-principles",
+      "operator_version": "0.1.0",
+      "previous_hash": "22445e9eb4d1bece15347ab8c239ea59c54d3dcb060ef7b4593404b61419645f",
+      "record_hash": "7d4f2d033e4245e33ed9fa9510f9e06649fc55ad384f9972600ba5e6726aeaf9",
+      "recorded_at": "2026-08-04T16:00:00Z",
+      "sequence": 3,
+      "stage": "FRAME",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "e351d5a6f2a899f491bc6c0638be1193656cb0b88c26a265f71c4d6841f68603",
+      "operator_id": "systemic",
+      "operator_version": "0.1.0",
+      "previous_hash": "7d4f2d033e4245e33ed9fa9510f9e06649fc55ad384f9972600ba5e6726aeaf9",
+      "record_hash": "cf80404b97e3dca809f62cf1bfd789d552370884cb105942905fa135af2aaac3",
+      "recorded_at": "2026-08-04T16:00:00Z",
+      "sequence": 4,
+      "stage": "FRAME",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "1f6b8ca597fd8b0c0afb6247723be6b829c2231e8eaa3e91c66f05c5ead7e0c9",
+      "operator_id": "divergent",
+      "operator_version": "0.1.0",
+      "previous_hash": "cf80404b97e3dca809f62cf1bfd789d552370884cb105942905fa135af2aaac3",
+      "record_hash": "c033e611b5e0ece4add17bb2780fb1caeb460320ba4728e7f2e19c238cbb2ad4",
+      "recorded_at": "2026-08-04T16:00:00Z",
+      "sequence": 5,
+      "stage": "EXPLORE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "c5860ee509780f9fed1a930a8a78f66a5cbd7918943e80fee20bae732559c662",
+      "operator_id": "abductive",
+      "operator_version": "0.1.0",
+      "previous_hash": "c033e611b5e0ece4add17bb2780fb1caeb460320ba4728e7f2e19c238cbb2ad4",
+      "record_hash": "7b4dc74d95734739e28a6ae25f2e339ca822645048caf216c4a4ddca4ff6737c",
+      "recorded_at": "2026-08-04T16:00:00Z",
+      "sequence": 6,
+      "stage": "EXPLAIN",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "8be80e4c2fc977673c1dec0de77478e10b0225bfd0b1bc89baa4975bfb00501a",
+      "operator_id": "critical",
+      "operator_version": "0.1.0",
+      "previous_hash": "7b4dc74d95734739e28a6ae25f2e339ca822645048caf216c4a4ddca4ff6737c",
+      "record_hash": "dd591fcaaa16bf9be4e6c8b9c7a9c0aa1b5715dfda4f85232001cb31e56bc1a0",
+      "recorded_at": "2026-08-04T16:00:00Z",
+      "sequence": 7,
+      "stage": "CHALLENGE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "303e1bb0dc737f2c6f15ffc25acea4d8f3c1ffa6748adbd85fbc6822941c94e5",
+      "operator_id": "inverted",
+      "operator_version": "0.1.0",
+      "previous_hash": "dd591fcaaa16bf9be4e6c8b9c7a9c0aa1b5715dfda4f85232001cb31e56bc1a0",
+      "record_hash": "a8ecd50456b28e8746bbe5f182d3f3a029ea7297840204da2f775cd781c6ac21",
+      "recorded_at": "2026-08-04T16:00:00Z",
+      "sequence": 8,
+      "stage": "CHALLENGE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "dae6b3deca9a8546c077f3c78956d152f3940a77e160be37f073b7b939d0a316",
+      "operator_id": "second-order",
+      "operator_version": "0.1.0",
+      "previous_hash": "a8ecd50456b28e8746bbe5f182d3f3a029ea7297840204da2f775cd781c6ac21",
+      "record_hash": "1f5f36847c28407bdcd0b1e33b288e843b9644a7f8be11134a74b7d1201e0943",
+      "recorded_at": "2026-08-04T16:00:00Z",
+      "sequence": 9,
+      "stage": "FORECAST",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "02c69228a40be20b5f8395d4dcd909c4ab94228c5c45fd34737a53b8106dd428",
+      "operator_id": "convergent",
+      "operator_version": "0.1.0",
+      "previous_hash": "1f5f36847c28407bdcd0b1e33b288e843b9644a7f8be11134a74b7d1201e0943",
+      "record_hash": "18b5b276ac33979206e3568237c73d9b5b313ad662f42ab754182d8de24a4aad",
+      "recorded_at": "2026-08-04T16:00:00Z",
+      "sequence": 10,
+      "stage": "DECIDE",
+      "status": "COMPLETE"
+    },
+    {
+      "content_hash": "eb005b626cd4a2461d3eeeb8549a125742dfb555189f88230338b620c4299786",
+      "operator_id": "metacognitive",
+      "operator_version": "0.1.0",
+      "previous_hash": "18b5b276ac33979206e3568237c73d9b5b313ad662f42ab754182d8de24a4aad",
+      "record_hash": "def70520f897f43ce36ff7ba586c78b3fd23327c4d2a1d6c0a9e4216aabf4075",
+      "recorded_at": "2026-08-04T16:00:00Z",
+      "sequence": 11,
+      "stage": "AUDIT",
+      "status": "COMPLETE"
+    }
+  ],
+  "stage_chain_head": "def70520f897f43ce36ff7ba586c78b3fd23327c4d2a1d6c0a9e4216aabf4075",
+  "versions": {
+    "operator_registry_id": "RCP-OPERATORS-0.1.0",
+    "operator_registry_sha256": "0666a034739ee1b18f5470d911c07341b495747d7dbdc4b98a7fc99132257637",
+    "operator_registry_version": "0.1.0",
+    "policy_id": "RCP-ROUTING-0.1.0",
+    "policy_version": "0.1.0",
+    "routing_policy_sha256": "098e8bc21de5b1b5eece1dc1daec44b2e6da84577be1363a5908e924bf60b265"
+  }
+}

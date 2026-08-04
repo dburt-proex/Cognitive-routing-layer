@@ -1,0 +1,17 @@
+{
+  "run_id": "RCP-RUN-2026-0006",
+  "run_timestamp": "2026-08-04T20:00:00Z",
+  "policy_version": "0.1.0",
+  "operator_registry_version": "0.1.0",
+  "fixture_note": "Adversarial: valid intake that matches no classification rule. Expected outcome REVIEW with an explicit coverage gap. The engine declares that it has no supported route rather than routing to a nearest-neighbour class and producing confident output about a problem it does not know how to handle.",
+  "intake": {
+    "problem_statement": "We would like a general view on whether the current direction of the work feels right, without a specific artefact, option set, or observation to evaluate.",
+    "artifact_kind": "none",
+    "decision_kind": "evaluate_proposal",
+    "decision_horizon": "weeks",
+    "constraints": ["no specific decision has been framed"],
+    "precedent_exists": true
+  },
+  "evidence_register": [],
+  "operator_outputs": {}
+}
