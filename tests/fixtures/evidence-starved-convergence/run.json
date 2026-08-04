@@ -1,0 +1,223 @@
+{
+  "run_id": "RCP-RUN-2026-0004",
+  "run_timestamp": "2026-08-04T18:00:00Z",
+  "policy_version": "0.1.0",
+  "operator_registry_version": "0.1.0",
+  "fixture_note": "Scenario 4: divergent analysis produces a healthy, materially distinct option set, but every claim leans on the same single internally authored evidence record. Expected outcome NO_RECOMMENDATION and REVIEW on RCP-GATE-EVIDENCE-INSUFFICIENT. This is the case the system exists to catch: plenty of thinking, nothing to stand on.",
+  "intake": {
+    "problem_statement": "We must choose which market segment to approach first with the governed decision offer, and no segment research has been completed yet.",
+    "artifact_kind": "none",
+    "decision_kind": "select_next_action",
+    "decision_horizon": "weeks",
+    "constraints": [
+      "no research budget approved",
+      "one outreach cycle available"
+    ],
+    "affected_systems": [
+      "commercial-pipeline"
+    ],
+    "precedent_exists": false,
+    "known_evidence_gaps": [
+      "no segment interviews conducted",
+      "no willingness-to-pay data"
+    ],
+    "options": [
+      {
+        "option_id": "OPT-REGULATED",
+        "label": "Approach regulated financial services first",
+        "mechanism": "Target compliance owners who already run documented decision-approval processes and frame the offer as evidence for existing audit obligations.",
+        "tradeoff": "Long procurement cycles delay any revenue signal by quarters.",
+        "reversible": true
+      },
+      {
+        "option_id": "OPT-PLATFORM",
+        "label": "Approach AI platform teams first",
+        "mechanism": "Target engineering leaders shipping agent features who need a defensible record of why an agent recommended what it did.",
+        "tradeoff": "These buyers build rather than buy, so the offer competes with internal work.",
+        "reversible": true
+      },
+      {
+        "option_id": "OPT-CONSULTING",
+        "label": "Approach consulting firms as a delivery channel",
+        "mechanism": "License the operator library and receipt format to advisory firms who resell it inside their own engagements.",
+        "tradeoff": "Cedes the direct buyer relationship and the outcome data that comes with it.",
+        "reversible": true
+      }
+    ]
+  },
+  "evidence_register": [
+    {
+      "evidence_id": "EV-M1",
+      "source_type": "document",
+      "source_id": "internal-note",
+      "locator": "commercialization/positioning.md, segment hypotheses",
+      "authority": "indicative",
+      "quality": 55,
+      "independence_group": "internal-hypothesis",
+      "verification_state": "SOURCE_IDENTIFIED",
+      "captured_at": "2026-08-04T17:30:00Z",
+      "claim_supported": "Three segment hypotheses have been written down."
+    }
+  ],
+  "operator_outputs": {
+    "first-principles": {
+      "operator_id": "first-principles",
+      "declared_confidence": "low",
+      "assumptions": [
+        "The three segments are the complete candidate set.",
+        "Delivery capacity is equal across segments."
+      ],
+      "primitives": [
+        {
+          "primitive_id": "MP1",
+          "statement": "Three segment hypotheses have been written down.",
+          "status": "verified_fact",
+          "evidence_refs": [
+            "EV-M1"
+          ]
+        },
+        {
+          "primitive_id": "MP2",
+          "statement": "No buyer in any segment has been interviewed.",
+          "status": "assumption",
+          "evidence_refs": []
+        },
+        {
+          "primitive_id": "MP3",
+          "statement": "Willingness to pay is unknown in every segment.",
+          "status": "unknown",
+          "evidence_refs": []
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "MFP-C1",
+          "statement": "The regulated segment is the only one with a stated existing obligation that the offer maps onto, according to the internal hypothesis note.",
+          "polarity": "supports",
+          "subject_ref": "OPT-REGULATED",
+          "evidence_refs": [
+            "EV-M1"
+          ],
+          "declared_confidence": "low",
+          "derived_from": [
+            "MP1"
+          ]
+        }
+      ]
+    },
+    "divergent": {
+      "operator_id": "divergent",
+      "declared_confidence": "medium",
+      "assumptions": [
+        "Segments can be approached sequentially rather than simultaneously."
+      ],
+      "options": [
+        {
+          "option_id": "OPT-REGULATED",
+          "label": "Approach regulated financial services first",
+          "mechanism": "Target compliance owners who already run documented decision-approval processes and frame the offer as evidence for existing audit obligations.",
+          "tradeoff": "Long procurement cycles delay any revenue signal by quarters.",
+          "reversible": true
+        },
+        {
+          "option_id": "OPT-PLATFORM",
+          "label": "Approach AI platform teams first",
+          "mechanism": "Target engineering leaders shipping agent features who need a defensible record of why an agent recommended what it did.",
+          "tradeoff": "These buyers build rather than buy, so the offer competes with internal work.",
+          "reversible": true
+        },
+        {
+          "option_id": "OPT-CONSULTING",
+          "label": "Approach consulting firms as a delivery channel",
+          "mechanism": "License the operator library and receipt format to advisory firms who resell it inside their own engagements.",
+          "tradeoff": "Cedes the direct buyer relationship and the outcome data that comes with it.",
+          "reversible": true
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "MDV-C1",
+          "statement": "Three distinct go-to-market mechanisms exist: map onto an existing obligation, sell to builders, or sell through a channel.",
+          "polarity": "neutral",
+          "subject_ref": null,
+          "evidence_refs": [],
+          "declared_confidence": "medium"
+        }
+      ]
+    },
+    "critical": {
+      "operator_id": "critical",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "defects": [
+        {
+          "defect_id": "MCR-D1",
+          "defect_type": "evidence_gap",
+          "target_ref": "evidence_register",
+          "statement": "The entire run rests on one internal hypothesis note; no segment has any external evidence attached.",
+          "severity": "material",
+          "remediation": "Conduct at least two interviews per segment and record willingness to pay before any segment is selected."
+        },
+        {
+          "defect_id": "MCR-D2",
+          "defect_type": "circularity",
+          "target_ref": "MFP-C1",
+          "statement": "The claim that the regulated segment fits best cites the same note that proposed the segment, so the evidence and the hypothesis are the same artefact.",
+          "severity": "material",
+          "remediation": "Obtain evidence from a source that did not author the hypothesis."
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "MCR-C1",
+          "statement": "Every segment claim in this run traces back to one internally authored note, so the option set cannot be discriminated on current evidence.",
+          "polarity": "opposes",
+          "subject_ref": "OPT-REGULATED",
+          "evidence_refs": [
+            "EV-M1"
+          ],
+          "declared_confidence": "medium"
+        }
+      ]
+    },
+    "second-order": {
+      "operator_id": "second-order",
+      "declared_confidence": "low",
+      "assumptions": [
+        "A first segment choice shapes the reference stories available for the second."
+      ],
+      "effects": [
+        {
+          "effect_id": "MSO-E1",
+          "statement": "The first segment approached determines which reference story exists for the second, so an early choice made without evidence constrains later positioning more than it appears to at the time.",
+          "order": 2,
+          "follows_from": "A segment is selected for the first outreach cycle.",
+          "horizon": "quarters",
+          "affected_party": "later prospects",
+          "option_ref": "OPT-REGULATED"
+        },
+        {
+          "effect_id": "MSO-E2",
+          "statement": "Licensing through a channel removes the direct outcome data that any later calibration of the confidence model would need.",
+          "order": 2,
+          "follows_from": "The channel option is selected.",
+          "horizon": "quarters",
+          "affected_party": "the calibration effort",
+          "option_ref": "OPT-CONSULTING"
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "MSO-C1",
+          "statement": "Choosing a channel first forecloses the outcome data required to calibrate the confidence model later.",
+          "polarity": "opposes",
+          "subject_ref": "OPT-CONSULTING",
+          "evidence_refs": [
+            "EV-M1"
+          ],
+          "declared_confidence": "low"
+        }
+      ]
+    }
+  }
+}

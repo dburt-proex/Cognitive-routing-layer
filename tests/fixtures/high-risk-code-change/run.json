@@ -1,0 +1,142 @@
+{
+  "run_id": "RCP-RUN-2026-0003",
+  "run_timestamp": "2026-08-04T17:00:00Z",
+  "policy_version": "0.1.0",
+  "operator_registry_version": "0.1.0",
+  "fixture_note": "Scenario 3: a high-risk change that widens a service account's permissions and touches a secrets path. Expected outcome REVIEW driven by an unresolved material contradiction between the test evidence and the security review, with authorization PENDING_CASA because a merge was requested and no CASA authorization was supplied.",
+  "intake": {
+    "problem_statement": "A pull request widens the deployment service account from read-scoped to write-scoped and adds a new handler that reads customer records from a secrets-backed configuration path.",
+    "artifact_kind": "code_change",
+    "decision_kind": "assess_change",
+    "decision_horizon": "immediate",
+    "constraints": ["release window closes in six hours", "no production data may be used for testing"],
+    "affected_systems": ["deployment-service", "identity-provider", "customer-records-store"],
+    "data_scope": ["secrets", "customer_records"],
+    "permission_delta": ["deploy:write granted to svc-deployer", "secrets:read granted to svc-deployer"],
+    "external_parties": ["downstream billing consumer"],
+    "precedent_exists": true,
+    "options": [
+      {
+        "option_id": "OPT-MERGE",
+        "label": "Merge the change as submitted",
+        "mechanism": "Accept the widened service account scope and the new configuration handler exactly as written and release inside the current window.",
+        "tradeoff": "Grants a standing write and secrets-read scope that no rollback removes automatically.",
+        "reversible": false
+      },
+      {
+        "option_id": "OPT-SCOPED",
+        "label": "Merge with a request-scoped short-lived credential",
+        "mechanism": "Replace the standing grant with a credential issued per deployment request and expiring at the end of it, keeping the handler otherwise unchanged.",
+        "tradeoff": "Adds a credential-issuance dependency to every deployment and costs one extra release cycle to implement.",
+        "reversible": true
+      }
+    ],
+    "requested_action": {
+      "kind": "merge_pull_request",
+      "target": "deployment-service#4821",
+      "principal": "svc-deployer",
+      "resource": "repo:deployment-service",
+      "data_scope": ["secrets", "customer_records"],
+      "reversible": false
+    }
+  },
+  "evidence_register": [
+    {"evidence_id": "EV-D1", "source_type": "test_result", "source_id": "ci-pipeline", "locator": "pipeline run 9912: 248 tests passing, coverage 87 percent", "authority": "authoritative", "quality": 85, "independence_group": "ci-execution", "verification_state": "INTEGRITY_CHECKED", "captured_at": "2026-08-04T16:10:00Z", "claim_supported": "The change passes the existing automated suite."},
+    {"evidence_id": "EV-D2", "source_type": "repository", "source_id": "diffwall", "locator": "DiffWall scan: HALT on sensitive-files rule, REVIEW on auth-and-secrets rule", "authority": "authoritative", "quality": 90, "independence_group": "static-analysis", "verification_state": "INTEGRITY_CHECKED", "captured_at": "2026-08-04T16:12:00Z", "claim_supported": "Change-time scanning flags the secrets path and the permission widening."},
+    {"evidence_id": "EV-D3", "source_type": "human_attestation", "source_id": "security-review", "locator": "security reviewer note: standing write scope is not required by the handler", "authority": "authoritative", "quality": 80, "independence_group": "human-review", "verification_state": "AUTHORITATIVE", "captured_at": "2026-08-04T16:20:00Z", "claim_supported": "The widened scope exceeds what the change needs."},
+    {"evidence_id": "EV-D4", "source_type": "measurement", "source_id": "identity-provider", "locator": "svc-deployer credential lifetime is currently unbounded", "authority": "corroborating", "quality": 75, "independence_group": "runtime-telemetry", "verification_state": "RETRIEVED", "captured_at": "2026-08-04T16:22:00Z", "claim_supported": "The existing credential does not expire."},
+    {"evidence_id": "EV-D5", "source_type": "document", "source_id": "credential-standard", "locator": "internal standard: deployment credentials must be request-scoped", "authority": "authoritative", "quality": 85, "independence_group": "internal-standard", "verification_state": "AUTHORITATIVE", "captured_at": "2026-08-04T16:24:00Z", "claim_supported": "A request-scoped credential is the standard-conformant pattern."},
+    {"evidence_id": "EV-D6", "source_type": "measurement", "source_id": "release-calendar", "locator": "six hours remain in the release window", "authority": "corroborating", "quality": 70, "independence_group": "operational-record", "verification_state": "RETRIEVED", "captured_at": "2026-08-04T16:26:00Z", "claim_supported": "Implementation time inside this window is constrained."}
+  ],
+  "operator_outputs": {
+    "first-principles": {
+      "operator_id": "first-principles",
+      "declared_confidence": "high",
+      "assumptions": ["The handler's stated data requirements are complete."],
+      "primitives": [
+        {"primitive_id": "DP1", "statement": "The handler needs to read a configuration value backed by a secrets store.", "status": "verified_fact", "evidence_refs": ["EV-D2"]},
+        {"primitive_id": "DP2", "statement": "The handler does not itself perform any write to the deployment target.", "status": "verified_fact", "evidence_refs": ["EV-D3"]},
+        {"primitive_id": "DP3", "statement": "The existing service credential has no expiry.", "status": "verified_fact", "evidence_refs": ["EV-D4"]},
+        {"primitive_id": "DP4", "statement": "Whether any other consumer depends on the standing write scope is unknown.", "status": "unknown", "evidence_refs": []}
+      ],
+      "claims": [
+        {"claim_id": "DFP-C1", "statement": "The write scope in the change is not required by any behaviour the change introduces, so a request-scoped credential satisfies the same functional requirement.", "polarity": "supports", "subject_ref": "OPT-SCOPED", "evidence_refs": ["EV-D3", "EV-D5", "EV-D4"], "declared_confidence": "high", "derived_from": ["DP2", "DP3"]}
+      ]
+    },
+    "systemic": {
+      "operator_id": "systemic",
+      "declared_confidence": "medium",
+      "assumptions": ["The identity provider can issue short-lived credentials without a new integration."],
+      "components": [
+        {"component_id": "D1", "label": "Deployment service"},
+        {"component_id": "D2", "label": "Identity provider"},
+        {"component_id": "D3", "label": "Customer records store"},
+        {"component_id": "D4", "label": "Billing consumer"}
+      ],
+      "relations": [
+        {"from": "D1", "to": "D2", "polarity": "reinforcing", "mechanism": "the service requests credentials"},
+        {"from": "D2", "to": "D3", "polarity": "reinforcing", "mechanism": "credential scope determines record access"},
+        {"from": "D3", "to": "D4", "polarity": "reinforcing", "mechanism": "records feed downstream billing"},
+        {"from": "D4", "to": "D1", "polarity": "balancing", "mechanism": "billing reconciliation failures throttle deployments"}
+      ],
+      "feedback_loops": [
+        {"loop_id": "DL1", "path": ["D1", "D2", "D3", "D4"], "effect": "A widened credential scope propagates into the billing consumer through the records store, and the balancing return path only throttles deployments after the incorrect data has already been consumed."}
+      ],
+      "claims": [
+        {"claim_id": "DSY-C1", "statement": "A standing scope propagates through the records store into a downstream consumer before the balancing path can react, so scope duration is the control point rather than scope correctness.", "polarity": "supports", "subject_ref": "OPT-SCOPED", "evidence_refs": ["EV-D4", "EV-D5", "EV-D2"], "declared_confidence": "medium"}
+      ]
+    },
+    "divergent": {
+      "operator_id": "divergent",
+      "declared_confidence": "low",
+      "assumptions": ["Rejecting the change outright is out of scope for this review."],
+      "options": [
+        {"option_id": "OPT-MERGE", "label": "Merge the change as submitted", "mechanism": "Accept the widened service account scope and the new configuration handler exactly as written and release inside the current window.", "tradeoff": "Grants a standing write and secrets-read scope that no rollback removes automatically.", "reversible": false},
+        {"option_id": "OPT-SCOPED", "label": "Merge with a request-scoped short-lived credential", "mechanism": "Replace the standing grant with a credential issued per deployment request and expiring at the end of it, keeping the handler otherwise unchanged.", "tradeoff": "Adds a credential-issuance dependency to every deployment and costs one extra release cycle to implement.", "reversible": true},
+        {"option_id": "OPT-SPLIT", "label": "Split the change and ship the handler alone", "mechanism": "Land only the configuration handler behind a feature flag and defer every permission modification to a separate reviewed change.", "tradeoff": "Leaves the handler inert until a second change lands, so no user-visible value ships in this window.", "reversible": true}
+      ],
+      "claims": [
+        {"claim_id": "DDV-C1", "statement": "Three mechanisms are available: accept the standing grant, bound the grant in time, or separate the permission change from the functional change.", "polarity": "neutral", "subject_ref": null, "evidence_refs": [], "declared_confidence": "low"}
+      ]
+    },
+    "critical": {
+      "operator_id": "critical",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "defects": [
+        {"defect_id": "DCR-D1", "defect_type": "unsupported_claim", "target_ref": "EV-D1", "statement": "A passing suite is evidence about behaviour, not about permission scope; no test in the suite exercises the widened credential.", "severity": "material", "remediation": "Add a test that asserts the effective credential scope at deployment time, or stop citing the suite as scope evidence."},
+        {"defect_id": "DCR-D2", "defect_type": "scope_creep", "target_ref": "OPT-MERGE", "statement": "The change bundles a permission modification with a functional handler, so neither can be reviewed or reverted independently.", "severity": "material", "remediation": "Separate the permission change into its own reviewable change."},
+        {"defect_id": "DCR-D3", "defect_type": "false_precision", "target_ref": "DFP-C1", "statement": "Concluding that no other consumer needs the write scope overstates what the security note establishes, which covers this handler only.", "severity": "minor", "remediation": "Enumerate current consumers of the write scope before removing it."}
+      ],
+      "claims": [
+        {"claim_id": "DCR-C1", "statement": "Removing the standing scope is asserted to be safe on the basis of a review that examined only this handler, so the scoped option carries an unquantified regression risk for other consumers.", "polarity": "opposes", "subject_ref": "OPT-SCOPED", "evidence_refs": ["EV-D3", "EV-D6"], "declared_confidence": "medium"},
+        {"claim_id": "DCR-C2", "statement": "Merging as submitted bundles an irreversible permission grant with a functional change, which the change-time scan already routes away from automatic acceptance.", "polarity": "opposes", "subject_ref": "OPT-MERGE", "evidence_refs": ["EV-D2", "EV-D5"], "declared_confidence": "high"}
+      ]
+    },
+    "inverted": {
+      "operator_id": "inverted",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "failure_modes": [
+        {"failure_mode_id": "DIN-F1", "statement": "The standing secrets-read scope is never revoked, and a later unrelated change reuses the same service account to reach customer records.", "option_ref": "OPT-MERGE", "precondition": "No scheduled review removes the grant after this release.", "detection_signal": "The service account appears in access logs for resources unrelated to deployment.", "reversible": false, "boundary_flag_candidate": "G4_SECRET_OR_SENSITIVE_DATA"},
+        {"failure_mode_id": "DIN-F2", "statement": "Credential issuance becomes a deployment dependency and an issuance outage blocks all releases.", "option_ref": "OPT-SCOPED", "precondition": "The identity provider has no fallback issuance path.", "detection_signal": "Deployment failures correlate with identity provider latency.", "reversible": true, "boundary_flag_candidate": null},
+        {"failure_mode_id": "DIN-F3", "statement": "The handler ships behind a flag and is forgotten, leaving dead code that later readers assume is active.", "option_ref": "OPT-SPLIT", "precondition": "The follow-up permission change is never scheduled.", "detection_signal": "The feature flag remains off for more than two release cycles.", "reversible": true, "boundary_flag_candidate": null}
+      ],
+      "claims": [
+        {"claim_id": "DIN-C1", "statement": "The only irreversible failure mode in this change belongs to merging as submitted, because a standing grant persists after any code rollback.", "polarity": "opposes", "subject_ref": "OPT-MERGE", "evidence_refs": ["EV-D4", "EV-D2"], "declared_confidence": "medium"}
+      ]
+    },
+    "second-order": {
+      "operator_id": "second-order",
+      "declared_confidence": "medium",
+      "assumptions": ["The release cadence stays weekly."],
+      "effects": [
+        {"effect_id": "DSO-E1", "statement": "A standing grant issued under release pressure becomes the reference precedent for the next urgent change, so the exception rate rises rather than staying constant.", "order": 2, "follows_from": "The permission widening is accepted inside the release window.", "horizon": "quarters", "affected_party": "future change reviewers", "option_ref": "OPT-MERGE"},
+        {"effect_id": "DSO-E2", "statement": "Once deployments depend on issued credentials, credential expiry becomes a monitored signal, which surfaces scope drift that is currently invisible.", "order": 2, "follows_from": "Request-scoped credentials are adopted.", "horizon": "weeks", "affected_party": "platform operators", "option_ref": "OPT-SCOPED"}
+      ],
+      "claims": [
+        {"claim_id": "DSO-C1", "statement": "Bounding the credential in time converts an invisible standing risk into a monitored signal, which compounds in value across later changes.", "polarity": "supports", "subject_ref": "OPT-SCOPED", "evidence_refs": ["EV-D4", "EV-D5", "EV-D2"], "declared_confidence": "medium"}
+      ]
+    }
+  }
+}

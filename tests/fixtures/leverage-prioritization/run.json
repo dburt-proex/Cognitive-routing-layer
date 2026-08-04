@@ -1,0 +1,128 @@
+{
+  "run_id": "RCP-RUN-2026-0001",
+  "run_timestamp": "2026-08-04T15:00:00Z",
+  "policy_version": "0.1.0",
+  "operator_registry_version": "0.1.0",
+  "fixture_note": "Scenario 1: select the highest-leverage next action from competing priorities. Expected outcome ALLOW with a recommendation, one minor contradiction detected but not blocking, and execution NOT_AUTHORIZED because no action was requested.",
+  "intake": {
+    "problem_statement": "Three candidate work items compete for the next build slot across the Operator Intelligence and Cognitive Routing Layer repositories, and only one can be started this week.",
+    "artifact_kind": "none",
+    "decision_kind": "select_next_action",
+    "decision_horizon": "weeks",
+    "constraints": ["one build slot available", "no external spend", "advisory output only"],
+    "affected_systems": ["operator-intelligence", "cognitive-routing-layer"],
+    "deadline": "2026-08-11T15:00:00Z",
+    "precedent_exists": true,
+    "options": [
+      {
+        "option_id": "OPT-A",
+        "label": "Complete the Cognitive Routing Layer v0.1 vertical slice",
+        "mechanism": "Implement the deterministic router, operator contract enforcement, and decision receipt against the locked policy so the pipeline runs end to end.",
+        "tradeoff": "Defers commercial packaging work by at least one week.",
+        "reversible": true
+      },
+      {
+        "option_id": "OPT-B",
+        "label": "Package the assessment service for sale",
+        "mechanism": "Assemble buyer-facing collateral, pricing tiers, and a proposal template from existing assessment content.",
+        "tradeoff": "Commits to a commercial claim before any buyer evidence exists.",
+        "reversible": true
+      },
+      {
+        "option_id": "OPT-C",
+        "label": "Reconcile repository documentation",
+        "mechanism": "Audit every README and architecture note against the shipped behaviour and correct the drift.",
+        "tradeoff": "Consumes the slot on maintenance rather than on new capability.",
+        "reversible": true
+      }
+    ]
+  },
+  "evidence_register": [
+    {"evidence_id": "EV-1", "source_type": "repository", "source_id": "cognitive-routing-layer", "locator": "spec/routing-policy.yaml@0.1.0", "authority": "authoritative", "quality": 80, "independence_group": "repo-inspection", "verification_state": "INTEGRITY_CHECKED", "captured_at": "2026-08-04T14:00:00Z", "claim_supported": "The routing policy is versioned and complete."},
+    {"evidence_id": "EV-2", "source_type": "test_result", "source_id": "leverage-engine", "locator": "operator-intelligence/leverage-engine/tests: 16 passing", "authority": "authoritative", "quality": 85, "independence_group": "test-execution", "verification_state": "INTEGRITY_CHECKED", "captured_at": "2026-08-04T14:05:00Z", "claim_supported": "The adjacent subsystem pattern is proven executable."},
+    {"evidence_id": "EV-3", "source_type": "repository", "source_id": "operator-intelligence", "locator": "leverage-engine/architecture/system-boundaries.md", "authority": "authoritative", "quality": 75, "independence_group": "repo-inspection", "verification_state": "RETRIEVED", "captured_at": "2026-08-04T14:06:00Z", "claim_supported": "Ownership boundaries between subsystems are already documented."},
+    {"evidence_id": "EV-4", "source_type": "document", "source_id": "roadmap", "locator": "roadmap/v0.1-build-plan.md", "authority": "corroborating", "quality": 70, "independence_group": "planning-record", "verification_state": "SOURCE_IDENTIFIED", "captured_at": "2026-08-04T14:10:00Z", "claim_supported": "The build plan sequences the vertical slice ahead of packaging."},
+    {"evidence_id": "EV-5", "source_type": "document", "source_id": "commercial-review", "locator": "commercialization/positioning.md#unvalidated-assumptions", "authority": "indicative", "quality": 60, "independence_group": "planning-record", "verification_state": "SOURCE_IDENTIFIED", "captured_at": "2026-08-04T14:12:00Z", "claim_supported": "No buyer evidence has been collected for the packaged offer."},
+    {"evidence_id": "EV-6", "source_type": "measurement", "source_id": "pipeline-inventory", "locator": "no signed pilot agreements on record", "authority": "corroborating", "quality": 65, "independence_group": "operational-record", "verification_state": "RETRIEVED", "captured_at": "2026-08-04T14:14:00Z", "claim_supported": "Demand for the packaged offer is unmeasured."},
+    {"evidence_id": "EV-7", "source_type": "document", "source_id": "informal-note", "locator": "unattributed comment that the slice may take longer than planned", "authority": "anecdotal", "quality": 20, "independence_group": "informal", "verification_state": "UNVERIFIED", "captured_at": "2026-08-04T14:20:00Z", "claim_supported": "Schedule risk on the vertical slice."},
+    {"evidence_id": "EV-8", "source_type": "repository", "source_id": "cognitive-routing-layer", "locator": "docs drift not yet measured", "authority": "indicative", "quality": 55, "independence_group": "repo-inspection", "verification_state": "SOURCE_IDENTIFIED", "captured_at": "2026-08-04T14:22:00Z", "claim_supported": "Documentation drift is suspected but unquantified."}
+  ],
+  "operator_outputs": {
+    "first-principles": {
+      "operator_id": "first-principles",
+      "declared_confidence": "high",
+      "assumptions": ["The build slot cannot be split across two work items."],
+      "primitives": [
+        {"primitive_id": "P1", "statement": "Only one build slot is available this week.", "status": "verified_fact", "evidence_refs": ["EV-4"]},
+        {"primitive_id": "P2", "statement": "The routing policy and operator registry are already written and versioned.", "status": "verified_fact", "evidence_refs": ["EV-1"]},
+        {"primitive_id": "P3", "statement": "An adjacent subsystem has already proven the deterministic-fixture pattern executable.", "status": "verified_fact", "evidence_refs": ["EV-2"]},
+        {"primitive_id": "P4", "statement": "Whether a buyer will pay for any of these outputs is unknown.", "status": "unknown", "evidence_refs": []}
+      ],
+      "claims": [
+        {"claim_id": "FP-C1", "statement": "The vertical slice is the only candidate whose prerequisites are already satisfied in the repository.", "polarity": "supports", "subject_ref": "OPT-A", "evidence_refs": ["EV-1", "EV-2"], "declared_confidence": "high", "derived_from": ["P2", "P3"]}
+      ]
+    },
+    "systemic": {
+      "operator_id": "systemic",
+      "declared_confidence": "medium",
+      "assumptions": ["Downstream consumers will not change their interfaces during this build slot."],
+      "components": [
+        {"component_id": "C1", "label": "Cognitive Routing Layer"},
+        {"component_id": "C2", "label": "Leverage Engine"},
+        {"component_id": "C3", "label": "Shared Decision Ledger"}
+      ],
+      "relations": [
+        {"from": "C1", "to": "C2", "polarity": "reinforcing", "mechanism": "routing receipts justify the leverage ranking"},
+        {"from": "C2", "to": "C3", "polarity": "reinforcing", "mechanism": "selected directives are recorded"},
+        {"from": "C3", "to": "C1", "polarity": "balancing", "mechanism": "recorded outcomes constrain future route confidence"}
+      ],
+      "feedback_loops": [
+        {"loop_id": "L1", "path": ["C1", "C2", "C3"], "effect": "Receipts recorded by the ledger constrain how confidently later routes may converge, so an unbuilt routing layer leaves the loop open."}
+      ],
+      "claims": [
+        {"claim_id": "SY-C1", "statement": "The routing layer closes an open loop that currently leaves the leverage ranking without recorded reasoning coverage.", "polarity": "supports", "subject_ref": "OPT-A", "evidence_refs": ["EV-2", "EV-3"], "declared_confidence": "medium"}
+      ]
+    },
+    "divergent": {
+      "operator_id": "divergent",
+      "declared_confidence": "medium",
+      "assumptions": ["The three candidate items are the complete set under consideration."],
+      "options": [
+        {"option_id": "OPT-A", "label": "Complete the Cognitive Routing Layer v0.1 vertical slice", "mechanism": "Implement the deterministic router, operator contract enforcement, and decision receipt against the locked policy so the pipeline runs end to end.", "tradeoff": "Defers commercial packaging work by at least one week.", "reversible": true},
+        {"option_id": "OPT-B", "label": "Package the assessment service for sale", "mechanism": "Assemble buyer-facing collateral, pricing tiers, and a proposal template from existing assessment content.", "tradeoff": "Commits to a commercial claim before any buyer evidence exists.", "reversible": true},
+        {"option_id": "OPT-C", "label": "Reconcile repository documentation", "mechanism": "Audit every README and architecture note against the shipped behaviour and correct the drift.", "tradeoff": "Consumes the slot on maintenance rather than on new capability.", "reversible": true}
+      ],
+      "claims": [
+        {"claim_id": "DV-C1", "statement": "Three materially distinct mechanisms are available: build capability, package existing capability, or repair the record of capability.", "polarity": "neutral", "subject_ref": null, "evidence_refs": [], "declared_confidence": "medium"}
+      ]
+    },
+    "critical": {
+      "operator_id": "critical",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "defects": [
+        {"defect_id": "CR-D1", "defect_type": "unsupported_claim", "target_ref": "OPT-B", "statement": "Packaging assumes demand that no evidence in this run measures.", "severity": "material", "remediation": "Collect two buyer conversations with recorded willingness to pay before packaging."},
+        {"defect_id": "CR-D2", "defect_type": "evidence_gap", "target_ref": "OPT-C", "statement": "The extent of documentation drift is asserted rather than measured, so the work cannot be sized.", "severity": "material", "remediation": "Run a drift diff across README and architecture files and count the divergences."},
+        {"defect_id": "CR-D3", "defect_type": "false_precision", "target_ref": "FP-C1", "statement": "Prerequisites being present does not establish that the slice fits inside one build slot.", "severity": "minor", "remediation": "Timebox the slice and record actual elapsed effort against the estimate."}
+      ],
+      "claims": [
+        {"claim_id": "CR-C1", "statement": "Packaging rests on an unmeasured demand assumption.", "polarity": "opposes", "subject_ref": "OPT-B", "evidence_refs": ["EV-5", "EV-6"], "declared_confidence": "medium"},
+        {"claim_id": "CR-C2", "statement": "An unattributed note suggests the slice may overrun its slot, but the source is anecdotal and unverified.", "polarity": "opposes", "subject_ref": "OPT-A", "evidence_refs": ["EV-7"], "declared_confidence": "low"}
+      ]
+    },
+    "second-order": {
+      "operator_id": "second-order",
+      "declared_confidence": "medium",
+      "assumptions": ["Downstream systems adopt the receipt format without renegotiation."],
+      "effects": [
+        {"effect_id": "SO-E1", "statement": "Once receipts exist, the leverage ranking can cite reasoning coverage rather than asserting it, which changes what the adjacent subsystem is able to claim.", "order": 2, "follows_from": "The vertical slice emits decision receipts.", "horizon": "weeks", "affected_party": "Leverage Engine consumers", "option_ref": "OPT-A"},
+        {"effect_id": "SO-E2", "statement": "Packaging before demand evidence exists creates a public claim that later evidence may contradict, which is expensive to retract.", "order": 2, "follows_from": "Buyer-facing collateral is published.", "horizon": "quarters", "affected_party": "prospective buyers", "option_ref": "OPT-B"},
+        {"effect_id": "SO-E3", "statement": "Documentation repaired before behaviour stabilises drifts again within one release, consuming the slot twice.", "order": 2, "follows_from": "Documentation is reconciled against current behaviour.", "horizon": "weeks", "affected_party": "maintainers", "option_ref": "OPT-C"}
+      ],
+      "claims": [
+        {"claim_id": "SO-C1", "statement": "Building the slice first is what makes the downstream ranking defensible, so its second-order value exceeds its direct output.", "polarity": "supports", "subject_ref": "OPT-A", "evidence_refs": ["EV-1", "EV-4"], "declared_confidence": "medium"},
+        {"claim_id": "SO-C2", "statement": "Reconciling documentation against unstable behaviour repeats the work within one release.", "polarity": "opposes", "subject_ref": "OPT-C", "evidence_refs": ["EV-8"], "declared_confidence": "medium"}
+      ]
+    }
+  }
+}

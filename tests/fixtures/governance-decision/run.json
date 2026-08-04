@@ -1,0 +1,149 @@
+{
+  "run_id": "RCP-RUN-2026-0002",
+  "run_timestamp": "2026-08-04T16:00:00Z",
+  "policy_version": "0.1.0",
+  "operator_registry_version": "0.1.0",
+  "fixture_note": "Scenario 2: evaluate an enterprise agent-governance proposal on incomplete evidence. Expected outcome REVIEW with NO_RECOMMENDATION because no option clears the GOVERNANCE_EVALUATION evidence threshold of three distinct records across two independent sources. Exercises the maximum route depth of nine and activates the abductive operator.",
+  "intake": {
+    "problem_statement": "An enterprise buyer proposes adopting an agent-governance control layer across four business units, and we must evaluate whether the proposal as written is adoptable.",
+    "artifact_kind": "proposal",
+    "decision_kind": "evaluate_proposal",
+    "decision_horizon": "quarters",
+    "constraints": ["no access to the buyer's incident data", "evaluation must complete before the next steering review"],
+    "affected_systems": ["agent-runtime", "identity-provider", "change-management"],
+    "external_parties": ["enterprise buyer", "buyer's internal audit function"],
+    "precedent_exists": false,
+    "precedent_setting": true,
+    "known_evidence_gaps": ["no incident data supplied", "no control-effectiveness measurements supplied"],
+    "observations": [
+      {"observation_id": "OBS-1", "statement": "The proposal claims a 40 percent reduction in unapproved agent actions but cites no measurement method.", "explained": false},
+      {"observation_id": "OBS-2", "statement": "Two of the four business units are absent from the proposal's rollout schedule without explanation.", "explained": false}
+    ],
+    "options": [
+      {
+        "option_id": "OPT-ADOPT",
+        "label": "Adopt the proposal as written",
+        "mechanism": "Accept the stated control set, rollout schedule, and success measures without modification and begin the first business unit next quarter.",
+        "tradeoff": "Accepts the proposal's unmeasured effectiveness claim as the baseline for later evaluation.",
+        "reversible": false
+      },
+      {
+        "option_id": "OPT-CONDITION",
+        "label": "Adopt conditionally after an evidence round",
+        "mechanism": "Require measured baseline data and a stated rollout rationale for the two absent units before any adoption decision is taken.",
+        "tradeoff": "Delays the decision by at least one steering cycle.",
+        "reversible": true
+      }
+    ]
+  },
+  "evidence_register": [
+    {"evidence_id": "EV-P1", "source_type": "document", "source_id": "buyer-proposal", "locator": "proposal.pdf section 3, control set", "authority": "indicative", "quality": 65, "independence_group": "buyer-supplied", "verification_state": "RETRIEVED", "captured_at": "2026-08-04T15:00:00Z", "claim_supported": "The proposed control set is documented."},
+    {"evidence_id": "EV-P2", "source_type": "vendor_claim", "source_id": "buyer-proposal", "locator": "proposal.pdf section 5, effectiveness claim", "authority": "anecdotal", "quality": 40, "independence_group": "buyer-supplied", "verification_state": "UNVERIFIED", "captured_at": "2026-08-04T15:02:00Z", "claim_supported": "A 40 percent reduction in unapproved actions is asserted."},
+    {"evidence_id": "EV-P3", "source_type": "document", "source_id": "buyer-proposal", "locator": "proposal.pdf appendix A, rollout schedule", "authority": "indicative", "quality": 60, "independence_group": "buyer-supplied", "verification_state": "RETRIEVED", "captured_at": "2026-08-04T15:04:00Z", "claim_supported": "The rollout schedule covers two of four business units."},
+    {"evidence_id": "EV-P4", "source_type": "external_publication", "source_id": "control-standard", "locator": "internal control-mapping standard, gate definitions", "authority": "authoritative", "quality": 80, "independence_group": "internal-standard", "verification_state": "INTEGRITY_CHECKED", "captured_at": "2026-08-04T15:06:00Z", "claim_supported": "A conditional adoption path is already defined in the control standard."}
+  ],
+  "operator_outputs": {
+    "first-principles": {
+      "operator_id": "first-principles",
+      "declared_confidence": "medium",
+      "assumptions": ["The proposal document supplied is the complete and current version."],
+      "primitives": [
+        {"primitive_id": "GP1", "statement": "The proposal defines a control set.", "status": "verified_fact", "evidence_refs": ["EV-P1"]},
+        {"primitive_id": "GP2", "statement": "The effectiveness figure has no stated measurement method.", "status": "verified_fact", "evidence_refs": ["EV-P2"]},
+        {"primitive_id": "GP3", "statement": "Whether the absent business units were excluded deliberately is unknown.", "status": "unknown", "evidence_refs": []},
+        {"primitive_id": "GP4", "statement": "A conditional adoption route exists in the standard.", "status": "verified_fact", "evidence_refs": ["EV-P4"]}
+      ],
+      "claims": [
+        {"claim_id": "GFP-C1", "statement": "The proposal's central effectiveness claim rests on an unstated measurement method, so adoption as written would import an unverifiable baseline.", "polarity": "opposes", "subject_ref": "OPT-ADOPT", "evidence_refs": ["EV-P2"], "declared_confidence": "medium", "derived_from": ["GP2"]},
+        {"claim_id": "GFP-C2", "statement": "A conditional adoption route is already permitted by the internal standard.", "polarity": "supports", "subject_ref": "OPT-CONDITION", "evidence_refs": ["EV-P4"], "declared_confidence": "medium", "derived_from": ["GP4"]}
+      ]
+    },
+    "systemic": {
+      "operator_id": "systemic",
+      "declared_confidence": "medium",
+      "assumptions": ["Business units share one identity provider."],
+      "components": [
+        {"component_id": "G1", "label": "Agent runtime"},
+        {"component_id": "G2", "label": "Identity provider"},
+        {"component_id": "G3", "label": "Change management"},
+        {"component_id": "G4", "label": "Internal audit"}
+      ],
+      "relations": [
+        {"from": "G1", "to": "G2", "polarity": "reinforcing", "mechanism": "agents request scoped credentials"},
+        {"from": "G2", "to": "G3", "polarity": "reinforcing", "mechanism": "credential scope changes are tracked as changes"},
+        {"from": "G3", "to": "G4", "polarity": "reinforcing", "mechanism": "change records feed the audit trail"},
+        {"from": "G4", "to": "G1", "polarity": "balancing", "mechanism": "audit findings constrain what the runtime may do"}
+      ],
+      "feedback_loops": [
+        {"loop_id": "GL1", "path": ["G1", "G2", "G3", "G4"], "effect": "Audit findings constrain runtime permissions, so a partial rollout leaves two business units outside the balancing loop entirely."}
+      ],
+      "claims": [
+        {"claim_id": "GSY-C1", "statement": "A rollout covering half the business units leaves the remaining units outside the balancing loop, which weakens the control rather than partially applying it.", "polarity": "opposes", "subject_ref": "OPT-ADOPT", "evidence_refs": ["EV-P3"], "declared_confidence": "medium"}
+      ]
+    },
+    "divergent": {
+      "operator_id": "divergent",
+      "declared_confidence": "medium",
+      "assumptions": ["Rejecting the proposal outright is out of scope for this evaluation."],
+      "options": [
+        {"option_id": "OPT-ADOPT", "label": "Adopt the proposal as written", "mechanism": "Accept the stated control set, rollout schedule, and success measures without modification and begin the first business unit next quarter.", "tradeoff": "Accepts the proposal's unmeasured effectiveness claim as the baseline for later evaluation.", "reversible": false},
+        {"option_id": "OPT-CONDITION", "label": "Adopt conditionally after an evidence round", "mechanism": "Require measured baseline data and a stated rollout rationale for the two absent units before any adoption decision is taken.", "tradeoff": "Delays the decision by at least one steering cycle.", "reversible": true},
+        {"option_id": "OPT-PILOT", "label": "Run a bounded pilot in one business unit", "mechanism": "Instrument a single unit for one quarter to generate the missing baseline internally instead of requesting it.", "tradeoff": "Spends internal capacity to produce evidence the proposer should have supplied.", "reversible": true}
+      ],
+      "claims": [
+        {"claim_id": "GDV-C1", "statement": "Three routes exist: accept the stated terms, require evidence first, or generate the missing evidence internally.", "polarity": "neutral", "subject_ref": null, "evidence_refs": [], "declared_confidence": "medium"}
+      ]
+    },
+    "abductive": {
+      "operator_id": "abductive",
+      "declared_confidence": "low",
+      "assumptions": ["The proposer had access to their own incident data when writing the proposal."],
+      "hypotheses": [
+        {"hypothesis_id": "GH1", "statement": "The two absent business units were omitted because their agent estate is not yet inventoried, and the effectiveness figure comes from a pilot in the two included units only.", "rank": 1, "explains": ["OBS-1", "OBS-2"], "discriminating_test": "Request the inventory status of the two absent units; if inventories exist, this hypothesis is false."},
+        {"hypothesis_id": "GH2", "statement": "The figure is a vendor benchmark rather than a buyer measurement, and the absent units are covered by a separate programme.", "rank": 2, "explains": ["OBS-1", "OBS-2"], "discriminating_test": "Ask for the source system of the 40 percent figure; a vendor document rather than buyer telemetry confirms this hypothesis."}
+      ],
+      "unexplained_observations": [],
+      "claims": [
+        {"claim_id": "GAB-C1", "statement": "The leading explanation for both anomalies is a partial inventory, which is testable by requesting inventory status and is not yet established.", "polarity": "neutral", "subject_ref": "GH1", "evidence_refs": ["EV-P3"], "declared_confidence": "low"}
+      ]
+    },
+    "critical": {
+      "operator_id": "critical",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "defects": [
+        {"defect_id": "GCR-D1", "defect_type": "unsupported_claim", "target_ref": "EV-P2", "statement": "The 40 percent effectiveness figure has no measurement method, population, or period attached.", "severity": "material", "remediation": "Require the measurement method, sample population, and observation window before the figure is used in any decision."},
+        {"defect_id": "GCR-D2", "defect_type": "sampling_bias", "target_ref": "EV-P3", "statement": "The rollout covers only the units most likely to succeed, so a favourable result would not generalise.", "severity": "material", "remediation": "Require the selection rationale for the included units."},
+        {"defect_id": "GCR-D3", "defect_type": "source_conflict", "target_ref": "evidence_register", "statement": "Three of four evidence records originate from a single buyer-supplied source, so the evidence base is not independent.", "severity": "material", "remediation": "Obtain at least one measurement from a source the proposer does not control."}
+      ],
+      "claims": [
+        {"claim_id": "GCR-C1", "statement": "The evidence base is dominated by one interested source and cannot support an adoption decision at this task class.", "polarity": "opposes", "subject_ref": "OPT-ADOPT", "evidence_refs": ["EV-P1", "EV-P2"], "declared_confidence": "medium"}
+      ]
+    },
+    "inverted": {
+      "operator_id": "inverted",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "failure_modes": [
+        {"failure_mode_id": "GIN-F1", "statement": "Adoption proceeds, the unmeasured baseline turns out to be wrong, and the control set is credited with an improvement it did not cause.", "option_ref": "OPT-ADOPT", "precondition": "The 40 percent figure is never independently reproduced after adoption.", "detection_signal": "Post-adoption incident rate does not move despite reported control coverage.", "reversible": false, "boundary_flag_candidate": "G4_FINANCIAL_OR_LEGAL_COMMITMENT"},
+        {"failure_mode_id": "GIN-F2", "statement": "The two absent units remain outside the control perimeter and become the route around the governance layer.", "option_ref": "OPT-ADOPT", "precondition": "No rollout rationale is supplied for the absent units and they are never scheduled.", "detection_signal": "Agent activity in the absent units grows relative to the covered units.", "reversible": true, "boundary_flag_candidate": null},
+        {"failure_mode_id": "GIN-F3", "statement": "The evidence round is requested, the buyer declines, and the evaluation stalls without a decision.", "option_ref": "OPT-CONDITION", "precondition": "The buyer treats the evidence request as a rejection.", "detection_signal": "No response to the evidence request within one steering cycle.", "reversible": true, "boundary_flag_candidate": null}
+      ],
+      "claims": [
+        {"claim_id": "GIN-C1", "statement": "The dominant failure mode of adopting as written is irreversible attribution of an unearned improvement to the control set.", "polarity": "opposes", "subject_ref": "OPT-ADOPT", "evidence_refs": ["EV-P2"], "declared_confidence": "medium"}
+      ]
+    },
+    "second-order": {
+      "operator_id": "second-order",
+      "declared_confidence": "medium",
+      "assumptions": ["The steering review treats this evaluation as precedent for later proposals."],
+      "effects": [
+        {"effect_id": "GSO-E1", "statement": "Accepting an unmeasured effectiveness claim once establishes that vendor-asserted figures are adoptable, which lowers the evidence bar for every later proposal.", "order": 2, "follows_from": "The proposal is adopted as written.", "horizon": "quarters", "affected_party": "future proposal reviewers", "option_ref": "OPT-ADOPT"},
+        {"effect_id": "GSO-E2", "statement": "Requiring measured evidence once sets the expectation that proposers supply baselines, which shifts evidence cost to the party that can produce it cheapest.", "order": 2, "follows_from": "Conditional adoption is chosen.", "horizon": "quarters", "affected_party": "future proposers", "option_ref": "OPT-CONDITION"}
+      ],
+      "claims": [
+        {"claim_id": "GSO-C1", "statement": "Because this evaluation is precedent-setting, the downstream cost of accepting an unmeasured claim exceeds the immediate cost of delay.", "polarity": "supports", "subject_ref": "OPT-CONDITION", "evidence_refs": ["EV-P4"], "declared_confidence": "medium"}
+      ]
+    }
+  }
+}

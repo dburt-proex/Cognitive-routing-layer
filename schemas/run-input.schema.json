@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "run-input.schema.json",
+  "title": "Cognitive Routing Layer Run Input",
+  "description": "A complete run request. operator_outputs carries adapter-supplied operator payloads: in v0.1 these come from a fixture so runs are byte-reproducible, and in later versions from a model. Routing never reads them, so the route is identical either way.",
+  "type": "object",
+  "required": ["run_id", "run_timestamp", "policy_version", "operator_registry_version", "intake"],
+  "properties": {
+    "run_id": {"type": "string", "pattern": "^RCP-RUN-[0-9]{4}-[0-9]{4}$"},
+    "run_timestamp": {"type": "string", "format": "date-time"},
+    "policy_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "operator_registry_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "fixture_note": {"type": "string"},
+    "intake": {"type": "object"},
+    "evidence_register": {"type": "array", "items": {"type": "object"}},
+    "operator_outputs": {"type": "object"},
+    "casa_authorization": {
+      "type": ["object", "null"],
+      "description": "An externally issued authorization. Presence proves nothing; the configured verifier decides.",
+      "required": ["authorization_id", "issuer", "principal", "resource", "action_hash", "bound_receipt_hash", "issued_at", "expires_at", "nonce", "signature"],
+      "properties": {
+        "authorization_id": {"type": "string", "minLength": 1},
+        "issuer": {"type": "string", "minLength": 1},
+        "principal": {"type": "string", "minLength": 1},
+        "resource": {"type": "string", "minLength": 1},
+        "action_hash": {"type": "string", "minLength": 1},
+        "bound_receipt_hash": {"type": "string", "minLength": 1},
+        "policy_version": {"type": "string"},
+        "issued_at": {"type": "string", "format": "date-time"},
+        "expires_at": {"type": "string", "format": "date-time"},
+        "nonce": {"type": "string", "minLength": 1},
+        "signature": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

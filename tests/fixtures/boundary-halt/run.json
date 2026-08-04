@@ -1,0 +1,369 @@
+{
+  "run_id": "RCP-RUN-2026-0007",
+  "run_timestamp": "2026-08-04T21:00:00Z",
+  "policy_version": "0.1.0",
+  "operator_registry_version": "0.1.0",
+  "fixture_note": "Adversarial: an operator raises a run-level boundary flag. Expected outcome HALT at conflict-resolution precedence 1, overriding an otherwise well-evidenced option. A boundary flag outranks every score, matching the Leverage Engine G4 semantics so the two systems agree on what stops a run.",
+  "intake": {
+    "problem_statement": "We must decide how to satisfy an urgent customer request for a bulk export of stored payment records to an external analytics vendor.",
+    "artifact_kind": "none",
+    "decision_kind": "select_next_action",
+    "decision_horizon": "immediate",
+    "constraints": [
+      "customer has escalated to the executive sponsor"
+    ],
+    "data_scope": [
+      "payment",
+      "customer_records"
+    ],
+    "external_parties": [
+      "external analytics vendor"
+    ],
+    "precedent_exists": false,
+    "options": [
+      {
+        "option_id": "OPT-EXPORT",
+        "label": "Export the payment records to the vendor",
+        "mechanism": "Extract the stored payment records in bulk and transfer them to the vendor's ingestion endpoint under the existing data-processing agreement.",
+        "tradeoff": "Moves regulated payment data outside the current processing boundary.",
+        "reversible": false
+      },
+      {
+        "option_id": "OPT-AGGREGATE",
+        "label": "Send derived aggregates only",
+        "mechanism": "Compute the metrics the vendor needs inside our own boundary and transfer only the non-identifying aggregate results.",
+        "tradeoff": "The vendor cannot run analyses we have not anticipated, so later requests need new work.",
+        "reversible": true
+      }
+    ]
+  },
+  "evidence_register": [
+    {
+      "evidence_id": "EV-B1",
+      "source_type": "document",
+      "source_id": "data-processing-agreement",
+      "locator": "DPA section 4: processing is limited to derived metrics",
+      "authority": "authoritative",
+      "quality": 90,
+      "independence_group": "contract",
+      "verification_state": "AUTHORITATIVE",
+      "captured_at": "2026-08-04T20:30:00Z",
+      "claim_supported": "The agreement does not cover bulk record transfer."
+    },
+    {
+      "evidence_id": "EV-B2",
+      "source_type": "measurement",
+      "source_id": "data-inventory",
+      "locator": "the export set contains stored primary account numbers",
+      "authority": "authoritative",
+      "quality": 95,
+      "independence_group": "inventory-scan",
+      "verification_state": "INTEGRITY_CHECKED",
+      "captured_at": "2026-08-04T20:32:00Z",
+      "claim_supported": "The export set contains regulated payment identifiers."
+    },
+    {
+      "evidence_id": "EV-B3",
+      "source_type": "document",
+      "source_id": "retention-standard",
+      "locator": "internal standard: regulated payment data does not leave the processing boundary",
+      "authority": "authoritative",
+      "quality": 90,
+      "independence_group": "internal-standard",
+      "verification_state": "AUTHORITATIVE",
+      "captured_at": "2026-08-04T20:34:00Z",
+      "claim_supported": "Bulk export is prohibited by internal standard."
+    }
+  ],
+  "operator_outputs": {
+    "first-principles": {
+      "operator_id": "first-principles",
+      "declared_confidence": "high",
+      "assumptions": [],
+      "primitives": [
+        {
+          "primitive_id": "BP1",
+          "statement": "The export set contains stored primary account numbers.",
+          "status": "verified_fact",
+          "evidence_refs": [
+            "EV-B2"
+          ]
+        },
+        {
+          "primitive_id": "BP2",
+          "statement": "The processing agreement covers derived metrics only.",
+          "status": "verified_fact",
+          "evidence_refs": [
+            "EV-B1"
+          ]
+        },
+        {
+          "primitive_id": "BP3",
+          "statement": "The vendor's stated analysis needs are not fully enumerated.",
+          "status": "unknown",
+          "evidence_refs": []
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "BFP-C1",
+          "statement": "The requested transfer would move regulated identifiers outside a boundary that the governing agreement does not extend to.",
+          "polarity": "opposes",
+          "subject_ref": "OPT-EXPORT",
+          "evidence_refs": [
+            "EV-B1",
+            "EV-B2",
+            "EV-B3"
+          ],
+          "declared_confidence": "high",
+          "derived_from": [
+            "BP1",
+            "BP2"
+          ]
+        },
+        {
+          "claim_id": "BFP-C2",
+          "statement": "Derived aggregates satisfy the stated analytical need inside the existing agreement.",
+          "polarity": "supports",
+          "subject_ref": "OPT-AGGREGATE",
+          "evidence_refs": [
+            "EV-B1",
+            "EV-B3"
+          ],
+          "declared_confidence": "high",
+          "derived_from": [
+            "BP2"
+          ]
+        }
+      ]
+    },
+    "divergent": {
+      "operator_id": "divergent",
+      "declared_confidence": "low",
+      "assumptions": [],
+      "options": [
+        {
+          "option_id": "OPT-EXPORT",
+          "label": "Export the payment records to the vendor",
+          "mechanism": "Extract the stored payment records in bulk and transfer them to the vendor's ingestion endpoint under the existing data-processing agreement.",
+          "tradeoff": "Moves regulated payment data outside the current processing boundary.",
+          "reversible": false
+        },
+        {
+          "option_id": "OPT-AGGREGATE",
+          "label": "Send derived aggregates only",
+          "mechanism": "Compute the metrics the vendor needs inside our own boundary and transfer only the non-identifying aggregate results.",
+          "tradeoff": "The vendor cannot run analyses we have not anticipated, so later requests need new work.",
+          "reversible": true
+        },
+        {
+          "option_id": "OPT-ONSITE",
+          "label": "Let the vendor query inside our boundary",
+          "mechanism": "Grant the vendor a scoped query interface that runs against the records without any data leaving the processing environment.",
+          "tradeoff": "Requires building and operating a query surface that does not exist today.",
+          "reversible": true
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "BDV-C1",
+          "statement": "Three mechanisms exist: move the data, move a derivative of the data, or move the computation to the data.",
+          "polarity": "neutral",
+          "subject_ref": null,
+          "evidence_refs": [],
+          "declared_confidence": "low"
+        }
+      ]
+    },
+    "critical": {
+      "operator_id": "critical",
+      "declared_confidence": "high",
+      "boundary_flags": [
+        "G4_SECRET_OR_SENSITIVE_DATA"
+      ],
+      "assumptions": [],
+      "defects": [
+        {
+          "defect_id": "BCR-D1",
+          "defect_type": "scope_creep",
+          "target_ref": "OPT-EXPORT",
+          "statement": "The request treats an escalation as authority to widen the processing boundary, which no evidence in this run grants.",
+          "severity": "material",
+          "remediation": "Obtain an amended data-processing agreement before any bulk transfer is considered."
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "BCR-C1",
+          "statement": "Executive escalation is not a source of processing authority, so the export option has no lawful basis in the evidence supplied.",
+          "polarity": "opposes",
+          "subject_ref": "OPT-EXPORT",
+          "evidence_refs": [
+            "EV-B1",
+            "EV-B3"
+          ],
+          "declared_confidence": "high"
+        }
+      ]
+    },
+    "second-order": {
+      "operator_id": "second-order",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "effects": [
+        {
+          "effect_id": "BSO-E1",
+          "statement": "Exporting once under escalation establishes escalation as a route around the processing boundary, so the boundary stops functioning as a control.",
+          "order": 2,
+          "follows_from": "The bulk export is performed.",
+          "horizon": "quarters",
+          "affected_party": "every later data request",
+          "option_ref": "OPT-EXPORT"
+        },
+        {
+          "effect_id": "BSO-E2",
+          "statement": "Delivering aggregates sets the expectation that analytical needs are met by derivation, which reduces the volume of future raw-data requests.",
+          "order": 2,
+          "follows_from": "Aggregates are delivered instead of records.",
+          "horizon": "quarters",
+          "affected_party": "vendor relationship owners",
+          "option_ref": "OPT-AGGREGATE"
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "BSO-C1",
+          "statement": "Meeting the need by derivation reduces the volume of later raw-data requests rather than inviting them.",
+          "polarity": "supports",
+          "subject_ref": "OPT-AGGREGATE",
+          "evidence_refs": [
+            "EV-B1",
+            "EV-B3"
+          ],
+          "declared_confidence": "medium"
+        }
+      ]
+    },
+    "systemic": {
+      "operator_id": "systemic",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "components": [
+        {
+          "component_id": "B1",
+          "label": "Records store"
+        },
+        {
+          "component_id": "B2",
+          "label": "Export pipeline"
+        },
+        {
+          "component_id": "B3",
+          "label": "External vendor environment"
+        },
+        {
+          "component_id": "B4",
+          "label": "Processing agreement"
+        }
+      ],
+      "relations": [
+        {
+          "from": "B1",
+          "to": "B2",
+          "polarity": "reinforcing",
+          "mechanism": "records are extracted for transfer"
+        },
+        {
+          "from": "B2",
+          "to": "B3",
+          "polarity": "reinforcing",
+          "mechanism": "the pipeline delivers to the vendor endpoint"
+        },
+        {
+          "from": "B3",
+          "to": "B4",
+          "polarity": "balancing",
+          "mechanism": "vendor processing is bounded by the agreement"
+        },
+        {
+          "from": "B4",
+          "to": "B1",
+          "polarity": "balancing",
+          "mechanism": "the agreement determines what may leave the store"
+        }
+      ],
+      "feedback_loops": [
+        {
+          "loop_id": "BL1",
+          "path": [
+            "B1",
+            "B2",
+            "B3",
+            "B4"
+          ],
+          "effect": "The agreement is the only balancing element in the loop, so a transfer that exceeds it leaves the loop with no control element at all and the data cannot be recalled."
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "BSY-C1",
+          "statement": "The processing agreement is the sole balancing element in this loop, so a transfer exceeding it removes the only control rather than stressing it.",
+          "polarity": "opposes",
+          "subject_ref": "OPT-EXPORT",
+          "evidence_refs": [
+            "EV-B1",
+            "EV-B3"
+          ],
+          "declared_confidence": "medium"
+        }
+      ]
+    },
+    "inverted": {
+      "operator_id": "inverted",
+      "declared_confidence": "high",
+      "assumptions": [],
+      "failure_modes": [
+        {
+          "failure_mode_id": "BIN-F1",
+          "statement": "The transferred records are retained or replicated inside the vendor environment and cannot be recalled.",
+          "option_ref": "OPT-EXPORT",
+          "precondition": "The vendor's retention behaviour is not contractually bounded for record-level data.",
+          "detection_signal": "Vendor storage growth proportional to the transferred record count.",
+          "reversible": false,
+          "boundary_flag_candidate": "G4_SECRET_OR_SENSITIVE_DATA"
+        },
+        {
+          "failure_mode_id": "BIN-F2",
+          "statement": "The aggregates are computed on a stale snapshot and the vendor draws conclusions from outdated figures.",
+          "option_ref": "OPT-AGGREGATE",
+          "precondition": "The aggregation job is run once and never scheduled.",
+          "detection_signal": "Aggregate timestamps stop advancing.",
+          "reversible": true,
+          "boundary_flag_candidate": null
+        },
+        {
+          "failure_mode_id": "BIN-F3",
+          "statement": "The scoped query surface is built with insufficient row-level restriction and becomes an indirect export path.",
+          "option_ref": "OPT-ONSITE",
+          "precondition": "Query results are not bounded to non-identifying aggregates.",
+          "detection_signal": "Query result sizes approach the underlying record count.",
+          "reversible": true,
+          "boundary_flag_candidate": null
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "BIN-C1",
+          "statement": "The export option carries the only irreversible failure mode, because transferred records cannot be recalled once replicated outside the boundary.",
+          "polarity": "opposes",
+          "subject_ref": "OPT-EXPORT",
+          "evidence_refs": [
+            "EV-B1",
+            "EV-B2"
+          ],
+          "declared_confidence": "high"
+        }
+      ]
+    }
+  }
+}

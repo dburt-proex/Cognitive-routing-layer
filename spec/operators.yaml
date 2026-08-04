@@ -1,0 +1,731 @@
+{
+  "registry_id": "RCP-OPERATORS-0.1.0",
+  "version": "0.1.0",
+  "stage": "v0.1_locked",
+  "format_note": "JSON-compatible YAML. Matches the operator-intelligence/leverage-engine control-file convention so a standard-library runtime can parse control files without a YAML dependency.",
+  "confidence_factors": {
+    "high": 1.0,
+    "medium": 0.75,
+    "low": 0.5,
+    "unknown": 0.0
+  },
+  "confidence_invariant": "declared_confidence_factor is capped by the evidence ceiling computed from the claim's resolved evidence. A conclusion cannot outrank its evidence.",
+  "global_prohibited_behaviors": [
+    "emit_private_chain_of_thought",
+    "invent_evidence_reference",
+    "assert_authorization",
+    "modify_policy_or_operator_registry",
+    "execute_external_action",
+    "claim_human_like_cognition",
+    "restate_another_operator_conclusion_as_new_evidence"
+  ],
+  "operators": [
+    {
+      "operator_id": "first-principles",
+      "version": "0.1.0",
+      "name": "First-Principles Operator",
+      "stage": "FRAME",
+      "class": "analysis",
+      "purpose": "Decompose the problem into primitives that are separately checkable, and label each primitive as verified fact, assumption, or unknown, so that every later conclusion rests on an inspectable base rather than on inherited framing.",
+      "selection_conditions": {
+        "task_classes_required": ["PRIORITIZATION", "DIAGNOSTIC", "DESIGN", "GOVERNANCE_EVALUATION", "CHANGE_RISK", "STRATEGY"],
+        "task_classes_conditional": [],
+        "activation_signals": [],
+        "suppression_signals": []
+      },
+      "input_contract": {
+        "required_fields": ["problem_statement", "constraints"],
+        "optional_fields": ["observations", "options", "evidence_register"],
+        "forbidden_fields": ["casa_result", "prior_recommendation"]
+      },
+      "required_transformations": [
+        {
+          "transformation_id": "FP-T1",
+          "description": "Decompose the problem into at least three primitives.",
+          "verifiable_as": "output.primitives has minItems 3"
+        },
+        {
+          "transformation_id": "FP-T2",
+          "description": "Label every primitive as verified_fact, assumption, or unknown.",
+          "verifiable_as": "every output.primitives[].status is in the enum"
+        },
+        {
+          "transformation_id": "FP-T3",
+          "description": "Every claim must derive from at least one declared primitive.",
+          "verifiable_as": "every output.claims[].derived_from resolves to a primitive_id in output.primitives"
+        },
+        {
+          "transformation_id": "FP-T4",
+          "description": "Every primitive labelled verified_fact must carry at least one evidence reference.",
+          "verifiable_as": "primitives with status verified_fact have non-empty evidence_refs"
+        }
+      ],
+      "output_contract": {
+        "required_fields": ["operator_id", "primitives", "claims", "assumptions", "declared_confidence"],
+        "min_claims": 1,
+        "max_claims": 12,
+        "produces_options": false,
+        "structured_payload_key": "primitives"
+      },
+      "evidence_requirements": {
+        "min_evidence_refs_per_claim": 1,
+        "min_distinct_evidence": 1,
+        "minimum_evidence_quality": 50,
+        "allow_unverified_evidence": true
+      },
+      "assumption_handling": {
+        "must_declare_assumptions": true,
+        "assumption_becomes_missing_evidence": true,
+        "unlabelled_primitive_is_failure": true
+      },
+      "confidence_rules": {
+        "declared_confidence_allowed": ["high", "medium", "low", "unknown"],
+        "cannot_exceed_evidence_ceiling": true,
+        "ceiling_penalty_when_unknown_primitives_exceed": 0.5
+      },
+      "failure_conditions": [
+        "FP-F1: fewer than three primitives",
+        "FP-F2: a primitive lacks a status label",
+        "FP-F3: a claim derives from no declared primitive",
+        "FP-F4: a verified_fact primitive carries no evidence reference"
+      ],
+      "prohibited_behaviors": [
+        "accept_the_framing_of_the_problem_statement_without_decomposition",
+        "label_an_assumption_as_verified_fact"
+      ],
+      "evaluation_fixtures": ["leverage-prioritization", "governance-decision", "high-risk-code-change"]
+    },
+    {
+      "operator_id": "systemic",
+      "version": "0.1.0",
+      "name": "Systemic Operator",
+      "stage": "FRAME",
+      "class": "analysis",
+      "purpose": "Map the components, the directed relations between them, and at least one feedback loop, so that effects propagating through the system are visible before an option is chosen.",
+      "selection_conditions": {
+        "task_classes_required": ["GOVERNANCE_EVALUATION", "CHANGE_RISK", "DIAGNOSTIC", "DESIGN", "STRATEGY"],
+        "task_classes_conditional": ["PRIORITIZATION"],
+        "activation_signals": ["systemic_coupling", "external_impact", "precedent_setting"],
+        "suppression_signals": []
+      },
+      "input_contract": {
+        "required_fields": ["problem_statement", "constraints"],
+        "optional_fields": ["observations", "options", "evidence_register"],
+        "forbidden_fields": ["casa_result", "prior_recommendation"]
+      },
+      "required_transformations": [
+        {
+          "transformation_id": "SY-T1",
+          "description": "Declare at least three components.",
+          "verifiable_as": "output.components has minItems 3"
+        },
+        {
+          "transformation_id": "SY-T2",
+          "description": "Declare directed relations with polarity between declared components only.",
+          "verifiable_as": "every relation.from and relation.to resolve to a component_id"
+        },
+        {
+          "transformation_id": "SY-T3",
+          "description": "Declare at least one feedback loop that is an actual cycle in the relation graph.",
+          "verifiable_as": "every feedback_loop.path forms a closed cycle over declared relations"
+        }
+      ],
+      "output_contract": {
+        "required_fields": ["operator_id", "components", "relations", "feedback_loops", "claims", "assumptions", "declared_confidence"],
+        "min_claims": 1,
+        "max_claims": 10,
+        "produces_options": false,
+        "structured_payload_key": "components"
+      },
+      "evidence_requirements": {
+        "min_evidence_refs_per_claim": 1,
+        "min_distinct_evidence": 1,
+        "minimum_evidence_quality": 50,
+        "allow_unverified_evidence": true
+      },
+      "assumption_handling": {
+        "must_declare_assumptions": true,
+        "assumption_becomes_missing_evidence": true,
+        "unlabelled_primitive_is_failure": false
+      },
+      "confidence_rules": {
+        "declared_confidence_allowed": ["high", "medium", "low", "unknown"],
+        "cannot_exceed_evidence_ceiling": true,
+        "ceiling_penalty_when_unknown_primitives_exceed": 0.5
+      },
+      "failure_conditions": [
+        "SY-F1: fewer than three components",
+        "SY-F2: a relation references an undeclared component",
+        "SY-F3: no feedback loop declared",
+        "SY-F4: a declared feedback loop is not a closed cycle in the relation graph"
+      ],
+      "prohibited_behaviors": [
+        "assert_a_feedback_loop_without_declaring_its_path",
+        "treat_a_list_of_stakeholders_as_a_system_map"
+      ],
+      "evaluation_fixtures": ["governance-decision", "high-risk-code-change"]
+    },
+    {
+      "operator_id": "divergent",
+      "version": "0.1.0",
+      "name": "Divergent Operator",
+      "stage": "EXPLORE",
+      "class": "analysis",
+      "purpose": "Generate a set of materially distinct options, each with a stated mechanism, so that convergence has a real option space rather than a single pre-selected answer with decorations.",
+      "selection_conditions": {
+        "task_classes_required": ["PRIORITIZATION", "DESIGN", "STRATEGY"],
+        "task_classes_conditional": ["GOVERNANCE_EVALUATION", "CHANGE_RISK", "DIAGNOSTIC"],
+        "activation_signals": ["contested_options", "novel_domain"],
+        "suppression_signals": []
+      },
+      "input_contract": {
+        "required_fields": ["problem_statement", "constraints"],
+        "optional_fields": ["options", "evidence_register"],
+        "forbidden_fields": ["casa_result", "prior_recommendation"]
+      },
+      "required_transformations": [
+        {
+          "transformation_id": "DV-T1",
+          "description": "Produce at least three options.",
+          "verifiable_as": "output.options has minItems 3"
+        },
+        {
+          "transformation_id": "DV-T2",
+          "description": "Every option declares a distinct mechanism.",
+          "verifiable_as": "pairwise normalized token overlap of option.mechanism is below the policy distinctness threshold"
+        },
+        {
+          "transformation_id": "DV-T3",
+          "description": "Every option declares what it gives up.",
+          "verifiable_as": "every option.tradeoff is a non-empty string"
+        }
+      ],
+      "output_contract": {
+        "required_fields": ["operator_id", "options", "claims", "assumptions", "declared_confidence"],
+        "min_claims": 1,
+        "max_claims": 12,
+        "produces_options": true,
+        "structured_payload_key": "options"
+      },
+      "evidence_requirements": {
+        "min_evidence_refs_per_claim": 0,
+        "min_distinct_evidence": 0,
+        "minimum_evidence_quality": 0,
+        "allow_unverified_evidence": true,
+        "note": "Option generation is explicitly permitted without evidence. Options carry no decision weight until other operators attach evidence-bearing claims to them. This is the one operator whose output is inert by design."
+      },
+      "assumption_handling": {
+        "must_declare_assumptions": true,
+        "assumption_becomes_missing_evidence": false,
+        "unlabelled_primitive_is_failure": false
+      },
+      "confidence_rules": {
+        "declared_confidence_allowed": ["medium", "low", "unknown"],
+        "cannot_exceed_evidence_ceiling": false,
+        "max_declared_confidence": "medium",
+        "rationale": "Generating an option is not evidence that the option is good. Divergent output is capped below high by contract."
+      },
+      "failure_conditions": [
+        "DV-F1: fewer than three options",
+        "DV-F2: two options exceed the distinctness threshold",
+        "DV-F3: an option declares no tradeoff",
+        "DV-F4: declared_confidence above medium",
+        "DV-F5: a claim takes a supports or opposes polarity, which is ranking an option"
+      ],
+      "prohibited_behaviors": [
+        "produce_restatements_of_one_option_as_distinct_options",
+        "rank_or_recommend_an_option",
+        "claim_evidentiary_support_for_a_generated_option"
+      ],
+      "evaluation_fixtures": ["leverage-prioritization", "evidence-starved-convergence"]
+    },
+    {
+      "operator_id": "abductive",
+      "version": "0.1.0",
+      "name": "Abductive Operator",
+      "stage": "EXPLAIN",
+      "class": "analysis",
+      "purpose": "Produce the most plausible explanations for stated observations together with at least one rival explanation and a discriminating test, so that an inference to best explanation is falsifiable rather than asserted.",
+      "selection_conditions": {
+        "task_classes_required": ["DIAGNOSTIC"],
+        "task_classes_conditional": ["PRIORITIZATION", "GOVERNANCE_EVALUATION", "CHANGE_RISK", "DESIGN", "STRATEGY"],
+        "activation_signals": ["unexplained_observation"],
+        "suppression_signals": []
+      },
+      "input_contract": {
+        "required_fields": ["problem_statement", "observations"],
+        "optional_fields": ["constraints", "evidence_register"],
+        "forbidden_fields": ["casa_result", "prior_recommendation"]
+      },
+      "required_transformations": [
+        {
+          "transformation_id": "AB-T1",
+          "description": "Produce at least two hypotheses, one leading and at least one rival.",
+          "verifiable_as": "output.hypotheses has minItems 2 and exactly one has rank 1"
+        },
+        {
+          "transformation_id": "AB-T2",
+          "description": "Every hypothesis names the observations it explains.",
+          "verifiable_as": "every hypothesis.explains resolves to an observation_id in input.observations"
+        },
+        {
+          "transformation_id": "AB-T3",
+          "description": "Every hypothesis declares a discriminating test that would separate it from its rivals.",
+          "verifiable_as": "every hypothesis.discriminating_test is a non-empty string"
+        },
+        {
+          "transformation_id": "AB-T4",
+          "description": "Observations left unexplained by the leading hypothesis are declared.",
+          "verifiable_as": "output.unexplained_observations equals input observation ids minus the leading hypothesis explains set"
+        }
+      ],
+      "output_contract": {
+        "required_fields": ["operator_id", "hypotheses", "unexplained_observations", "claims", "assumptions", "declared_confidence"],
+        "min_claims": 1,
+        "max_claims": 8,
+        "produces_options": false,
+        "structured_payload_key": "hypotheses"
+      },
+      "evidence_requirements": {
+        "min_evidence_refs_per_claim": 1,
+        "min_distinct_evidence": 1,
+        "minimum_evidence_quality": 50,
+        "allow_unverified_evidence": true
+      },
+      "assumption_handling": {
+        "must_declare_assumptions": true,
+        "assumption_becomes_missing_evidence": true,
+        "unlabelled_primitive_is_failure": false
+      },
+      "confidence_rules": {
+        "declared_confidence_allowed": ["high", "medium", "low", "unknown"],
+        "cannot_exceed_evidence_ceiling": true,
+        "max_declared_confidence_without_discriminating_test": "low"
+      },
+      "failure_conditions": [
+        "AB-F1: fewer than two hypotheses",
+        "AB-F2: no single leading hypothesis or more than one rank 1",
+        "AB-F3: a hypothesis explains an observation that was not supplied",
+        "AB-F4: a hypothesis declares no discriminating test"
+      ],
+      "prohibited_behaviors": [
+        "present_a_single_hypothesis_as_the_explanation",
+        "treat_an_unfalsifiable_hypothesis_as_leading"
+      ],
+      "evaluation_fixtures": ["governance-decision"]
+    },
+    {
+      "operator_id": "critical",
+      "version": "0.1.0",
+      "name": "Critical Operator",
+      "stage": "CHALLENGE",
+      "class": "analysis",
+      "purpose": "Attack the evidentiary support of claims already on the record and emit typed defects bound to specific targets, so that weak support is surfaced as structured findings rather than as a caveat sentence.",
+      "selection_conditions": {
+        "task_classes_required": ["PRIORITIZATION", "DIAGNOSTIC", "DESIGN", "GOVERNANCE_EVALUATION", "CHANGE_RISK", "STRATEGY"],
+        "task_classes_conditional": [],
+        "activation_signals": [],
+        "suppression_signals": []
+      },
+      "input_contract": {
+        "required_fields": ["problem_statement", "upstream_claims"],
+        "optional_fields": ["evidence_register", "options"],
+        "forbidden_fields": ["casa_result", "prior_recommendation"]
+      },
+      "required_transformations": [
+        {
+          "transformation_id": "CR-T1",
+          "description": "Every defect names a typed defect_type from the closed vocabulary.",
+          "verifiable_as": "every defect.defect_type is in the policy defect_vocabulary"
+        },
+        {
+          "transformation_id": "CR-T2",
+          "description": "Every defect binds to an upstream claim id or an evidence id that exists in the run.",
+          "verifiable_as": "every defect.target_ref resolves to a run claim_id or evidence_id"
+        },
+        {
+          "transformation_id": "CR-T3",
+          "description": "Every defect declares what would repair it.",
+          "verifiable_as": "every defect.remediation is a non-empty string"
+        },
+        {
+          "transformation_id": "CR-T4",
+          "description": "Defects rated material are separated from defects rated minor.",
+          "verifiable_as": "every defect.severity is in [material, minor]"
+        }
+      ],
+      "output_contract": {
+        "required_fields": ["operator_id", "defects", "claims", "assumptions", "declared_confidence"],
+        "min_claims": 1,
+        "max_claims": 12,
+        "produces_options": false,
+        "structured_payload_key": "defects"
+      },
+      "evidence_requirements": {
+        "min_evidence_refs_per_claim": 1,
+        "min_distinct_evidence": 1,
+        "minimum_evidence_quality": 50,
+        "allow_unverified_evidence": true,
+        "note": "A defect asserting that evidence is absent may cite the evidence register itself as its reference. Absence is an inspectable state of the run."
+      },
+      "assumption_handling": {
+        "must_declare_assumptions": true,
+        "assumption_becomes_missing_evidence": true,
+        "unlabelled_primitive_is_failure": false
+      },
+      "confidence_rules": {
+        "declared_confidence_allowed": ["high", "medium", "low", "unknown"],
+        "cannot_exceed_evidence_ceiling": true
+      },
+      "failure_conditions": [
+        "CR-F1: a defect uses a type outside the closed vocabulary",
+        "CR-F2: a defect binds to a target that does not exist in the run",
+        "CR-F3: a defect declares no remediation",
+        "CR-F4: no defects and no explicit no_defects_found justification"
+      ],
+      "prohibited_behaviors": [
+        "criticize_without_binding_to_a_target",
+        "raise_a_defect_that_restates_a_declared_assumption_as_a_discovery",
+        "substitute_general_caution_for_a_typed_defect"
+      ],
+      "evaluation_fixtures": ["leverage-prioritization", "governance-decision", "high-risk-code-change", "evidence-starved-convergence"]
+    },
+    {
+      "operator_id": "inverted",
+      "version": "0.1.0",
+      "name": "Inverted Operator",
+      "stage": "CHALLENGE",
+      "class": "analysis",
+      "purpose": "Reason from the failure end: enumerate concrete failure modes with preconditions and detection signals, so that what would have to be true for this to go wrong is on the record before the choice is made.",
+      "selection_conditions": {
+        "task_classes_required": ["GOVERNANCE_EVALUATION", "CHANGE_RISK", "DESIGN"],
+        "task_classes_conditional": ["PRIORITIZATION", "STRATEGY", "DIAGNOSTIC"],
+        "activation_signals": ["irreversibility", "external_impact", "sensitive_data_scope", "permission_change"],
+        "suppression_signals": []
+      },
+      "input_contract": {
+        "required_fields": ["problem_statement", "options"],
+        "optional_fields": ["constraints", "evidence_register", "upstream_claims"],
+        "forbidden_fields": ["casa_result", "prior_recommendation"]
+      },
+      "required_transformations": [
+        {
+          "transformation_id": "IN-T1",
+          "description": "Produce at least two failure modes.",
+          "verifiable_as": "output.failure_modes has minItems 2"
+        },
+        {
+          "transformation_id": "IN-T2",
+          "description": "Every failure mode binds to a declared option.",
+          "verifiable_as": "every failure_mode.option_ref resolves to an option_id in the run option set"
+        },
+        {
+          "transformation_id": "IN-T3",
+          "description": "Every failure mode declares the precondition that would make it occur.",
+          "verifiable_as": "every failure_mode.precondition is a non-empty string"
+        },
+        {
+          "transformation_id": "IN-T4",
+          "description": "Every failure mode declares an observable detection signal.",
+          "verifiable_as": "every failure_mode.detection_signal is a non-empty string"
+        },
+        {
+          "transformation_id": "IN-T5",
+          "description": "Every failure mode declares reversibility, and an irreversible one names the boundary flag it would trip.",
+          "verifiable_as": "every failure_mode.reversible is a boolean, and reversible=false requires a boundary_flag_candidate from the policy vocabulary"
+        }
+      ],
+      "output_contract": {
+        "required_fields": ["operator_id", "failure_modes", "claims", "assumptions", "declared_confidence"],
+        "min_claims": 1,
+        "max_claims": 12,
+        "produces_options": false,
+        "structured_payload_key": "failure_modes"
+      },
+      "evidence_requirements": {
+        "min_evidence_refs_per_claim": 1,
+        "min_distinct_evidence": 1,
+        "minimum_evidence_quality": 50,
+        "allow_unverified_evidence": true
+      },
+      "assumption_handling": {
+        "must_declare_assumptions": true,
+        "assumption_becomes_missing_evidence": true,
+        "unlabelled_primitive_is_failure": false
+      },
+      "confidence_rules": {
+        "declared_confidence_allowed": ["high", "medium", "low", "unknown"],
+        "cannot_exceed_evidence_ceiling": true
+      },
+      "failure_conditions": [
+        "IN-F1: fewer than two failure modes",
+        "IN-F2: a failure mode binds to an option that does not exist",
+        "IN-F3: a failure mode declares no precondition",
+        "IN-F4: a failure mode declares no detection signal",
+        "IN-F5: an irreversible failure mode is emitted without a boundary_flag_candidate"
+      ],
+      "prohibited_behaviors": [
+        "list_generic_risks_without_preconditions",
+        "declare_a_failure_mode_undetectable_without_saying_so_explicitly"
+      ],
+      "evaluation_fixtures": ["governance-decision", "high-risk-code-change", "confidence-does-not-authorize"]
+    },
+    {
+      "operator_id": "second-order",
+      "version": "0.1.0",
+      "name": "Second-Order Operator",
+      "stage": "FORECAST",
+      "class": "analysis",
+      "purpose": "Trace consequences past the immediate effect, so that the and-then-what step is recorded with a horizon and an affected party rather than left implicit.",
+      "selection_conditions": {
+        "task_classes_required": ["PRIORITIZATION", "GOVERNANCE_EVALUATION", "CHANGE_RISK", "DESIGN", "STRATEGY"],
+        "task_classes_conditional": ["DIAGNOSTIC"],
+        "activation_signals": ["precedent_setting", "external_impact", "systemic_coupling"],
+        "suppression_signals": []
+      },
+      "input_contract": {
+        "required_fields": ["problem_statement", "options"],
+        "optional_fields": ["constraints", "evidence_register", "upstream_claims"],
+        "forbidden_fields": ["casa_result", "prior_recommendation"]
+      },
+      "required_transformations": [
+        {
+          "transformation_id": "SO-T1",
+          "description": "Every effect declares an order of at least 2.",
+          "verifiable_as": "every effect.order is an integer >= 2"
+        },
+        {
+          "transformation_id": "SO-T2",
+          "description": "Every effect names the first-order effect it follows from.",
+          "verifiable_as": "every effect.follows_from is a non-empty string"
+        },
+        {
+          "transformation_id": "SO-T3",
+          "description": "Every effect declares a horizon and an affected party.",
+          "verifiable_as": "every effect.horizon is in the policy horizon vocabulary and effect.affected_party is non-empty"
+        },
+        {
+          "transformation_id": "SO-T4",
+          "description": "Every effect binds to a declared option.",
+          "verifiable_as": "every effect.option_ref resolves to an option_id in the run option set"
+        }
+      ],
+      "output_contract": {
+        "required_fields": ["operator_id", "effects", "claims", "assumptions", "declared_confidence"],
+        "min_claims": 1,
+        "max_claims": 12,
+        "produces_options": false,
+        "structured_payload_key": "effects"
+      },
+      "evidence_requirements": {
+        "min_evidence_refs_per_claim": 1,
+        "min_distinct_evidence": 1,
+        "minimum_evidence_quality": 50,
+        "allow_unverified_evidence": true
+      },
+      "assumption_handling": {
+        "must_declare_assumptions": true,
+        "assumption_becomes_missing_evidence": true,
+        "unlabelled_primitive_is_failure": false
+      },
+      "confidence_rules": {
+        "declared_confidence_allowed": ["medium", "low", "unknown"],
+        "cannot_exceed_evidence_ceiling": true,
+        "max_declared_confidence": "medium",
+        "rationale": "Forecasts of downstream effects are capped below high by contract. A second-order projection is not an observation."
+      },
+      "failure_conditions": [
+        "SO-F1: an effect declares order less than 2",
+        "SO-F2: an effect names no first-order antecedent",
+        "SO-F3: an effect binds to an option that does not exist",
+        "SO-F4: declared_confidence above medium"
+      ],
+      "prohibited_behaviors": [
+        "restate_a_first_order_effect_as_second_order",
+        "forecast_without_naming_an_affected_party"
+      ],
+      "evaluation_fixtures": ["leverage-prioritization", "governance-decision", "high-risk-code-change", "confidence-does-not-authorize"]
+    },
+    {
+      "operator_id": "convergent",
+      "version": "0.1.0",
+      "name": "Convergent Operator",
+      "stage": "DECIDE",
+      "class": "deterministic",
+      "purpose": "Reduce the option set to a single recommendation or to an explicit no-recommendation, by deterministic aggregation of evidence-weighted supporting and opposing claims. This operator computes; it does not generate.",
+      "selection_conditions": {
+        "task_classes_required": ["PRIORITIZATION", "DIAGNOSTIC", "DESIGN", "GOVERNANCE_EVALUATION", "CHANGE_RISK", "STRATEGY"],
+        "task_classes_conditional": [],
+        "activation_signals": [],
+        "suppression_signals": []
+      },
+      "input_contract": {
+        "required_fields": ["options", "run_claims", "evidence_register", "contradictions"],
+        "optional_fields": [],
+        "forbidden_fields": ["casa_result"]
+      },
+      "required_transformations": [
+        {
+          "transformation_id": "CV-T1",
+          "description": "Compute a support score and an opposition score per option from evidence-weighted claims.",
+          "verifiable_as": "every option in the ranking carries support, opposition and net values"
+        },
+        {
+          "transformation_id": "CV-T2",
+          "description": "Mark each option evidence_sufficient or not against the task-class threshold.",
+          "verifiable_as": "every ranked option carries evidence_sufficient and the thresholds applied"
+        },
+        {
+          "transformation_id": "CV-T3",
+          "description": "Select only from evidence-sufficient options; otherwise return NO_RECOMMENDATION.",
+          "verifiable_as": "selected_option_id is null whenever no option is evidence_sufficient"
+        },
+        {
+          "transformation_id": "CV-T4",
+          "description": "Record every non-selected option as a rejected alternative with its reason.",
+          "verifiable_as": "rejected_alternatives covers the full option set minus the selection"
+        }
+      ],
+      "output_contract": {
+        "required_fields": ["operator_id", "ranking", "selected_option_id", "rejected_alternatives", "claims", "declared_confidence"],
+        "min_claims": 1,
+        "max_claims": 4,
+        "produces_options": false,
+        "structured_payload_key": "ranking"
+      },
+      "evidence_requirements": {
+        "min_evidence_refs_per_claim": 0,
+        "min_distinct_evidence": 0,
+        "minimum_evidence_quality": 0,
+        "allow_unverified_evidence": false,
+        "note": "Convergent inherits the evidence of the claims it aggregates. It introduces none of its own."
+      },
+      "assumption_handling": {
+        "must_declare_assumptions": false,
+        "assumption_becomes_missing_evidence": false,
+        "unlabelled_primitive_is_failure": false
+      },
+      "confidence_rules": {
+        "declared_confidence_allowed": ["high", "medium", "low", "unknown"],
+        "cannot_exceed_evidence_ceiling": true,
+        "derived_only": true,
+        "rationale": "Convergent confidence is computed from the aggregate evidence ceiling of the claims supporting the selection. It is never asserted."
+      },
+      "failure_conditions": [
+        "CV-F1: an option set of size zero",
+        "CV-F2: a selection made from an option that is not evidence_sufficient",
+        "CV-F3: a selection made while a material contradiction is unresolved",
+        "CV-F4: rejected alternatives do not cover the option set"
+      ],
+      "prohibited_behaviors": [
+        "generate_a_new_option_at_the_decide_stage",
+        "select_on_narrative_strength_rather_than_evidence_weight",
+        "resolve_a_contradiction_by_discarding_one_side_without_a_recorded_reason"
+      ],
+      "evaluation_fixtures": ["leverage-prioritization", "governance-decision", "high-risk-code-change", "evidence-starved-convergence", "confidence-does-not-authorize"]
+    },
+    {
+      "operator_id": "metacognitive",
+      "version": "0.1.0",
+      "name": "Metacognitive Audit Operator",
+      "stage": "AUDIT",
+      "class": "meta",
+      "purpose": "Audit the run itself rather than the problem. Verify route coverage, evidence binding, confidence calibration, contradiction disposition, and the confidence-authorization separation, and fail the run when the reasoning process did not meet its own contract.",
+      "selection_conditions": {
+        "task_classes_required": ["PRIORITIZATION", "DIAGNOSTIC", "DESIGN", "GOVERNANCE_EVALUATION", "CHANGE_RISK", "STRATEGY"],
+        "task_classes_conditional": [],
+        "activation_signals": [],
+        "suppression_signals": [],
+        "mandatory": true,
+        "may_not_be_skipped_reason": "The audit is the control that makes every other operator result trustworthy. A run without it has no completion evidence."
+      },
+      "input_contract": {
+        "required_fields": ["run_record"],
+        "optional_fields": [],
+        "forbidden_fields": []
+      },
+      "required_transformations": [
+        {
+          "transformation_id": "MC-T1",
+          "description": "PLAN check: the executed route matches the route the policy selected for the classification.",
+          "verifiable_as": "executed operator ids equal planned operator ids"
+        },
+        {
+          "transformation_id": "MC-T2",
+          "description": "MONITOR check: every operator satisfied its required transformations and none violated a prohibited behavior.",
+          "verifiable_as": "no operator carries an unresolved contract_violation"
+        },
+        {
+          "transformation_id": "MC-T3",
+          "description": "EVALUATE check: no claim confidence exceeds its evidence ceiling, and evidence sufficiency thresholds were applied.",
+          "verifiable_as": "no claim has effective_confidence greater than evidence_ceiling"
+        },
+        {
+          "transformation_id": "MC-T4",
+          "description": "REFLECT check: contradictions are dispositioned, missing evidence is enumerated, and the authorization status was not derived from confidence.",
+          "verifiable_as": "every contradiction has a disposition and authorization_status has a non-confidence provenance"
+        }
+      ],
+      "output_contract": {
+        "required_fields": ["operator_id", "audit_result", "findings", "coverage", "phases", "declared_confidence"],
+        "min_claims": 0,
+        "max_claims": 0,
+        "produces_options": false,
+        "structured_payload_key": "findings"
+      },
+      "evidence_requirements": {
+        "min_evidence_refs_per_claim": 0,
+        "min_distinct_evidence": 0,
+        "minimum_evidence_quality": 0,
+        "allow_unverified_evidence": false,
+        "note": "The audit's evidence is the run record itself."
+      },
+      "assumption_handling": {
+        "must_declare_assumptions": false,
+        "assumption_becomes_missing_evidence": false,
+        "unlabelled_primitive_is_failure": false
+      },
+      "confidence_rules": {
+        "declared_confidence_allowed": ["high"],
+        "cannot_exceed_evidence_ceiling": false,
+        "derived_only": true,
+        "rationale": "The audit reports deterministic checks over a complete run record. Its checks either passed or did not."
+      },
+      "failure_conditions": [
+        "MC-F1: a required operator did not execute",
+        "MC-F2: an operator violated a required transformation",
+        "MC-F3: a claim confidence exceeds its evidence ceiling",
+        "MC-F4: a material contradiction has no disposition",
+        "MC-F5: authorization_status was derived from a confidence value"
+      ],
+      "prohibited_behaviors": [
+        "pass_a_run_that_skipped_a_required_operator",
+        "downgrade_a_finding_to_make_a_run_pass",
+        "audit_the_problem_instead_of_the_run"
+      ],
+      "evaluation_fixtures": ["leverage-prioritization", "governance-decision", "high-risk-code-change", "evidence-starved-convergence", "confidence-does-not-authorize"]
+    }
+  ],
+  "deferred_operators": [
+    {
+      "operator_id": "analogical",
+      "target_version": "0.2.0",
+      "deferral_reason": "Requires a validated source-domain corpus and a structural-mapping check to avoid surface-similarity reasoning. Without a mapping validity test it degrades into decorative comparison, which is precisely the failure mode this system exists to prevent."
+    },
+    {
+      "operator_id": "lateral",
+      "target_version": "0.2.0",
+      "deferral_reason": "Its value is reframing the problem statement, which conflicts with a v0.1 pipeline that treats the intake frame as fixed for the run. Enabling it requires a re-entrant router that can restart classification, which is a v0.2 routing change."
+    },
+    {
+      "operator_id": "associative",
+      "target_version": "0.2.0",
+      "deferral_reason": "Produces connections whose quality cannot yet be scored deterministically. Admitting unscoreable output into the evidence-weighted convergence would let unweighted material influence a decision."
+    },
+    {
+      "operator_id": "janusian",
+      "target_version": "0.2.0",
+      "deferral_reason": "Deliberately holds opposed propositions simultaneously, which the v0.1 contradiction gate is built to flag and route to REVIEW. Admitting it requires a contradiction taxonomy that distinguishes productive tension from unresolved conflict. That taxonomy is the v0.2 prerequisite."
+    }
+  ]
+}

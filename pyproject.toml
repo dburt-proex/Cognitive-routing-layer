@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cognitive-routing-layer"
+version = "0.1.0"
+description = "Deterministic reasoning-operator routing and decision-receipt engine for the Reasoning Control Plane"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+cognitive-routing-layer = "cognitive_routing_layer.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "operator-input.schema.json",
+  "title": "Reasoning Operator Input",
+  "description": "What the engine hands to a single operator. The engine composes this from the run state according to the operator's declared input_contract; an operator never reads the raw run. Fields listed in an operator's forbidden_fields are omitted here, which is how casa_result and prior_recommendation are kept out of analytical reasoning.",
+  "type": "object",
+  "required": ["operator_id", "operator_version", "run_id", "task_class", "problem_statement"],
+  "properties": {
+    "operator_id": {"enum": ["first-principles", "systemic", "divergent", "abductive", "critical", "inverted", "second-order", "convergent", "metacognitive"]},
+    "operator_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "run_id": {"type": "string", "minLength": 1},
+    "task_class": {"enum": ["PRIORITIZATION", "DIAGNOSTIC", "DESIGN", "GOVERNANCE_EVALUATION", "CHANGE_RISK", "STRATEGY"]},
+    "problem_statement": {"type": "string", "minLength": 20},
+    "constraints": {"type": "array", "items": {"type": "string"}},
+    "options": {"type": "array", "items": {"type": "object"}},
+    "observations": {"type": "array", "items": {"type": "object"}},
+    "evidence_register": {"type": "array", "items": {"type": "object"}},
+    "upstream_claims": {
+      "type": "array",
+      "description": "Sealed claims from earlier stages. Read-only: an operator may reference them but the stage chain rejects any run in which their content changed.",
+      "items": {"type": "object"}
+    },
+    "run_claims": {"type": "array", "items": {"type": "object"}},
+    "contradictions": {"type": "array", "items": {"type": "object"}},
+    "run_record": {"type": "object"}
+  },
+  "additionalProperties": false
+}

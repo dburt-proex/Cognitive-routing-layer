@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "operator-output.schema.json",
+  "title": "Reasoning Operator Output",
+  "description": "What every operator returns. Claims are the common currency: each carries a polarity, a subject, evidence references, and a declared confidence that the engine caps at the evidence ceiling. The operator-specific structured payload (primitives, components, options, hypotheses, defects, failure_modes, effects) is validated against that operator's required transformations. Private reasoning is not a field here and is stripped if present.",
+  "type": "object",
+  "required": ["operator_id", "claims", "declared_confidence"],
+  "properties": {
+    "operator_id": {"enum": ["first-principles", "systemic", "divergent", "abductive", "critical", "inverted", "second-order", "convergent", "metacognitive"]},
+    "declared_confidence": {"enum": ["high", "medium", "low", "unknown", "derived"]},
+    "assumptions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "boundary_flags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["claim_id", "statement", "polarity", "declared_confidence"],
+        "properties": {
+          "claim_id": {"type": "string", "minLength": 1},
+          "statement": {"type": "string", "minLength": 5},
+          "polarity": {"enum": ["supports", "opposes", "neutral"]},
+          "subject_ref": {"type": ["string", "null"]},
+          "evidence_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "declared_confidence": {"enum": ["high", "medium", "low", "unknown"]},
+          "derived_from": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "primitives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["primitive_id", "statement", "status"],
+        "properties": {
+          "primitive_id": {"type": "string", "minLength": 1},
+          "statement": {"type": "string", "minLength": 5},
+          "status": {"enum": ["verified_fact", "assumption", "unknown"]},
+          "evidence_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+        },
+        "additionalProperties": false
+      }
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["component_id", "label"],
+        "properties": {
+          "component_id": {"type": "string", "minLength": 1},
+          "label": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "polarity"],
+        "properties": {
+          "from": {"type": "string", "minLength": 1},
+          "to": {"type": "string", "minLength": 1},
+          "polarity": {"enum": ["reinforcing", "balancing"]},
+          "mechanism": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "feedback_loops": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["loop_id", "path", "effect"],
+        "properties": {
+          "loop_id": {"type": "string", "minLength": 1},
+          "path": {"type": "array", "minItems": 2, "items": {"type": "string"}},
+          "effect": {"type": "string", "minLength": 5}
+        },
+        "additionalProperties": false
+      }
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["option_id", "label", "mechanism", "tradeoff"],
+        "properties": {
+          "option_id": {"type": "string", "minLength": 1},
+          "label": {"type": "string", "minLength": 1},
+          "mechanism": {"type": "string", "minLength": 10},
+          "tradeoff": {"type": "string", "minLength": 5},
+          "reversible": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "hypotheses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["hypothesis_id", "statement", "rank", "explains", "discriminating_test"],
+        "properties": {
+          "hypothesis_id": {"type": "string", "minLength": 1},
+          "statement": {"type": "string", "minLength": 5},
+          "rank": {"type": "integer", "minimum": 1},
+          "explains": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "discriminating_test": {"type": "string", "minLength": 5}
+        },
+        "additionalProperties": false
+      }
+    },
+    "unexplained_observations": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "defects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["defect_id", "defect_type", "target_ref", "statement", "severity", "remediation"],
+        "properties": {
+          "defect_id": {"type": "string", "minLength": 1},
+          "defect_type": {"enum": ["unsupported_claim", "evidence_gap", "sampling_bias", "circularity", "equivocation", "overgeneralization", "stale_evidence", "source_conflict", "scope_creep", "false_precision"]},
+          "target_ref": {"type": "string", "minLength": 1},
+          "statement": {"type": "string", "minLength": 5},
+          "severity": {"enum": ["material", "minor"]},
+          "remediation": {"type": "string", "minLength": 5}
+        },
+        "additionalProperties": false
+      }
+    },
+    "no_defects_found_justification": {"type": "string"},
+    "failure_modes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["failure_mode_id", "statement", "option_ref", "precondition", "detection_signal", "reversible"],
+        "properties": {
+          "failure_mode_id": {"type": "string", "minLength": 1},
+          "statement": {"type": "string", "minLength": 5},
+          "option_ref": {"type": "string", "minLength": 1},
+          "precondition": {"type": "string", "minLength": 5},
+          "detection_signal": {"type": "string", "minLength": 5},
+          "reversible": {"type": "boolean"},
+          "boundary_flag_candidate": {"type": ["string", "null"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "effects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["effect_id", "statement", "order", "follows_from", "horizon", "affected_party", "option_ref"],
+        "properties": {
+          "effect_id": {"type": "string", "minLength": 1},
+          "statement": {"type": "string", "minLength": 5},
+          "order": {"type": "integer", "minimum": 2},
+          "follows_from": {"type": "string", "minLength": 5},
+          "horizon": {"enum": ["immediate", "days", "weeks", "quarters", "years"]},
+          "affected_party": {"type": "string", "minLength": 1},
+          "option_ref": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
