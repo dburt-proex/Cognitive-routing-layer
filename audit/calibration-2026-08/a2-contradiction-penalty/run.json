@@ -1,0 +1,394 @@
+{
+  "run_id": "RCP-RUN-2026-0101",
+  "run_timestamp": "2026-08-05T12:15:00Z",
+  "policy_version": "0.1.0",
+  "operator_registry_version": "0.1.0",
+  "fixture_note": "Calibration audit A2. Retrospective reconstruction of a real decision taken during the v0.1 build: how should the contradiction penalty on decision confidence be computed. Intake is restricted to what was knowable at the decision point. The option actually chosen is NOT marked, and no evidence describing the outcome is included.",
+  "intake": {
+    "problem_statement": "The convergent operator reported a decision confidence of 0.083 on the high-risk change fixture, and we must decide how the contradiction penalty that produced that figure should be computed.",
+    "artifact_kind": "system_design",
+    "decision_kind": "design_system",
+    "decision_horizon": "immediate",
+    "constraints": [
+      "the penalty coefficient itself is fixed in the versioned policy and changing it is a separate decision",
+      "contradiction detection is pairwise and that mechanism is not in scope",
+      "any change must keep runs byte-reproducible"
+    ],
+    "affected_systems": ["cognitive-routing-layer", "leverage-engine"],
+    "precedent_exists": false,
+    "observations": [
+      {
+        "observation_id": "OBS-1",
+        "statement": "Three material contradictions were reported against one option and all three cite the same single opposing claim.",
+        "explained": false
+      },
+      {
+        "observation_id": "OBS-2",
+        "statement": "Decision confidence fell from a pre-penalty 0.833 to 0.083 while the gate result was REVIEW under either figure.",
+        "explained": false
+      }
+    ],
+    "options": [
+      {
+        "option_id": "OPT-PAIRS",
+        "label": "Charge the penalty once per detected contradiction pair",
+        "mechanism": "Multiply the penalty coefficient by the count of unresolved material contradiction records, treating each supporting-opposing pair as an independent disagreement.",
+        "tradeoff": "Penalty scales with the cross-product of supporting and opposing claims rather than with the amount of disagreement present.",
+        "reversible": true
+      },
+      {
+        "option_id": "OPT-OBJECTIONS",
+        "label": "Charge the penalty once per distinct opposing claim",
+        "mechanism": "Group contradiction records by the opposing claim identifier and multiply the coefficient by the number of distinct opposing claims contesting each option.",
+        "tradeoff": "Treats claim identity as a proxy for objection identity, which no contract enforces.",
+        "reversible": true
+      },
+      {
+        "option_id": "OPT-SUBJECT-CAP",
+        "label": "Charge at most one penalty unit per contested subject",
+        "mechanism": "Apply a single flat deduction to any option carrying at least one unresolved material contradiction, regardless of how many objections or pairs exist.",
+        "tradeoff": "An option facing five independent objections is scored identically to one facing a single objection.",
+        "reversible": true
+      }
+    ]
+  },
+  "evidence_register": [
+    {
+      "evidence_id": "EV-A2-1",
+      "source_type": "measurement",
+      "source_id": "run-output",
+      "locator": "high-risk-code-change receipt: contradictions RCP-CON-DFP-C1-DCR-C1, RCP-CON-DSO-C1-DCR-C1, RCP-CON-DSY-C1-DCR-C1",
+      "authority": "authoritative",
+      "quality": 90,
+      "independence_group": "run-output",
+      "verification_state": "INTEGRITY_CHECKED",
+      "captured_at": "2026-08-04T17:05:00Z",
+      "claim_supported": "One opposing claim generated three contradiction records."
+    },
+    {
+      "evidence_id": "EV-A2-2",
+      "source_type": "repository",
+      "source_id": "cognitive-routing-layer",
+      "locator": "spec/routing-policy.yaml: contradiction_penalty_per_material_contradiction = 0.25",
+      "authority": "authoritative",
+      "quality": 85,
+      "independence_group": "policy-file",
+      "verification_state": "INTEGRITY_CHECKED",
+      "captured_at": "2026-08-04T17:06:00Z",
+      "claim_supported": "The coefficient is 0.25 per material contradiction."
+    },
+    {
+      "evidence_id": "EV-A2-3",
+      "source_type": "measurement",
+      "source_id": "run-output",
+      "locator": "mean supporting claim confidence 0.8333, evidence ceiling 1.0, penalty 0.75, result 0.0833",
+      "authority": "authoritative",
+      "quality": 85,
+      "independence_group": "run-output",
+      "verification_state": "INTEGRITY_CHECKED",
+      "captured_at": "2026-08-04T17:07:00Z",
+      "claim_supported": "The arithmetic is correct for the pair-counting model."
+    },
+    {
+      "evidence_id": "EV-A2-4",
+      "source_type": "document",
+      "source_id": "cognitive-routing-layer",
+      "locator": "spec/metacognitive-audit.md: detection pairs each supporting claim with each opposing claim addressing the same subject",
+      "authority": "authoritative",
+      "quality": 80,
+      "independence_group": "spec-document",
+      "verification_state": "AUTHORITATIVE",
+      "captured_at": "2026-08-04T17:08:00Z",
+      "claim_supported": "Detection is pairwise by construction, so the record count is a cross-product."
+    },
+    {
+      "evidence_id": "EV-A2-5",
+      "source_type": "measurement",
+      "source_id": "run-output",
+      "locator": "gate_reasons included RCP-GATE-CONTRADICTION-UNRESOLVED independently of the confidence figure",
+      "authority": "corroborating",
+      "quality": 80,
+      "independence_group": "run-output",
+      "verification_state": "RETRIEVED",
+      "captured_at": "2026-08-04T17:09:00Z",
+      "claim_supported": "The gate outcome did not depend on the penalty magnitude in this instance."
+    }
+  ],
+  "operator_outputs": {
+    "first-principles": {
+      "operator_id": "first-principles",
+      "declared_confidence": "high",
+      "assumptions": [
+        "The penalty exists to make reported confidence reflect unresolved disagreement, not to change the gate outcome."
+      ],
+      "primitives": [
+        {"primitive_id": "P1", "statement": "Contradiction detection pairs every supporting claim with every opposing claim on the same subject.", "status": "verified_fact", "evidence_refs": ["EV-A2-4"]},
+        {"primitive_id": "P2", "statement": "The penalty coefficient is applied per unresolved material contradiction record.", "status": "verified_fact", "evidence_refs": ["EV-A2-2"]},
+        {"primitive_id": "P3", "statement": "One opposing claim contested by three supporting claims produced three records.", "status": "verified_fact", "evidence_refs": ["EV-A2-1"]},
+        {"primitive_id": "P4", "statement": "Whether two claim identifiers ever represent two genuinely independent objections is not enforced by any contract.", "status": "unknown", "evidence_refs": []},
+        {"primitive_id": "P5", "statement": "The record count is therefore the product of supporting and opposing claim counts, not a measure of disagreement.", "status": "assumption", "evidence_refs": []}
+      ],
+      "claims": [
+        {
+          "claim_id": "FP-C1",
+          "statement": "Because detection is a cross-product, a penalty charged per record scales with how many supporting claims happened to be written rather than with how much the option is contested.",
+          "polarity": "opposes",
+          "subject_ref": "OPT-PAIRS",
+          "evidence_refs": ["EV-A2-1", "EV-A2-2", "EV-A2-4"],
+          "declared_confidence": "high",
+          "derived_from": ["P1", "P2", "P3"]
+        },
+        {
+          "claim_id": "FP-C2",
+          "statement": "Counting distinct opposing claims removes the supporting-claim multiplier while still scaling with the number of objections raised.",
+          "polarity": "supports",
+          "subject_ref": "OPT-OBJECTIONS",
+          "evidence_refs": ["EV-A2-1", "EV-A2-4"],
+          "declared_confidence": "medium",
+          "derived_from": ["P1", "P5"]
+        }
+      ]
+    },
+    "systemic": {
+      "operator_id": "systemic",
+      "declared_confidence": "medium",
+      "assumptions": ["Reviewers read the confidence figure before reading the contradiction list."],
+      "components": [
+        {"component_id": "C1", "label": "Contradiction detector"},
+        {"component_id": "C2", "label": "Convergent operator"},
+        {"component_id": "C3", "label": "Reported decision confidence"},
+        {"component_id": "C4", "label": "Human reviewer"}
+      ],
+      "relations": [
+        {"from": "C1", "to": "C2", "polarity": "reinforcing", "mechanism": "detected records are supplied to convergence"},
+        {"from": "C2", "to": "C3", "polarity": "reinforcing", "mechanism": "convergence computes the reported figure"},
+        {"from": "C3", "to": "C4", "polarity": "reinforcing", "mechanism": "the reviewer reads the figure"},
+        {"from": "C4", "to": "C1", "polarity": "balancing", "mechanism": "the reviewer dispositions contradictions, removing them from the penalty"}
+      ],
+      "feedback_loops": [
+        {
+          "loop_id": "L1",
+          "path": ["C1", "C2", "C3", "C4"],
+          "effect": "The reviewer is the only element that can clear a penalty, so a figure the reviewer learns to distrust breaks the loop: contradictions stop being dispositioned because the number that reports them is not believed."
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "SY-C1",
+          "statement": "The reported figure is the only channel by which unresolved disagreement reaches the reviewer who can clear it, so a figure that overstates disagreement degrades the loop it is meant to drive.",
+          "polarity": "opposes",
+          "subject_ref": "OPT-PAIRS",
+          "evidence_refs": ["EV-A2-3", "EV-A2-4"],
+          "declared_confidence": "medium"
+        }
+      ]
+    },
+    "divergent": {
+      "operator_id": "divergent",
+      "declared_confidence": "low",
+      "assumptions": ["The penalty must remain a deterministic function of the run record."],
+      "options": [
+        {"option_id": "OPT-PAIRS", "label": "Charge the penalty once per detected contradiction pair", "mechanism": "Multiply the penalty coefficient by the count of unresolved material contradiction records, treating each supporting-opposing pair as an independent disagreement.", "tradeoff": "Penalty scales with the cross-product of supporting and opposing claims rather than with the amount of disagreement present.", "reversible": true},
+        {"option_id": "OPT-OBJECTIONS", "label": "Charge the penalty once per distinct opposing claim", "mechanism": "Group contradiction records by the opposing claim identifier and multiply the coefficient by the number of distinct opposing claims contesting each option.", "tradeoff": "Treats claim identity as a proxy for objection identity, which no contract enforces.", "reversible": true},
+        {"option_id": "OPT-SUBJECT-CAP", "label": "Charge at most one penalty unit per contested subject", "mechanism": "Apply a single flat deduction to any option carrying at least one unresolved material contradiction, regardless of how many objections or pairs exist.", "tradeoff": "An option facing five independent objections is scored identically to one facing a single objection.", "reversible": true},
+        {"option_id": "OPT-GATE-ONLY", "label": "Remove the confidence penalty and let the gate carry disagreement", "mechanism": "Leave reported confidence untouched by contradictions and rely entirely on the unresolved-material-contradiction gate to route the run to review.", "tradeoff": "A consumer reading only the confidence figure sees no trace of an unresolved objection.", "reversible": true}
+      ],
+      "claims": [
+        {
+          "claim_id": "DV-C1",
+          "statement": "Four mechanisms are available: charge per pair, charge per objection, charge once per contested option, or move the signal out of confidence entirely.",
+          "polarity": "neutral",
+          "subject_ref": null,
+          "evidence_refs": [],
+          "declared_confidence": "low"
+        }
+      ]
+    },
+    "abductive": {
+      "operator_id": "abductive",
+      "declared_confidence": "medium",
+      "assumptions": ["The observed arithmetic is correct for whatever model is in force."],
+      "hypotheses": [
+        {
+          "hypothesis_id": "H1",
+          "statement": "The penalty is charged per detected record while detection is pairwise, so the deduction grows with the number of supporting claims written about an option even though no additional objection was raised.",
+          "rank": 1,
+          "explains": ["OBS-1", "OBS-2"],
+          "discriminating_test": "Add a fourth supporting claim to the same option without adding any objection. If the penalty rises, the multiplier is the supporting-claim count and this hypothesis holds."
+        },
+        {
+          "hypothesis_id": "H2",
+          "statement": "The 0.25 coefficient is simply too large for this task class, and the record count is incidental.",
+          "rank": 2,
+          "explains": ["OBS-2"],
+          "discriminating_test": "Halve the coefficient and re-run. If three records still report where one objection exists, the coefficient was not the defect and this hypothesis is insufficient."
+        }
+      ],
+      "unexplained_observations": [],
+      "claims": [
+        {
+          "claim_id": "AB-C1",
+          "statement": "The leading explanation is a multiplier defect rather than a coefficient defect, and it is testable by adding a supporting claim without adding an objection.",
+          "polarity": "neutral",
+          "subject_ref": "H1",
+          "evidence_refs": ["EV-A2-1", "EV-A2-4"],
+          "declared_confidence": "medium"
+        }
+      ]
+    },
+    "critical": {
+      "operator_id": "critical",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "defects": [
+        {
+          "defect_id": "CR-D1",
+          "defect_type": "false_precision",
+          "target_ref": "OPT-PAIRS",
+          "statement": "A reported 0.083 implies a magnitude of doubt that one objection does not support, and the three-decimal figure lends it unearned authority.",
+          "severity": "material",
+          "remediation": "Report the penalty and its multiplier alongside the figure so a reader can see what produced it."
+        },
+        {
+          "defect_id": "CR-D2",
+          "defect_type": "overgeneralization",
+          "target_ref": "OPT-OBJECTIONS",
+          "statement": "Grouping by opposing claim identifier assumes distinct identifiers mean distinct objections. An operator that splits one objection across three claims would be charged three times, which is the same defect in a different place.",
+          "severity": "material",
+          "remediation": "State the assumption explicitly in the confidence model, and add a contract check that an operator may not restate one objection as multiple claims."
+        },
+        {
+          "defect_id": "CR-D3",
+          "defect_type": "unsupported_claim",
+          "target_ref": "FP-C2",
+          "statement": "The claim that objection-counting scales correctly holds only when objections are independent, which primitive P4 records as unknown.",
+          "severity": "minor",
+          "remediation": "Discharge P4 by defining objection independence, or accept the proxy and say so."
+        },
+        {
+          "defect_id": "CR-D4",
+          "defect_type": "evidence_gap",
+          "target_ref": "OPT-SUBJECT-CAP",
+          "statement": "No evidence in this run describes a case with two or more independent objections on one subject, so the option that most differs there is the least evidenced.",
+          "severity": "material",
+          "remediation": "Construct a two-objection fixture before choosing between per-objection and flat-cap models."
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "CR-C1",
+          "statement": "Every candidate model is being chosen on a single observed case containing exactly one objection, which is the case in which three of the four models are indistinguishable.",
+          "polarity": "opposes",
+          "subject_ref": "OPT-SUBJECT-CAP",
+          "evidence_refs": ["EV-A2-1", "EV-A2-3"],
+          "declared_confidence": "medium"
+        }
+      ]
+    },
+    "inverted": {
+      "operator_id": "inverted",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "failure_modes": [
+        {
+          "failure_mode_id": "IN-F1",
+          "statement": "Reported confidence sits far below what the evidence warrants, reviewers learn the figure is unreliable, and they stop using it as a signal at all.",
+          "option_ref": "OPT-PAIRS",
+          "precondition": "Options routinely attract more supporting claims than opposing ones, which is the normal case.",
+          "detection_signal": "Reviewers reference the contradiction list but not the confidence figure in their dispositions.",
+          "reversible": true,
+          "boundary_flag_candidate": null
+        },
+        {
+          "failure_mode_id": "IN-F2",
+          "statement": "An operator splits a single objection across three claims and the penalty triples, reproducing the original defect through a different route.",
+          "option_ref": "OPT-OBJECTIONS",
+          "precondition": "No contract check prevents one objection being expressed as several claims.",
+          "detection_signal": "Multiple opposing claims on one subject sharing the same evidence references and remediation text.",
+          "reversible": true,
+          "boundary_flag_candidate": null
+        },
+        {
+          "failure_mode_id": "IN-F3",
+          "statement": "An option facing five independent objections reports the same confidence as one facing a single objection, and the figure stops discriminating between them.",
+          "option_ref": "OPT-SUBJECT-CAP",
+          "precondition": "A run accumulates several genuinely independent objections against one option.",
+          "detection_signal": "Two options with very different contradiction counts carry identical penalties.",
+          "reversible": true,
+          "boundary_flag_candidate": null
+        },
+        {
+          "failure_mode_id": "IN-F4",
+          "statement": "A downstream consumer reads confidence without reading the gate, sees a high figure, and treats a contested recommendation as uncontested.",
+          "option_ref": "OPT-GATE-ONLY",
+          "precondition": "Any consumer integrates on the confidence field alone.",
+          "detection_signal": "A consumer acts on a recommendation whose gate result was REVIEW.",
+          "reversible": true,
+          "boundary_flag_candidate": null
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "IN-C1",
+          "statement": "The dominant failure of pair-counting is that it discredits the figure it computes, which is worse than being imprecise because it removes the reviewer from the loop entirely.",
+          "polarity": "opposes",
+          "subject_ref": "OPT-PAIRS",
+          "evidence_refs": ["EV-A2-3", "EV-A2-5"],
+          "declared_confidence": "medium"
+        },
+        {
+          "claim_id": "IN-C2",
+          "statement": "Moving the signal out of confidence entirely creates a silent divergence between what the gate knows and what a consumer reads.",
+          "polarity": "opposes",
+          "subject_ref": "OPT-GATE-ONLY",
+          "evidence_refs": ["EV-A2-5", "EV-A2-4"],
+          "declared_confidence": "medium"
+        }
+      ]
+    },
+    "second-order": {
+      "operator_id": "second-order",
+      "declared_confidence": "medium",
+      "assumptions": ["The confidence figure will be consumed by at least one other system."],
+      "effects": [
+        {
+          "effect_id": "SO-E1",
+          "statement": "Once reviewers discount the confidence figure, the penalty stops functioning as a control and the contradiction list becomes the only real signal, so effort spent computing the figure produces nothing.",
+          "order": 2,
+          "follows_from": "Pair-counting reports a figure far below the evidence.",
+          "horizon": "quarters",
+          "affected_party": "human reviewers",
+          "option_ref": "OPT-PAIRS"
+        },
+        {
+          "effect_id": "SO-E2",
+          "statement": "A penalty that scales with objection count rewards phrasing objections coarsely, so operators are incentivised to bundle distinct concerns into one claim to avoid compounding the deduction.",
+          "order": 2,
+          "follows_from": "The penalty is charged per distinct opposing claim.",
+          "horizon": "quarters",
+          "affected_party": "operator authors and the instruction layer",
+          "option_ref": "OPT-OBJECTIONS"
+        },
+        {
+          "effect_id": "SO-E3",
+          "statement": "A flat cap makes contradiction count invisible in the figure, so the only way to see accumulating disagreement is to read the list, which pushes the system back toward prose review.",
+          "order": 2,
+          "follows_from": "One penalty unit is applied regardless of objection count.",
+          "horizon": "quarters",
+          "affected_party": "downstream consumers",
+          "option_ref": "OPT-SUBJECT-CAP"
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "SO-C1",
+          "statement": "Objection-counting preserves the figure's ability to discriminate while removing the supporting-claim multiplier, at the cost of an incentive to bundle objections that a contract check can address later.",
+          "polarity": "supports",
+          "subject_ref": "OPT-OBJECTIONS",
+          "evidence_refs": ["EV-A2-1", "EV-A2-4", "EV-A2-2"],
+          "declared_confidence": "medium"
+        }
+      ]
+    }
+  }
+}
