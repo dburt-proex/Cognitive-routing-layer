@@ -46,8 +46,8 @@ contradictions that all trace to one objection:
 
 ## The material finding, verified
 
-That objection is correct, and it was verified against the shipped suite rather
-than accepted on its own authority.
+At the time, that objection was correct, and it was verified against the
+shipped suite rather than accepted on its own authority.
 
 | Fixture | Generated option | Evidence-sufficient |
 |---|---|---|
@@ -56,18 +56,19 @@ than accepted on its own authority.
 | `confidence-does-not-authorize` | `OPT-RESTRICT` | False |
 | `boundary-halt` | `OPT-ONSITE` | False |
 
-Across all seven acceptance fixtures, a generated option clears the evidence
-threshold in **zero** cases. `test_generated_options_are_ranked_not_ignored`
-asserts only that a generated option appears in the ranking — not that it can
-pass the threshold, and not that it can be selected.
+Across all seven acceptance fixtures at the time, a generated option cleared the
+evidence threshold in **zero** cases. The shipped test asserted only that a
+generated option appeared in the ranking — not that it could pass the threshold
+or be selected.
 
-**The branch in which a generated option wins is implemented and unexercised.**
-The `a2-contradiction-penalty` run is the first case anywhere in this
-repository where a generated option cleared the threshold, and it still lost on
-net score.
+**At calibration time, the branch in which a generated option wins was
+implemented and unexercised.** The `a2-contradiction-penalty` run was the first
+case anywhere in this repository where a generated option cleared the threshold,
+and it still lost on net score.
 
-Open remediation: a fixture in which a generated option attracts genuine
-supporting evidence and is selected, plus a test asserting that outcome.
+Remediated by `tests/fixtures/generated-option-wins/`: `OPT-PROVE` is generated
+by divergent, supported by downstream evidence, selected, evidence-sufficient,
+and asserted under an `ALLOW` gate.
 
 ## Measurements
 

@@ -91,14 +91,16 @@ to self-authorize. A test asserts its exact parameter list.
 | `governance-decision` | GOVERNANCE_EVALUATION | REVIEW | PASS | 0.0 | REVIEW |
 | `high-risk-code-change` | CHANGE_RISK | REVIEW | FAIL | 0.583 | REVIEW |
 | `evidence-starved-convergence` | PRIORITIZATION | REVIEW | FAIL | 0.0 | REVIEW |
+| `generated-option-wins` | PRIORITIZATION | ALLOW | PASS | 0.875 | NOT_AUTHORIZED |
 | `confidence-does-not-authorize` | PRIORITIZATION | ALLOW | PASS | **1.0** | **NOT_AUTHORIZED** |
 | `unsupported-classification` | UNSUPPORTED | REVIEW | FAIL | 0.0 | REVIEW |
 | `boundary-halt` | PRIORITIZATION | HALT | PASS | 0.75 | HALT |
 
-Row 5 is the point: maximum confidence, clean audit, `ALLOW` gate, irreversible
-action requested — still not authorized. Row 7 is its mirror: a clean audit and
-a well-evidenced option, and the run halts anyway because a boundary flag
-outranks every score.
+Row 5 proves exploration is load-bearing: a divergent-generated option is
+evidence-sufficient and selected. Row 6 is the point: maximum confidence, clean
+audit, `ALLOW` gate, irreversible action requested — still not authorized. Row 8
+is its mirror: a clean audit and a well-evidenced option, and the run halts
+anyway because a boundary flag outranks every score.
 
 ## The v0.1 operators
 
@@ -141,7 +143,7 @@ where a persuasive narrative could quietly become a decision.
 ├── src/cognitive_routing_layer/        the engine
 ├── examples/                           three end-to-end receipts
 ├── tests/
-│   ├── fixtures/                       seven runs
+│   ├── fixtures/                       eight runs
 │   ├── test_acceptance.py              81 tests
 │   └── acceptance-tests.md             results and criteria mapping
 ├── commercialization/
