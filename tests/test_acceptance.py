@@ -650,7 +650,8 @@ class EvidenceTests(Base):
         self.assertIsNotNone(selected)
         self.assertIn(selected, origins)
         self.assertTrue(origins[selected].startswith("generated_by:"))
-        selection = next(item for item in receipt["convergence"]["ranking"] if item["option_id"] == selected)
+        selection = next((item for item in receipt["convergence"]["ranking"] if item["option_id"] == selected), None)
+        self.assertIsNotNone(selection)
         self.assertTrue(selection["evidence_sufficient"])
         self.assertEqual(receipt["gate"]["gate_result"], "ALLOW")
 
