@@ -1,0 +1,311 @@
+{
+  "run_id": "RCP-RUN-2026-0008",
+  "run_timestamp": "2026-08-04T20:00:00Z",
+  "policy_version": "0.1.0",
+  "operator_registry_version": "0.1.0",
+  "fixture_note": "Divergent generates a bounded receipt-compatibility proof that was absent from intake. Independent evidence supports it through downstream operators, so it is selected over every intake option and clears the ALLOW gate.",
+  "intake": {
+    "problem_statement": "Three candidate work items compete for the next build slot across the Cognitive Routing Layer and its receipt consumer: expand the runtime, package the offer, or reconcile documentation. The team needs an evidence-backed next step that can establish integration compatibility without changing production systems.",
+    "artifact_kind": "none",
+    "decision_kind": "select_next_action",
+    "decision_horizon": "weeks",
+    "constraints": [
+      "one build slot available",
+      "no production-system mutation",
+      "advisory output only"
+    ],
+    "affected_systems": [
+      "cognitive-routing-layer",
+      "receipt-consumer"
+    ],
+    "deadline": "2026-08-11T20:00:00Z",
+    "precedent_exists": true,
+    "options": [
+      {
+        "option_id": "OPT-EXPAND",
+        "label": "Expand the runtime with a production model adapter",
+        "mechanism": "Implement a production model adapter and extend the runtime before collecting any compatibility evidence from a receipt consumer.",
+        "tradeoff": "Adds an external integration surface before proving the existing receipt contract works end to end.",
+        "reversible": true
+      },
+      {
+        "option_id": "OPT-PACKAGE",
+        "label": "Package the assessment service for sale",
+        "mechanism": "Assemble buyer-facing collateral, pricing tiers, and a proposal template from existing assessment content.",
+        "tradeoff": "Commits to a commercial claim before any buyer evidence exists.",
+        "reversible": true
+      }
+    ]
+  },
+  "evidence_register": [
+    {
+      "evidence_id": "EV-G1",
+      "source_type": "repository",
+      "source_id": "cognitive-routing-layer",
+      "locator": "src/cognitive_routing_layer/runner.py and spec/routing-policy.yaml@0.1.0",
+      "authority": "authoritative",
+      "quality": 90,
+      "independence_group": "repository-inspection",
+      "verification_state": "INTEGRITY_CHECKED",
+      "captured_at": "2026-08-04T19:00:00Z",
+      "claim_supported": "The versioned runner can produce a deterministic decision receipt from a structured fixture."
+    },
+    {
+      "evidence_id": "EV-G2",
+      "source_type": "test_result",
+      "source_id": "acceptance-suite",
+      "locator": "PYTHONPATH=src python -m unittest discover -s tests: 81 passing",
+      "authority": "authoritative",
+      "quality": 90,
+      "independence_group": "test-execution",
+      "verification_state": "INTEGRITY_CHECKED",
+      "captured_at": "2026-08-04T19:05:00Z",
+      "claim_supported": "Acceptance tests exercise the runner and validate decision receipts."
+    },
+    {
+      "evidence_id": "EV-G3",
+      "source_type": "document",
+      "source_id": "integration-boundaries",
+      "locator": "docs/integration-boundaries.md, receipt handoff boundary",
+      "authority": "corroborating",
+      "quality": 80,
+      "independence_group": "architecture-record",
+      "verification_state": "RETRIEVED",
+      "captured_at": "2026-08-04T19:10:00Z",
+      "claim_supported": "The receipt handoff is documented as a bounded data interface with no cross-repository import."
+    },
+    {
+      "evidence_id": "EV-G4",
+      "source_type": "measurement",
+      "source_id": "receipt-replay",
+      "locator": "deterministic fixture replay: identical input produces byte-identical receipt",
+      "authority": "authoritative",
+      "quality": 85,
+      "independence_group": "runtime-verification",
+      "verification_state": "INTEGRITY_CHECKED",
+      "captured_at": "2026-08-04T19:15:00Z",
+      "claim_supported": "Receipt compatibility can be tested with repeatable fixture output."
+    }
+  ],
+  "operator_outputs": {
+    "first-principles": {
+      "operator_id": "first-principles",
+      "declared_confidence": "high",
+      "assumptions": [],
+      "primitives": [
+        {
+          "primitive_id": "GP1",
+          "statement": "The versioned runner can produce a deterministic decision receipt from a structured fixture.",
+          "status": "verified_fact",
+          "evidence_refs": [
+            "EV-G1"
+          ]
+        },
+        {
+          "primitive_id": "GP2",
+          "statement": "Acceptance tests exercise the runner and validate decision receipts.",
+          "status": "verified_fact",
+          "evidence_refs": [
+            "EV-G2"
+          ]
+        },
+        {
+          "primitive_id": "GP3",
+          "statement": "The receipt handoff is a bounded data interface without a cross-repository import.",
+          "status": "verified_fact",
+          "evidence_refs": [
+            "EV-G3"
+          ]
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "GFP-C1",
+          "statement": "The runner, acceptance suite, and documented handoff define an executable path for gathering receipt-compatibility evidence.",
+          "polarity": "neutral",
+          "subject_ref": null,
+          "evidence_refs": [
+            "EV-G1",
+            "EV-G2",
+            "EV-G3"
+          ],
+          "declared_confidence": "high",
+          "derived_from": [
+            "GP1",
+            "GP2",
+            "GP3"
+          ]
+        }
+      ]
+    },
+    "systemic": {
+      "operator_id": "systemic",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "components": [
+        {
+          "component_id": "G1",
+          "label": "Cognitive Routing Layer"
+        },
+        {
+          "component_id": "G2",
+          "label": "Receipt consumer"
+        },
+        {
+          "component_id": "G3",
+          "label": "Fixture replay"
+        }
+      ],
+      "relations": [
+        {
+          "from": "G1",
+          "to": "G2",
+          "polarity": "reinforcing",
+          "mechanism": "the runner emits a receipt that the consumer parses"
+        },
+        {
+          "from": "G2",
+          "to": "G3",
+          "polarity": "reinforcing",
+          "mechanism": "the consumer reports compatibility findings back to fixture replay"
+        },
+        {
+          "from": "G3",
+          "to": "G1",
+          "polarity": "reinforcing",
+          "mechanism": "replay results define which runner outputs must remain compatible"
+        }
+      ],
+      "feedback_loops": [
+        {
+          "loop_id": "GL1",
+          "path": [
+            "G1",
+            "G2",
+            "G3"
+          ],
+          "effect": "A receipt can be replayed through the consumer and its compatibility finding constrains the next runner output, making the integration boundary observable before production expansion."
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "GSY-C1",
+          "statement": "The runner, consumer, and fixture replay form an observable feedback loop for receipt-compatibility evidence.",
+          "polarity": "neutral",
+          "subject_ref": null,
+          "evidence_refs": [
+            "EV-G2",
+            "EV-G3",
+            "EV-G4"
+          ],
+          "declared_confidence": "medium"
+        }
+      ]
+    },
+    "divergent": {
+      "operator_id": "divergent",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "options": [
+        {
+          "option_id": "OPT-EXPAND",
+          "label": "Expand the runtime with a production model adapter",
+          "mechanism": "Implement a production model adapter and extend the runtime before collecting any compatibility evidence from a receipt consumer.",
+          "tradeoff": "Adds an external integration surface before proving the existing receipt contract works end to end.",
+          "reversible": true
+        },
+        {
+          "option_id": "OPT-PACKAGE",
+          "label": "Package the assessment service for sale",
+          "mechanism": "Assemble buyer-facing collateral, pricing tiers, and a proposal template from existing assessment content.",
+          "tradeoff": "Commits to a commercial claim before any buyer evidence exists.",
+          "reversible": true
+        },
+        {
+          "option_id": "OPT-PROVE",
+          "label": "Run a bounded receipt-compatibility proof",
+          "mechanism": "Feed a representative fixture through the existing deterministic runner, give the resulting receipt to the consumer, and record any schema or contract mismatch without modifying production systems.",
+          "tradeoff": "Uses the build slot on a constrained proof rather than feature expansion or buyer-facing packaging.",
+          "reversible": true
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "GDV-C1",
+          "statement": "Three materially distinct mechanisms are available: expand the runtime, package the offer, or generate compatibility evidence with a bounded proof.",
+          "polarity": "neutral",
+          "subject_ref": null,
+          "evidence_refs": [],
+          "declared_confidence": "medium"
+        }
+      ]
+    },
+    "critical": {
+      "operator_id": "critical",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "defects": [
+        {
+          "defect_id": "GCR-D1",
+          "defect_type": "unsupported_claim",
+          "target_ref": "OPT-PACKAGE",
+          "statement": "Packaging assumes demand that no evidence in this run measures.",
+          "severity": "material",
+          "remediation": "Collect two buyer conversations with recorded willingness to pay before packaging."
+        },
+        {
+          "defect_id": "GCR-D2",
+          "defect_type": "false_precision",
+          "target_ref": "OPT-EXPAND",
+          "statement": "The production adapter scope is not measured, so its fit within one build slot is asserted rather than established.",
+          "severity": "minor",
+          "remediation": "Timebox a compatibility proof and record the resulting interface findings before estimating the production adapter."
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "GCR-C1",
+          "statement": "The bounded proof is the only candidate whose scope is bounded by repository, test, and interface evidence rather than an unmeasured commercial or implementation assumption.",
+          "polarity": "supports",
+          "subject_ref": "OPT-PROVE",
+          "evidence_refs": [
+            "EV-G1",
+            "EV-G2",
+            "EV-G3"
+          ],
+          "declared_confidence": "high"
+        }
+      ]
+    },
+    "second-order": {
+      "operator_id": "second-order",
+      "declared_confidence": "medium",
+      "assumptions": [],
+      "effects": [
+        {
+          "effect_id": "GSO-E1",
+          "statement": "The bounded proof records a repeatable receipt-consumer compatibility baseline, so later expansion starts from observed constraints rather than inferred interface behaviour.",
+          "order": 2,
+          "follows_from": "A bounded proof produces receipt compatibility findings.",
+          "horizon": "weeks",
+          "affected_party": "runtime maintainers",
+          "option_ref": "OPT-PROVE"
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "GSO-C1",
+          "statement": "A compatibility proof creates the observed receipt boundary that a later production expansion must preserve.",
+          "polarity": "supports",
+          "subject_ref": "OPT-PROVE",
+          "evidence_refs": [
+            "EV-G1",
+            "EV-G3",
+            "EV-G4"
+          ],
+          "declared_confidence": "medium"
+        }
+      ]
+    }
+  }
+}

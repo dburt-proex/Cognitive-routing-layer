@@ -33,6 +33,7 @@ SCENARIOS = (
     "governance-decision",
     "high-risk-code-change",
     "evidence-starved-convergence",
+    "generated-option-wins",
     "confidence-does-not-authorize",
     "unsupported-classification",
     "boundary-halt",
@@ -642,14 +643,17 @@ class EvidenceTests(Base):
         self.assertFalse(divergent["contributes_to_decision_confidence"])
         self.assertEqual(receipt["convergence"]["decision_confidence"], 1.0)
 
-    def test_generated_options_are_ranked_not_ignored(self):
-        receipt = self.execute("governance-decision")
+    def test_generated_option_can_be_selected_with_sufficient_evidence(self):
+        receipt = self.execute("generated-option-wins")
         origins = {item["option_id"]: item["origin"] for item in receipt["option_set"]}
-        generated = [key for key, value in origins.items() if value.startswith("generated_by:")]
-        self.assertTrue(generated, "divergent generated an option")
-        ranked = {item["option_id"] for item in receipt["convergence"]["ranking"]}
-        for option_id in generated:
-            self.assertIn(option_id, ranked)
+        selected = receipt["convergence"]["selected_option_id"]
+        self.assertIsNotNone(selected)
+        self.assertIn(selected, origins)
+        self.assertTrue(origins[selected].startswith("generated_by:"))
+        selection = next((item for item in receipt["convergence"]["ranking"] if item["option_id"] == selected), None)
+        self.assertIsNotNone(selection)
+        self.assertTrue(selection["evidence_sufficient"])
+        self.assertEqual(receipt["gate"]["gate_result"], "ALLOW")
 
 
 # ---------------------------------------------------------------------------
